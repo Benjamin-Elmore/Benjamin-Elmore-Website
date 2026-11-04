@@ -64,6 +64,9 @@
         row.addEventListener('focus', function () { show(row); });
         row.addEventListener('blur', hide);
       });
+      Array.prototype.forEach.call(list.querySelectorAll('.exp-details summary'), function (s) {
+        s.addEventListener('mouseenter', hide);
+      });
       list.addEventListener('mouseleave', function () {
         var a = document.activeElement;
         var fv = false;
