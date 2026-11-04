@@ -841,18 +841,30 @@ def js_without_comments(text: str) -> str:
 #: Any http(s)/ftp URL in raw text, tolerating backslashes and odd slashes.
 RAW_URL_RE = re.compile(r"\b(?:https?|ftp)\s*:[\\/]*[^\s\"'<>()\\/][^\s\"'<>()]*", re.I)
 CSS_URL_RE = re.compile(r"""url\(\s*(?:"([^"]*)"|'([^']*)'|([^)\s]*))\s*\)""", re.I)
-CSS_STRING_RE = re.compile(r'"([^"]*)"|\'([^\']*)\'')
+#: A quoted CSS string, honouring backslash escapes ("a\"b" is one string).
+CSS_STRING_RE = re.compile(r'"((?:[^"\\\n]|\\.)*)"|\'((?:[^\'\\\n]|\\.)*)\'', re.S)
 CSS_IMPORT_RE = re.compile(r"""@import\s+(?:"([^"]*)"|'([^']*)')""", re.I)
+#: C08 only (CR4-2): a real content: declaration, at the start of a style
+#: attribute or block, or after a ";". So "--icon-content:" or "x-content:"
+#: never matches. CSS_CONTENT_RE (C11/C13) is left as it is.
+C08_CONTENT_DECL_RE = re.compile(r"(?:^|[{;])\s*content\s*:", re.I)
+
+
+def decode_css_escapes(css: str) -> str:
+    """Decode CSS escapes: a hex escape (\\2f, plus one optional trailing
+    whitespace) becomes its character; a backslash before any other character
+    except a newline becomes that character. Shared by css_targets (CR2-8)
+    and the C08 string pass (CR4-4)."""
+    css = re.sub(r"\\([0-9a-fA-F]{1,6})\s?",
+                 lambda m: chr(int(m.group(1), 16)) if int(m.group(1), 16) <= 0x10FFFF
+                 else "\ufffd", css)
+    return re.sub(r"\\([^\n0-9a-fA-F])", r"\1", css)
 
 
 def css_targets(css: str) -> list[str]:
     """Every url(...) and @import "..." target in a CSS text."""
-    css = strip_css_comments(css)
     # Decode CSS escapes first, so u\72l(...) reads as url(...) (CR2-8).
-    css = re.sub(r"\\([0-9a-fA-F]{1,6})\s?",
-                 lambda m: chr(int(m.group(1), 16)) if int(m.group(1), 16) <= 0x10FFFF
-                 else "\ufffd", css)
-    css = re.sub(r"\\([^\n0-9a-fA-F])", r"\1", css)
+    css = decode_css_escapes(strip_css_comments(css))
     out = []
     for rx in (CSS_URL_RE, CSS_IMPORT_RE):
         for m in rx.finditer(css):
@@ -860,13 +872,44 @@ def css_targets(css: str) -> list[str]:
     return out
 
 
+def top_level_content_strings(css: str) -> set[int]:
+    """Start offsets of the strings that are top-level tokens of a content:
+    declaration value, i.e. not inside any (...): not in image-set(), url(),
+    attr() or any other function (CR4-2)."""
+    starts: set[int] = set()
+    for decl in C08_CONTENT_DECL_RE.finditer(css):
+        i, depth = decl.end(), 0
+        while i < len(css):
+            c = css[i]
+            if c in "\"'":
+                m = CSS_STRING_RE.match(css, i)
+                if m is None:
+                    break  # unterminated string: treat nothing after it as text
+                if depth == 0:
+                    starts.add(i)
+                i = m.end()
+                continue
+            if c == "\\":
+                i += 2
+                continue
+            if c == "(":
+                depth += 1
+            elif c == ")":
+                depth = max(0, depth - 1)
+            elif c in ";{}" and depth == 0:
+                break
+            i += 1
+    return starts
+
+
 def canonical_external(value: str) -> str | None:
     """The absolute URL a value would load if it leaves the site, else None.
-    A leading // becomes https://; "https:" followed by any run of slashes or
+    A leading run of two or more slashes becomes https:// (browsers read
+    "///host" as "//host"); "https:" followed by any run of slashes or
     backslashes becomes "https://"."""
     v = browser_url(value)
     if v.startswith("//"):
-        return "https:" + v
+        return "https://" + v.lstrip("/")
     m = re.match(r"^(https?|ftp):/*(.*)$", v, re.I | re.S)
     if m:
         return f"{m.group(1).lower()}://{m.group(2)}"
@@ -903,15 +946,20 @@ def c08(site: Site) -> str:
         # CSS-escaped u\72l(...) (CR2-8). A string is judged only when it names
         # a host, and a protocol-relative string inside a content: declaration
         # is text, not a URL, so a decorative content: "//" passes (CR3-4).
+        # Only a top-level string of a real content: declaration is text; a
+        # string inside image-set(), url() or any other function is judged
+        # (CR4-2). Escapes are decoded before judging, so "\2f\2f host" and
+        # "\68ttps://host" read as the URLs they are (CR4-4). An escaped
+        # newline inside a string is a line continuation and is dropped.
         css = strip_css_comments(css)
-        content_spans = [m.span(1) for m in CSS_CONTENT_RE.finditer(css)]
+        text_starts = top_level_content_strings(css)
         for m in CSS_STRING_RE.finditer(css):
-            value = m.group(1) if m.group(1) is not None else m.group(2)
+            raw = m.group(1) if m.group(1) is not None else m.group(2)
+            value = decode_css_escapes(re.sub(r"\\(?:\r\n|[\n\r\f])", "", raw))
             url = canonical_external(value)
             if url is None or not urlsplit(url).netloc.strip():
                 continue
-            in_content = any(lo <= m.start() < hi for lo, hi in content_spans)
-            if in_content and browser_url(value).startswith("//"):
+            if m.start() in text_starts and browser_url(value).startswith("//"):
                 continue
             judge(url, f"{where} CSS string", False)
 
@@ -1003,6 +1051,12 @@ def c10(site: Site) -> str:
     for p in site.files:
         if p.suffix.lower() == ".md":
             problems.append(f"markdown file {site.rel(p)} under docs/")
+        # CR4-3: the plan ships no PDF, and C10 is the only guard on one (C11
+        # does not read PDFs), so any .pdf fails. That closes cv2.pdf and
+        # Benjamin-Elmore-CV2.pdf more simply than narrowing the OpenCV "cv2"
+        # exemption in RESUME_NAME_RE to image extensions.
+        if p.suffix.lower() == ".pdf":
+            problems.append(f"PDF {site.rel(p)} under docs/ (the plan ships none)")
         if RESUME_NAME_RE.search(p.name):
             problems.append(f"file name {site.rel(p)} looks like a resume/CV")
     for p, text in site.text_files():
@@ -1010,7 +1064,7 @@ def c10(site: Site) -> str:
             m = re.search(pat, text, re.I)
             if m:
                 problems.append(f"{site.rel(p)}: references '{m.group(0)}'")
-    return fail_if(problems, "no handoff/work-file references, no .md or resume files")
+    return fail_if(problems, "no handoff/work-file references, no .md, .pdf or resume files")
 
 
 def find_phones(text: str) -> list[str]:

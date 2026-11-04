@@ -721,10 +721,22 @@ class CheckerFixtureTest(unittest.TestCase):
                 self.assertIn("resume/CV", detail)
 
     def test_c10_opencv_names_pass(self):
+        # Through the checker's file walk, not just the regex (CR4-3).
+        svg = ('<svg xmlns="http://www.w3.org/2000/svg" role="img" viewBox="0 0 1 1">'
+               "<title>OpenCV</title><desc>OpenCV logo</desc></svg>")
         for name in ("assets/arc-cv2.png", "assets/opencv.svg", "assets/opencv2.png",
                      "assets/CV2-pipeline.png"):
+            body = svg if name.endswith(".svg") else b"\x89PNG\r\n"
             with self.subTest(name):
-                self.assertIsNone(check_site.RESUME_NAME_RE.search(Path(name).name), name)
+                self.assert_all_pass(lambda f: f.update({name: body}))
+
+    # -- fix round 4: C10 any PDF fails (CR4-3) ----------------------------
+    def test_c10_cv2_pdf_and_any_pdf(self):
+        for name in ("assets/Benjamin-Elmore-CV2.pdf", "assets/cv2.pdf", "cv2.PDF",
+                     "assets/arc-poster.pdf"):
+            with self.subTest(name):
+                detail = self.assert_only_fails("C10", lambda f: f.update({name: b"%PDF-1.4\n"}))
+                self.assertIn("PDF", detail)
 
     # -- fix round 3: C08 CSS strings need a host (CR3-4) ------------------
     def test_c08_round3_css_string_vectors(self):
@@ -759,6 +771,62 @@ class CheckerFixtureTest(unittest.TestCase):
                     else:
                         self.assert_all_pass(lambda f: edit(
                             f, "index.html", "</head>", f"<style>{rule}</style>\n</head>"))
+
+    # -- fix round 4: content: strings inside functions, escapes (CR4-2/4) -
+    def test_c08_round4_css_string_vectors(self):
+        # Each loads a third-party resource, so each must fail C08, in the
+        # site stylesheet and in an inline <style> alike.
+        rules = {
+            "content: image-set //host": '.x::after { content: image-set("//evil.example/x.png" 1x); }',
+            "content: image-set ///host": ".x::after { content: image-set('///evil.example/x.png' 1x); }",
+            "content: text then image-set //host":
+                '.x::after { content: "a" image-set("//evil.example/x.png" 1x); }',
+            "content: nested functions //host":
+                '.x::after { content: image-set(image-set("//evil.example/x.png" 1x) 1x); }',
+            "custom property named *-content":
+                ':root { --icon-content: "//evil.example/x.png"; }'
+                " .x { background-image: image-set(var(--icon-content) 1x); }",
+            "custom property, uppercase CONTENT":
+                ':root { --icon-CONTENT: "//evil.example/x.png"; }'
+                " .x { background-image: image-set(var(--icon-CONTENT) 1x); }",
+            "hex-escaped slashes \\2f\\2f":
+                '.x { background-image: image-set("\\2f\\2f evil.example/x.png" 1x); }',
+            "hex-escaped scheme \\68ttps":
+                '.x { background-image: image-set("\\68ttps://evil.example/x.png" 1x); }',
+            "escaped slashes inside content: image-set":
+                '.x::after { content: image-set("\\/\\/evil.example/x.png" 1x); }',
+            "escaped scheme inside content:":
+                '.x::after { content: image-set("\\000068ttps://evil.example/x.png" 1x); }',
+            "escaped newline continuation":
+                '.x { background-image: image-set("/\\\n/evil.example/x.png" 1x); }',
+        }
+        for label, rule in rules.items():
+            for where in ("css", "style"):
+                with self.subTest(label, where=where):
+                    if where == "css":
+                        self.assert_only_fails("C08", lambda f: edit(
+                            f, "assets/site.css", "a:focus-visible {", f"{rule}\na:focus-visible {{"))
+                    else:
+                        self.assert_only_fails("C08", lambda f: edit(
+                            f, "index.html", "</head>", f"<style>{rule}</style>\n</head>"))
+
+    def test_c08_round4_style_attribute_content(self):
+        detail = self.assert_only_fails("C08", lambda f: edit(
+            f, "index.html", '<p class="section__lede">',
+            '<p class="section__lede" style=\'content: image-set("//evil.example/x.png" 1x)\'>'))
+        self.assertIn("evil.example", detail)
+
+    def test_c08_round4_decorative_forms_pass(self):
+        # More text-only content: values that must stay legal (CR3-4 guards).
+        rules = ('.a::before { content: "//"; }',
+                 '.a::before{content:"//"}',
+                 '.a::before { color: red; content: "// " counter(step) " //"; }',
+                 '.a::before { content: "\\2f\\2f"; }',
+                 '.a::before { content: "///"; }')
+        for rule in rules:
+            with self.subTest(rule):
+                self.assert_all_pass(lambda f: edit(
+                    f, "assets/site.css", "a:focus-visible {", f"{rule}\na:focus-visible {{"))
 
     # -- fix round 3: C13 ARC-Testing needs the hyphen (CR3-5) -------------
     def test_c13_arc_testing_repo_name(self):

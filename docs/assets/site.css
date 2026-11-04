@@ -202,7 +202,7 @@ time {
 
 /*
   Row 1: name (left) and theme toggle (right). Row 2: the nav.
-  Edges line up with the content column at every width. Static on phones; from 720px the whole
+  Edges line up with the content column at every width. Static on phones; from 45em (720px) the whole
   header sticks at top: 0. Its geometry never changes with focus or hover, so a mouse press cannot
   move a link out from under the pointer (CR3-1) and focusing a header control never scrolls (CR3-3).
 */
@@ -492,7 +492,7 @@ main {
   margin-top: var(--space-7);
 }
 
-/* <picture>: stacked SVG below 720px, wide SVG above. Capped on large phones so the tall version stays in view. */
+/* <picture>: stacked SVG below 45em (720px), wide SVG above. Capped on large phones so the tall version stays in view. */
 .figure--diagram picture {
   display: block;
 }
@@ -744,7 +744,7 @@ main {
 
 /* ---------- Wider screens ---------- */
 
-@media (min-width: 720px) {
+@media (min-width: 45em) { /* 720px at a 16px default; em so a large default font gets the phone layout (CR4-1) */
   :root {
     --gutter: 24px;
   }
