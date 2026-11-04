@@ -3,10 +3,9 @@
   var B = '/Benjamin-Elmore-Website/';
   var M = {"arc":"ARC/","markettesting":"MarketTesting/","cbu-robotics":"CBU-Robotics/","in-n-out":"In-N-Out/","legoland":"LEGOLAND/","about":"About/"};
   var p = location.pathname;
-  if (p.indexOf(B) !== 0) return;
+  if (p.slice(0, B.length).toLowerCase() !== B.toLowerCase()) return;
   var k = p.slice(B.length).replace(/index\.html$/, '').replace(/\/+$/, '').toLowerCase();
-  if (!Object.prototype.hasOwnProperty.call(M, k)) return;
-  var to = B + M[k];
-  if (p === to) return;
+  var to = k === '' ? B : (Object.prototype.hasOwnProperty.call(M, k) ? B + M[k] : null);
+  if (!to || p === to) return;
   location.replace(to + location.search + location.hash);
 })();

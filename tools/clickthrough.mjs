@@ -27,6 +27,8 @@ async function get(url) {  // fetch without following redirects, body always dra
   return r;
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+// scrollY on the next painted frame: route scrolls must be instant, so there is no waiting for them to settle.
+const FRAME_Y = 'new Promise(r=>requestAnimationFrame(()=>r(scrollY)))';
 
 const children = [];
 function kill(c) {
@@ -132,8 +134,9 @@ async function main() {
   const server = await startServer();
   const port = await startBrowser();
   const tab = await Tab.open(port);
+  await tab.send('Emulation.setFocusEmulationEnabled', { enabled: true });
   const url = (p) => server + BASE + p;
-  const base404 = tab.errors; // all console errors across the run are checked in K12
+  const consoleProblems = tab.errors; // all console problems across the run are checked in K12
 
   // K1 home loads
   await step('K1 home loads', async () => {
@@ -147,27 +150,27 @@ async function main() {
   let homeScroll = 0;
   async function openFromHome(name, href, expectPath, arc) {
     await step(name, async () => {
-      await tab.eval('window.scrollTo(0, 300)');
+      await tab.eval("window.scrollTo({top:300,behavior:'instant'})");
       await sleep(150);
       homeScroll = await tab.eval('scrollY');
       await tab.eval(q.click(href));
-      await tab.until(`location.pathname===${JSON.stringify(BASE + expectPath)}`, 'route change');
+      await tab.until(`location.pathname===${JSON.stringify(BASE + expectPath)} && (document.querySelector('link[rel=canonical]')||{}).href===${JSON.stringify(SITE_URL + expectPath)}`, 'route change');
+      const y0 = await tab.eval(FRAME_Y);
+      check(y0 === 0, 'not at 0 on first frame (scrollY ' + y0 + ')');
       await tab.until("!!document.querySelector('main h1')", 'h1');
       check(await tab.eval('window.__marker') === 1, 'page reloaded (marker lost)');
       check(await tab.eval('document.title') !== homeTitle, 'title unchanged');
       check(await tab.eval(q.canonical) === SITE_URL + expectPath, 'canonical ' + await tab.eval(q.canonical));
       const media = await tab.eval(q.arcMedia);
       check(arc ? media !== 'not all' : media === 'not all', `arc.css media "${media}"`);
-      await tab.until('scrollY===0', 'scrollY 0 (now ' + await tab.eval('scrollY') + ')', 3000);
     });
   }
   async function back(name) {
     await step(name, async () => {
       await tab.eval('history.back()');
-      await tab.until(`location.pathname===${JSON.stringify(BASE)}`, 'back to home');
-      await sleep(300);
+      await tab.until(`location.pathname===${JSON.stringify(BASE)} && document.title===${JSON.stringify(homeTitle)}`, 'back to home');
+      const y = await tab.eval(FRAME_Y);
       check(await tab.eval('window.__marker') === 1, 'page reloaded (marker lost)');
-      const y = await tab.eval('scrollY');
       check(Math.abs(y - homeScroll) <= 5, `scrollY ${y}, expected ${homeScroll}`);
       check(await tab.eval('document.title') === homeTitle, 'home title not restored');
     });
@@ -176,12 +179,12 @@ async function main() {
   await openFromHome('K2 home -> ARC (no reload, head, arc.css, scroll 0)', BASE + 'ARC/', 'ARC/', true);
   await back('K3 back -> home at the old scroll');
   await step('K3c ARC skip link lands on main; Back twice keeps ARC at 0 and the home scroll', async () => {
-    await tab.eval('window.scrollTo(0, 300)');
+    await tab.eval("window.scrollTo({top:300,behavior:'instant'})");
     await sleep(150);
     homeScroll = await tab.eval('scrollY');
     await tab.eval(q.click(BASE + 'ARC/'));
-    await tab.until(`location.pathname===${JSON.stringify(BASE + 'ARC/')}`, 'ARC');
-    await tab.until('scrollY===0', 'ARC at 0', 3000);
+    await tab.until(`location.pathname===${JSON.stringify(BASE + 'ARC/')} && !!document.querySelector('link[data-arc]:not([media])')`, 'ARC');
+    check(await tab.eval(FRAME_Y) === 0, 'ARC not at 0 on first frame');
     await sleep(150);
     await tab.eval("document.querySelector('a.skip-link').click()");
     await tab.until("location.hash==='#main'", '#main');
@@ -190,13 +193,12 @@ async function main() {
     check(top >= 0 && top <= 80, 'main.top ' + top);
     await tab.eval('history.back()');
     await tab.until("location.hash===''", 'back to ARC');
-    await sleep(300);
+    const arcY = await tab.eval(FRAME_Y);
     check(await tab.eval(`location.pathname===${JSON.stringify(BASE + 'ARC/')}`), 'not on ARC');
-    check(await tab.eval('scrollY') === 0, 'ARC scrollY ' + await tab.eval('scrollY'));
+    check(arcY === 0, 'ARC scrollY ' + arcY);
     await tab.eval('history.back()');
-    await tab.until(`location.pathname===${JSON.stringify(BASE)}`, 'back to home');
-    await sleep(300);
-    const y = await tab.eval('scrollY');
+    await tab.until(`location.pathname===${JSON.stringify(BASE)} && document.title===${JSON.stringify(homeTitle)}`, 'back to home');
+    const y = await tab.eval(FRAME_Y);
     check(Math.abs(y - homeScroll) <= 5, `home scrollY ${y}, expected ${homeScroll}`);
   });
   await openFromHome('K4 home -> MarketTesting', BASE + 'MarketTesting/', 'MarketTesting/', false);
@@ -224,7 +226,7 @@ async function main() {
     });
   }
   await step('K6b home nav #experience then #contact scrolls to each', async () => {
-    await tab.eval('window.scrollTo(0, 0)');
+    await tab.eval("window.scrollTo({top:0,behavior:'instant'})");
     await sleep(150);
     await tab.eval(q.click('#experience'));
     await tab.until(q.inView('experience'), '#experience in view', 3000);
@@ -246,6 +248,27 @@ async function main() {
     await tab.until(`location.pathname===${JSON.stringify(BASE)} && location.hash==='#work'`, '/#work');
     await tab.until(q.inView('work'), '#work in view');
     check(await tab.eval('window.__marker') === 1, 'page reloaded');
+  });
+  await step('K7b keyboard: Enter on the ARC row, then Tab goes to the skip link', async () => {
+    const key = async (k, code, vk, text) => {
+      await tab.send('Input.dispatchKeyEvent', { type: 'keyDown', key: k, code, windowsVirtualKeyCode: vk, ...(text ? { text } : {}) });
+      await tab.send('Input.dispatchKeyEvent', { type: 'keyUp', key: k, code, windowsVirtualKeyCode: vk });
+    };
+    await tab.goto(url(''), SETTLE);
+    await tab.eval('window.__marker=3');
+    let hit = false;
+    for (let i = 0; i < 40 && !hit; i++) {
+      await key('Tab', 'Tab', 9);
+      hit = await tab.eval("!!document.activeElement && document.activeElement.classList.contains('work-row')");
+    }
+    check(hit, 'never tabbed to a .work-row');
+    check(await tab.eval("document.activeElement.getAttribute('href')") === BASE + 'ARC/', 'first work row is not ARC');
+    await key('Enter', 'Enter', 13, '\r');
+    await tab.until(`location.pathname===${JSON.stringify(BASE + 'ARC/')} && !!document.querySelector('link[data-arc]:not([media])')`, 'ARC');
+    check(await tab.eval('window.__marker') === 3, 'page reloaded');
+    await key('Tab', 'Tab', 9);
+    const now = await tab.eval("(document.activeElement.className||document.activeElement.tagName)+''");
+    check(await tab.eval("document.activeElement.classList.contains('skip-link')"), 'Tab went to ' + now);
   });
 
   // K8 direct loads and the directory 301
@@ -272,14 +295,17 @@ async function main() {
   });
 
   // K9 lowercase redirects and the 404 page
+  // Entries are relative to the base, except the root-absolute wrong-case base one.
+  const from9 = (f) => (f.startsWith('/') ? server + f : url(f));
   for (const [from, to] of [['arc', 'ARC/'], ['arc/', 'ARC/'], ['markettesting/', 'MarketTesting/'],
-    ['cbu-robotics/#vice-president', 'CBU-Robotics/#vice-president'], ['in-n-out', 'In-N-Out/'], ['legoland/', 'LEGOLAND/'], ['about', 'About/']]) {
-    await step(`K9 /${from} -> /${to}`, async () => {
-      await tab.goto(url(from), 'true');
+    ['cbu-robotics/#vice-president', 'CBU-Robotics/#vice-president'], ['in-n-out', 'In-N-Out/'], ['legoland/', 'LEGOLAND/'], ['about', 'About/'],
+    ['/benjamin-elmore-website/arc', 'ARC/']]) {
+    await step(`K9 ${from.startsWith('/') ? from : '/' + from} -> /${to}`, async () => {
+      await tab.goto(from9(from), 'true');
       const want = BASE + to.split('#')[0];
       await tab.until(`location.pathname===${JSON.stringify(want)} && !!document.querySelector('main h1') && document.readyState==='complete'`, 'redirect');
       if (to.includes('#')) check(await tab.eval('location.hash') === '#' + to.split('#')[1], 'hash lost');
-      const r = await get(url(from.split('#')[0]));
+      const r = await get(from9(from.split('#')[0]));
       check(r.status === 404 || r.status === 301, 'server gave ' + r.status);
     });
   }
@@ -326,7 +352,7 @@ async function main() {
 
   // K12 console
   await step('K12 zero console errors or hydration warnings', async () => {
-    check(base404.length === 0, `${base404.length} console problem(s): ${base404.slice(0, 3).join(' | ')}`);
+    check(consoleProblems.length === 0, `${consoleProblems.length} console problem(s): ${consoleProblems.slice(0, 3).join(' | ')}`);
   });
 }
 
