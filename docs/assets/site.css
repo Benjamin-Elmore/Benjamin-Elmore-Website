@@ -1,8 +1,6 @@
 /*
   Benjamin Elmore portfolio: site styles.
   Mobile-first (base = 360px), min-width media queries only. System fonts; no third-party requests.
-
-  Color contrast for both themes is checked by tools/check_site.py.
 */
 
 :root {
@@ -1039,6 +1037,7 @@ main {
 /* ---------- Subpages: back link, page header, photo slots ---------- */
 
 .page-header {
+  grid-column: 1 / -1;
   padding-block: var(--space-5) var(--space-6);
 }
 
@@ -1133,3 +1132,14 @@ main {
   font-size: 0.8125rem;
 }
 
+
+.section > .photo-slot:first-child { margin-top: 0; }
+.photo-slot + .section__title { margin-top: var(--space-6); }
+.section__title + .case-study__block { margin-top: 0; }
+
+.figure--narrow img { max-width: 22.5rem; margin-inline: auto; }
+
+.case-study > .photo-slot--21x9 { max-width: none; }
+
+.section--page ul:not([class]) { margin-top: var(--space-3); padding-left: 1.25rem; }
+.section--page ul:not([class]) li + li { margin-top: var(--space-2); }
