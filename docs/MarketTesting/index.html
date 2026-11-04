@@ -22,7 +22,7 @@
       <ul class="site-nav__list">
         <li><a href="../#work">Work</a></li>
         <li><a href="../#experience">Experience</a></li>
-        <li><a href="../#education">About</a></li>
+        <li><a href="../#about">About</a></li>
         <li><a href="../#contact">Contact</a></li>
       </ul>
     </nav>
@@ -68,6 +68,7 @@
         </ul>
       </div>
 
+      <!-- Pipeline diagram: replace with the render of Ben's PUML (assets/markettesting-pipeline.svg, from his .puml) when it arrives. -->
       <figure class="figure figure--diagram figure--narrow" id="markettesting-pipeline">
         <img src="../assets/markettesting-pipeline.svg" width="360" height="620" alt="Pipeline diagram, top to bottom: CSV or yfinance data, pandas and NumPy preprocessing, RobustScaler feature scaling, 100-day windows, LSTM, prediction table." loading="lazy" decoding="async">
         <figcaption class="figure__caption">The MarketTesting pipeline, from data source to prediction table.</figcaption>
@@ -79,18 +80,13 @@
         <figcaption class="figure__caption">A terminal run of the pipeline. Screenshot to be added.</figcaption>
       </figure>
 
-      <div class="case-study__block" id="mt-scope">
-        <h3>Scope</h3>
-        <p>This project shows iterative development and data handling. It doesn’t establish forecast accuracy, investment usefulness or trading performance, and I make no such claim.</p>
-      </div>
-
       <p class="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener">Benjamin-Elmore/MarketTesting on GitHub</a>. The pipeline above is the default <code>main</code> branch at <code>79f6e12</code>. The VIX and general CSV work is on the <code>LSTM-feature-implement</code> branch.</p>
     </section>
 
   </main>
 
   <footer class="site-footer">
-    <p>Benjamin Elmore <span aria-hidden="true">/</span> California Baptist University</p>
+    <p>Benjamin Elmore <span aria-hidden="true">/</span> CBU Robotics <span aria-hidden="true">/</span> California Baptist University</p>
     <p>2026</p>
   </footer>
 </body>

@@ -10,7 +10,9 @@ from urllib.parse import unquote, urldefrag, urlparse
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "docs"
 PAGES = ["index.html", "ARC/index.html", "MarketTesting/index.html",
-         "CBU-Robotics/index.html", "In-N-Out/index.html", "LEGOLAND/index.html"]
+         "CBU-Robotics/index.html", "In-N-Out/index.html", "LEGOLAND/index.html",
+         "About/index.html"]
+FONTS = ["assets/fonts/B612Mono-Regular.woff2", "assets/fonts/B612Mono-Bold.woff2", "assets/fonts/OFL.txt"]
 EMAIL = "benelmore6@gmail.com"
 REQUIRED = {  # fact -> (page, text that must appear)
     "email text": ("index.html", EMAIL),
@@ -59,6 +61,9 @@ def private_names():
 
 def main():
     errors, parsed, raw = [], {}, {}
+    for fp in FONTS:
+        if not (DOCS / fp).exists():
+            errors.append(f"missing font file: {fp}")
     for p in PAGES:
         f = DOCS / p
         if not f.exists():
