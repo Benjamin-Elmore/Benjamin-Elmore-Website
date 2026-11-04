@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 620" role="img" aria-labelledby="mt-title mt-desc" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
   <title id="mt-title">MarketTesting data pipeline</title>
-  <desc id="mt-desc">Pipeline, top to bottom: CSV or yfinance market data; pandas and NumPy preprocessing; per-ticker scaling; 100-day input windows; a TensorFlow LSTM; a prediction table.</desc>
+  <desc id="mt-desc">Pipeline, top to bottom: CSV or yfinance market data; pandas and NumPy preprocessing; feature scaling with one RobustScaler; 100-day input windows; a TensorFlow LSTM; a prediction table.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="#b4b4b4"/>
@@ -17,8 +17,8 @@
   <text x="42" y="215" font-size="17" fill="#d6e2f3">preprocessing</text>
   <line x1="180" y1="228" x2="180" y2="254" stroke="#b4b4b4" stroke-width="3" marker-end="url(#arrow)"/>
   <rect x="24" y="256" width="312" height="64" rx="12" fill="#333333" stroke="#b4b4b4" stroke-width="3"/>
-  <text x="42" y="284" font-size="20" font-weight="700" fill="#ffffff">Per-ticker scaling</text>
-  <text x="42" y="307" font-size="17" fill="#d6e2f3">each ticker scaled on its own</text>
+  <text x="42" y="284" font-size="20" font-weight="700" fill="#ffffff">Feature scaling</text>
+  <text x="42" y="307" font-size="17" fill="#d6e2f3">RobustScaler, all tickers</text>
   <line x1="180" y1="320" x2="180" y2="346" stroke="#b4b4b4" stroke-width="3" marker-end="url(#arrow)"/>
   <rect x="24" y="348" width="312" height="64" rx="12" fill="#333333" stroke="#b4b4b4" stroke-width="3"/>
   <text x="42" y="376" font-size="20" font-weight="700" fill="#ffffff">100-day windows</text>

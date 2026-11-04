@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ARC firmware for ARSENAL | Benjamin Elmore</title>
-  <meta name="description" content="Case study: ARC, C++ sensor firmware for a custom ESP32-S3 board that connects external sensors to a VEX V5 Brain. Role, design decisions and verification.">
+  <meta name="description" content="Case study: ARC, C++ sensor firmware for a custom ESP32-S3 board designed to connect external sensors to a VEX V5 Brain. Role, design decisions and verification.">
   <meta property="og:title" content="ARC firmware for ARSENAL | Benjamin Elmore">
-  <meta property="og:description" content="Case study: ARC, C++ sensor firmware for a custom ESP32-S3 board that connects external sensors to a VEX V5 Brain. Role, design decisions and verification.">
+  <meta property="og:description" content="Case study: ARC, C++ sensor firmware for a custom ESP32-S3 board designed to connect external sensors to a VEX V5 Brain. Role, design decisions and verification.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://benjamin-elmore.github.io/Benjamin-Elmore-Website/ARC/">
   <link rel="canonical" href="https://benjamin-elmore.github.io/Benjamin-Elmore-Website/ARC/">
@@ -93,7 +93,7 @@
               <dt class="decision__label">Failure mode</dt>
               <dd class="decision__text">If each sensor type gets its own code, the acquisition logic gets copied from sensor to sensor.</dd>
               <dt class="decision__label">Design response</dt>
-              <dd class="decision__text">Early work used a sensor base class with an optical specialization. The later design moved to configurable setup and read callbacks plus preconfiguration, so one acquisition path can serve different sensor types. Optical register reads, writes and offset handling are the concrete example.</dd>
+              <dd class="decision__text">Early work used a sensor base class with an optical specialization. The later design moved to configurable setup and read callbacks plus preconfiguration, so one acquisition path can serve different sensor types. Optical register reads, writes and offset handling are the concrete example; at <code>3eb3ed6</code> that optical preconfiguration is set aside until optical bring-up resumes.</dd>
             </dl>
           </li>
           <li class="decision">
@@ -138,11 +138,11 @@
             <p class="evidence__text">Commit <code>cef105f</code> records successful <span class="nowrap">RS-485</span> protocol checks across multiple packet formats, per the commit message. That message is the only evidence for this earlier test. Later commits changed the communication code.</p>
           </li>
         </ul>
-      <figure class="photo-slot photo-slot--text" id="arc-serial">
-        <!-- Text slot "arc-serial": replace the placeholder line in the pre block with real captured output. -->
-        <pre aria-label="Placeholder for sample serial output">[Sample serial output goes here]</pre>
-        <figcaption class="figure__caption">Sample serial output. Date, board and commit to be added with the capture.</figcaption>
-      </figure>
+        <figure class="photo-slot photo-slot--text" id="arc-serial">
+          <!-- Text slot "arc-serial": replace the placeholder line in the pre block with real captured output. -->
+          <pre>No capture yet.</pre>
+          <figcaption class="figure__caption">Sample serial output. Date, board and commit to be added with the capture.</figcaption>
+        </figure>
 
         <h4>Open work</h4>
         <ul class="open-work">
