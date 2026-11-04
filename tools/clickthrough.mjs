@@ -95,7 +95,11 @@ class Tab {
   }
   send(method, params = {}) {
     const id = ++this.id;
-    return new Promise((res, rej) => { this.pending.set(id, { res, rej }); this.ws.send(JSON.stringify({ id, method, params })); });
+    return new Promise((res, rej) => {
+      const timer = setTimeout(() => { this.pending.delete(id); rej(new Error(method + ' timed out')); }, 30000);
+      this.pending.set(id, { res: (v) => { clearTimeout(timer); res(v); }, rej: (e) => { clearTimeout(timer); rej(e); } });
+      this.ws.send(JSON.stringify({ id, method, params }));
+    });
   }
   async eval(expr) {
     const r = await this.send('Runtime.evaluate', { expression: expr, returnByValue: true, awaitPromise: true });
@@ -332,11 +336,18 @@ async function shots() {
   mkdirSync(out, { recursive: true });
   const servers = { react: await startServer(root), fresh: await startServer(resolve(args.shots)) };
   const tab = await Tab.open(await startBrowser());
-  const center = (sel) => `(()=>{const e=document.querySelector(${JSON.stringify(sel)});e.scrollIntoView({block:'center'});const r=e.getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2]})()`;
+  await tab.send('Emulation.setFocusEmulationEnabled', { enabled: true });
+  // Instant scrolls (the CSS may ask for smooth ones), then measure once the page is still.
+  const hover = async (sel) => {
+    await tab.eval(`document.querySelector(${JSON.stringify(sel)}).scrollIntoView({block:'center',behavior:'instant'})`);
+    await sleep(300);
+    const [x, y] = await tab.eval(`(()=>{const r=document.querySelector(${JSON.stringify(sel)}).getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2]})()`);
+    await tab.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y });
+  };
   const states = {
-    'work-hover': async () => { const [x, y] = await tab.eval(center('.work-row')); await tab.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y }); },
-    'exp-hover': async () => { const [x, y] = await tab.eval(center('.exp-row__link')); await tab.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y }); },
-    'details-open': async () => { await tab.eval("(()=>{const d=document.querySelector('.exp-details');d.open=true;d.scrollIntoView({block:'start'})})()"); await tab.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 1, y: 1 }); },
+    'work-hover': () => hover('.work-row'),
+    'exp-hover': () => hover('.exp-row__link'),
+    'details-open': async () => { await tab.eval("(()=>{const d=document.querySelector('.exp-details');d.open=true;d.scrollIntoView({block:'start',behavior:'instant'})})()"); await tab.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 1, y: 1 }); },
   };
   const { writeFileSync } = await import('node:fs');
   for (const w of [360, 1280]) for (const theme of ['light', 'dark']) for (const [name, act] of Object.entries(states)) {
@@ -349,7 +360,8 @@ async function shots() {
       await sleep(300);
       await act();
       await sleep(600);
-      pngs[build] = (await tab.send('Page.captureScreenshot', { format: 'png' })).data;
+      await tab.send('Page.bringToFront');
+      pngs[build] = (await tab.send('Page.captureScreenshot', { format: 'png', fromSurface: true })).data;
       writeFileSync(join(out, `${name}-${w}-${theme}-${build}.png`), Buffer.from(pngs[build], 'base64'));
     }
     const same = pngs.react === pngs.fresh;
