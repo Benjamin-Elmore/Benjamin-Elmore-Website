@@ -19,12 +19,14 @@
     }
     btn.hidden = false;
     render();
-    if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
     btn.addEventListener('click', function () {
       var next = current() === 'dark' ? 'light' : 'dark';
       root.dataset.theme = next;
       try { localStorage.setItem('theme', next); } catch (e) {}
       render();
     });
+    // After the click handler, and guarded for old Safari's addListener-only MediaQueryList (CR2-6).
+    var mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq) mq.addEventListener ? mq.addEventListener('change', render) : mq.addListener(render);
   });
 })();

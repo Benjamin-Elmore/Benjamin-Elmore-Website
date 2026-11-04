@@ -68,7 +68,7 @@
 
       <figure class="figure figure--diagram" id="arc-architecture">
         <picture>
-          <source media="(max-width: 719px)" srcset="assets/arc-architecture-stacked.svg" width="360" height="640">
+          <source media="(max-width: 719.98px)" srcset="assets/arc-architecture-stacked.svg" width="360" height="616">
           <img src="assets/arc-architecture.svg" width="960" height="360" alt="Block diagram of the intended ARC system architecture: sensors to I²C multiplexer to ESP32-S3 to VEX V5 Brain over half-duplex RS-485." loading="lazy" decoding="async">
         </picture>
         <figcaption class="figure__caption">Intended system architecture. This is the path the board is designed for. The full sensor-to-V5 path has not had a hardware test yet.
@@ -174,7 +174,7 @@
         <article class="card">
           <h3 class="card__title">FSW-UAV-SIM</h3>
           <p class="card__meta">Staged engineering prototype. AI-assisted implementation. Repository not public.</p>
-          <p class="card__body">I coordinate this AI-assisted UAV simulation effort and own its C++/simulation integration decisions. I work with a mechanical engineer, and AI agents did substantial implementation and review. The architecture separates C++ flight-software logic from a Simulink plant behind a Level-2 S-function. Generated interface contracts, JSON parameter files, and replay fixtures and tests keep the interfaces explicit. An October 15, 2026 review of commit <code>f4f6229</code> found all 13 generator tests passing, along with the interface and rule checks. The checker’s self-test failed on Windows, and the native C++ tests and MEX build were not built. GNC (guidance, navigation and control) is stubbed and the aerodynamic data is a draft.</p>
+          <p class="card__body">I coordinate this AI-assisted UAV simulation effort and own its C++/simulation integration decisions. I work with a mechanical engineer, and AI agents did substantial implementation and review. The architecture separates C++ flight-software logic from a Simulink plant behind a Level-2 S-function. Generated interface contracts, JSON parameter files, and replay fixtures and tests keep the interfaces explicit. An October 15, 2026 review of commit <code>f4f6229</code> found all 13 generator tests passing, along with the interface and rule checks. The checker’s self-test failed on Windows, and the native C++ tests and the MEX file were not built. GNC (guidance, navigation and control) is stubbed and the aerodynamic data is a draft.</p>
           <ul class="tag-list">
             <li class="tag">C++</li>
             <li class="tag">MATLAB/Simulink</li>

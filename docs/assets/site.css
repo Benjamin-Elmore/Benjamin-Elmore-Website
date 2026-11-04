@@ -214,8 +214,11 @@ time {
   justify-content: space-between;
   gap: 0 var(--space-4);
   padding: var(--space-2) max(var(--gutter), calc((100% - var(--measure)) / 2));
+  /* Bottom rule drawn at the section-divider width (column + gutters), not full-bleed, so the header,
+     section and footer rules all share one edge at every width. The first line is the fallback. */
   background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(var(--color-border), var(--color-border)) center bottom /
+    min(100%, calc(var(--measure) + 2 * var(--gutter))) 1px no-repeat var(--color-bg);
 }
 
 .site-header__name {
@@ -463,6 +466,21 @@ main {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   font-size: 0.9375rem;
+}
+
+/*
+  The repo link sits in a sentence (WCAG 2.5.8 inline exception), but it is the box's lead link, so an
+  invisible ::before stretches its hit area to 44px: 18px up into the box padding, 6px down into the
+  line gap. Line spacing and the focus ring (which stays on the text) are unchanged.
+*/
+.case-study__repo a {
+  position: relative;
+}
+
+.case-study__repo a::before {
+  content: "";
+  position: absolute;
+  inset: -18px -4px -6px;
 }
 
 /* Figure */
@@ -736,6 +754,11 @@ main {
   .site-header {
     position: sticky;
     top: calc(-1 * (var(--space-2) + var(--tap)));
+  }
+
+  /* Keyboard focus anywhere in the header brings row 1 back, so the name, toggle and nav rings show (CR2-1). */
+  .site-header:focus-within {
+    top: 0;
   }
 
   .site-nav__list {

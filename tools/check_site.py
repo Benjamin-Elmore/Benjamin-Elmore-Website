@@ -34,8 +34,11 @@ from urllib.parse import unquote
 #: C13. Matched case-insensitively against the visible text of index.html,
 #: its public metadata (meta description / og:*), the text of title /
 #: aria-label / aria-description / placeholder attributes, CSS ``content:``
-#: strings and SVG text. A plain entry is a whole-word phrase (word boundary
-#: on both sides; spaces match any whitespace). An entry starting with ``re:``
+#: strings and SVG text, on every *.html page under docs/ (CR2-4). A plain
+#: entry is a whole-word phrase (word boundary on both sides); a space or a
+#: hyphen in the entry matches any run of spaces and hyphens, so
+#: "flight-ready" also catches "flight ready" and "end-to-end tested" catches
+#: "end to end tested" (CR2-3). An entry starting with ``re:``
 #: is a regex with a word boundary at the start only, so a stem such as
 #: ``reliab\w*`` also catches "reliably" and "reliability" (CR1-16). Stems
 #: start at a word boundary, so negated forms like "unproven" still pass.
@@ -50,14 +53,16 @@ FORBIDDEN_PHRASES: tuple[str, ...] = (
     "in production",
     r"re:production[-\s]ready\b",
     r"re:production[-\s]systems?\b",
-    r"re:release[sd]?\b",                 # release, released, releases
+    # Every form, "releasing" included (CR2-3: one consistent rule; honest
+    # mutex wording such as "release the lock" must be rephrased).
+    r"re:releas(?:e[sd]?|ing)\b",
     "flight-ready",
     "flight-tested",
     "flight-validated",
     "battle-tested",
     "hardware-tested",
     "hardware-verified",
-    r"re:prove[nd]\b",                    # proven, proved ("unproven" passes)
+    r"re:prov(?:e[nsd]?|ing|abl[ey])\b",  # prove(s/d/n), proving, provably
     r"re:guarantee\w*",                   # guarantee, guaranteed, guarantees
     r"re:accura\w*",                      # accuracy, accurate, accurately
     r"re:outperform\w*",
@@ -65,7 +70,8 @@ FORBIDDEN_PHRASES: tuple[str, ...] = (
     "returns",
     "fully tested",
     "end-to-end tested",
-    "validated",                          # not bare "validation" (CONTENT-REVIEW-1)
+    r"re:validat(?:e[sd]?|ing)\b",        # not bare "validation" (CONTENT-REVIEW-1)
+    r"re:production[-\s]+grade\b",
     r"re:autonomous(?:ly)?[-\s]+navigat\w*",
     r"re:autonomous(?:ly)?[-\s]+(?:flight|fl(?:y|ies|ying|own|ew))\b",
     "CFD",
@@ -150,7 +156,7 @@ URL_ATTRS = frozenset({
 })
 SRCSET_ATTRS = frozenset({"srcset", "imagesrcset"})
 #: C10 (CR1-20). File names that look like a resume/CV.
-RESUME_NAME_RE = re.compile(r"r[eé]sum[eé]|(?<![a-z])cv(?![a-z])", re.I)
+RESUME_NAME_RE = re.compile(r"r[eé]sum[eé]|(?<![a-z])cv(?![a-z0-9])", re.I)
 
 BINARY_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif", ".ico",
                      ".pdf", ".woff", ".woff2", ".ttf", ".otf", ".zip", ".bin"}
@@ -303,7 +309,7 @@ class TreeBuilder(HTMLParser):
 
 
 _INVISIBLE_RE = re.compile("[\u00ad\u200b-\u200d\u2060\ufeff]")
-_DASH_RE = re.compile("[\u2010-\u2013\u2212]")
+_DASH_RE = re.compile("[\u2010-\u2014\u2212]")  # incl. em dash (CR2-3)
 
 
 def normalise(text: str) -> str:
@@ -484,18 +490,24 @@ class Site:
                 self.comments = builder.comments
             except Exception as exc:  # decode or parser failure
                 self.html_error = f"{type(exc).__name__}: {exc}"
-        #: Every *.html under docs/ (index included), parsed (C08 scans all).
+        #: Every *.html under docs/ (index included), parsed. C08, C11, C12
+        #: and C13 scan all of them (CR2-4); the page-structure checks stay
+        #: on index.html.
         self.html_docs: dict[Path, Element] = {}
+        #: Comments per page, keyed like html_docs (C11).
+        self.html_comments: dict[Path, list[tuple[int, str]]] = {}
         for p in self.files:
             if p.suffix.lower() in (".html", ".htm"):
                 if p == self.index_path and self.doc is not None:
                     self.html_docs[p] = self.doc
+                    self.html_comments[p] = self.comments
                     continue
                 try:
-                    self.html_docs[p] = parse_html(
-                        p.read_text(encoding="utf-8", errors="replace")).document
+                    builder = parse_html(p.read_text(encoding="utf-8", errors="replace"))
                 except Exception:
-                    pass
+                    continue
+                self.html_docs[p] = builder.document
+                self.html_comments[p] = builder.comments
         self.css_path = root / CSS_PATH
         self.css: str | None = (
             strip_css_comments(self.css_path.read_text(encoding="utf-8"))
@@ -825,12 +837,18 @@ def js_without_comments(text: str) -> str:
 #: Any http(s)/ftp URL in raw text, tolerating backslashes and odd slashes.
 RAW_URL_RE = re.compile(r"\b(?:https?|ftp)\s*:[\\/]*[^\s\"'<>()\\/][^\s\"'<>()]*", re.I)
 CSS_URL_RE = re.compile(r"""url\(\s*(?:"([^"]*)"|'([^']*)'|([^)\s]*))\s*\)""", re.I)
+CSS_STRING_RE = re.compile(r'"([^"]*)"|\'([^\']*)\'')
 CSS_IMPORT_RE = re.compile(r"""@import\s+(?:"([^"]*)"|'([^']*)')""", re.I)
 
 
 def css_targets(css: str) -> list[str]:
     """Every url(...) and @import "..." target in a CSS text."""
     css = strip_css_comments(css)
+    # Decode CSS escapes first, so u\72l(...) reads as url(...) (CR2-8).
+    css = re.sub(r"\\([0-9a-fA-F]{1,6})\s?",
+                 lambda m: chr(int(m.group(1), 16)) if int(m.group(1), 16) <= 0x10FFFF
+                 else "\ufffd", css)
+    css = re.sub(r"\\([^\n0-9a-fA-F])", r"\1", css)
     out = []
     for rx in (CSS_URL_RE, CSS_IMPORT_RE):
         for m in rx.finditer(css):
@@ -877,11 +895,17 @@ def c08(site: Site) -> str:
     def judge_css(css: str, where: str) -> None:
         for target in css_targets(css):
             judge_value(target, f"{where} url()/@import")
+        # Any quoted CSS string that is a URL, e.g. inside image-set() or a
+        # CSS-escaped u\72l(...) (CR2-8).
+        for a, b in CSS_STRING_RE.findall(strip_css_comments(css)):
+            judge_value(a or b, f"{where} CSS string")
 
     def judge_raw(text: str, where: str) -> None:
         # The site URL is policed in attributes (step 1), so raw text skips it.
         for m in RAW_URL_RE.finditer(text):
-            url = canonical_external(m.group(0)) or m.group(0)
+            # Prose punctuation after a URL is not part of it (CR2-7).
+            raw = m.group(0).rstrip(".,;:!?")
+            url = canonical_external(raw) or raw
             head = text[max(0, m.start() - 40):m.start()]
             if url in XMLNS_URLS and re.search(r"xmlns(?::[\w-]+)?\s*=\s*[\"']$", head):
                 continue
@@ -909,6 +933,12 @@ def c08(site: Site) -> str:
                         judge(m.group(0), where, ok)
                 if attr == "style":
                     judge_css(value or "", where)
+                if (attr == "content" and el.tag == "meta"
+                        and el.attrs.get("http-equiv", "").lower() == "refresh"):
+                    # <meta http-equiv=refresh content="0;url=//host/"> (CR2-8).
+                    rm = re.search(r"url\s*=\s*['\"]?([^'\"]*)", value or "", re.I)
+                    if rm:
+                        judge_value(rm.group(1), where)
             if el.tag == "style":
                 judge_css(el.raw_text(), f"{name} <style> {el.describe()}")
     # 2. Every CSS file and every SVG: url()/@import targets, href/src.
@@ -995,31 +1025,48 @@ def hidden_html_text(doc: Element) -> list[tuple[str, str]]:
 
 @check("C11")
 def c11(site: Site) -> str:
-    doc = need_html(site)
+    need_html(site)
     problems = []
     # Emails and mailto:/tel: in the raw text of every text file under docs/
     # (HTML incl. comments, <template> and attributes; CSS; JS; SVG; .txt).
     # "@media"/"@import" never follow a word character, so CSS at-rules
     # don't look like emails (CR1-17).
-    for p, text in site.text_files():
-        for e in find_emails(unescape(text)):
-            problems.append(f"email-like '{e}' in {site.rel(p)}")
-        m = re.search(r"\b(mailto|tel):", unescape(text), re.I)
+    contact_sources = [(site.rel(p), unescape(text)) for p, text in site.text_files()]
+    # Also the rendered text, where inline markup or a comment no longer
+    # splits an address: "a<span>@</span>b.com" reads as a@b.com (CR2-2).
+    for p, page in site.html_docs.items():
+        contact_sources.append((f"{site.rel(p)} text", visible_text(page)))
+    for p, root in site.svgs.items():
+        if root is not None:
+            contact_sources.append((f"{site.rel(p)} text", svg_text(root)))
+    for where, text in contact_sources:
+        for e in find_emails(text):
+            problems.append(f"email-like '{e}' in {where}")
+        m = re.search(r"\b(mailto|tel):", text, re.I)
         if m:
-            problems.append(f"'{m.group(0)}' in {site.rel(p)}")
-    # Phone numbers: text a reader can see (visible text, SVG text, HTML
-    # comments, <template> bodies, .txt files). Not attributes, CSS or SVG
-    # geometry, where long digit runs are coordinates.
-    phone_sources = [("index.html visible text", visible_text(doc))]
-    phone_sources += [(f"index.html {w}", t) for w, t in hidden_html_text(doc)]
-    phone_sources += [(f"index.html comment at line {ln}", normalise(c))
-                      for ln, c in site.comments]
+            problems.append(f"'{m.group(0)}' in {where}")
+    # Phone numbers: text a reader can see or hear (visible text, reader-
+    # facing attributes, CSS content strings, SVG text, HTML comments,
+    # <template> bodies, .txt files) on every page. Not other attributes,
+    # CSS geometry or SVG geometry, where long digit runs are coordinates.
+    # Phones in JS strings are an accepted residual (CR2-4).
+    phone_sources = []
+    for p, page in site.html_docs.items():
+        name = site.rel(p)
+        phone_sources.append((f"{name} visible text", visible_text(page)))
+        phone_sources += [(f"{name} {w}", t) for w, t in hidden_html_text(page)]
+        phone_sources += [(f"{name} comment at line {ln}", normalise(c))
+                          for ln, c in site.html_comments.get(p, [])]
+        phone_sources += reader_attr_text(page, name)
     for p, root in site.svgs.items():
         if root is not None:
             phone_sources.append((f"{site.rel(p)} text", svg_text(root)))
     for p, text in site.text_files():
         if p.suffix.lower() == ".txt":
             phone_sources.append((site.rel(p), normalise(text)))
+        elif p.suffix.lower() == ".css":
+            phone_sources += [(f"{site.rel(p)} content", normalise(s))
+                              for s in css_content_strings(text)]
     for where, s in phone_sources:
         for ph in find_phones(s):
             problems.append(f"phone-like '{ph}' in {where}")
@@ -1029,28 +1076,33 @@ def c11(site: Site) -> str:
 
 @check("C12")
 def c12(site: Site) -> str:
-    doc = need_html(site)
+    need_html(site)
     problems = []
-    for el in doc.find_all("script"):
-        src = el.attrs.get("src")
-        if src is None:
-            problems.append(f"inline {el.describe()}")
-            continue
-        src = src.strip()
-        if src.lower().startswith(("http:", "https:", "//")):
-            problems.append(f'remote script src="{src}"')
-        elif src.removeprefix("./") != JS_PATH:
-            problems.append(f'script src="{src}" is not {JS_PATH}')
-        if el.raw_text().strip():
-            problems.append(f"{el.describe()} has src and an inline body")
-    for el in doc.iter():
-        for name, value in el.attrs.items():
-            if re.fullmatch(r"on[a-z]+", name):
-                problems.append(f"handler attribute {name}= on {el.describe()}")
-            if name in ("href", "src", "action") and (value or "").strip().lower().startswith("javascript:"):
-                problems.append(f"javascript: URL on {el.describe()}")
-        if el.tag in ("iframe", "object", "embed"):
-            problems.append(f"{el.describe()} not allowed")
+    js_target = (site.root / JS_PATH).resolve()
+    # Every *.html page under docs/, not only index.html (CR2-4).
+    for p, doc in site.html_docs.items():
+        name = site.rel(p)
+        for el in doc.find_all("script"):
+            src = el.attrs.get("src")
+            if src is None:
+                problems.append(f"{name}: inline {el.describe()}")
+                continue
+            src = browser_url(src)
+            if is_external(src) or src.startswith("/"):
+                problems.append(f'{name}: remote script src="{src}"')
+            elif (p.parent / re.split(r"[?#]", src, maxsplit=1)[0]).resolve() != js_target:
+                problems.append(f'{name}: script src="{src}" is not {JS_PATH}')
+            if el.raw_text().strip():
+                problems.append(f"{name}: {el.describe()} has src and an inline body")
+        for el in doc.iter():
+            for attr, value in el.attrs.items():
+                if re.fullmatch(r"on[a-z]+", attr):
+                    problems.append(f"{name}: handler attribute {attr}= on {el.describe()}")
+                if attr in ("href", "src", "action", "formaction") and browser_url(
+                        value or "").lower().startswith("javascript:"):
+                    problems.append(f"{name}: javascript: URL on {el.describe()}")
+            if el.tag in ("iframe", "object", "embed"):
+                problems.append(f"{name}: {el.describe()} not allowed")
     for p, raw in site.svg_raw.items():
         for pat, label in ((r"<script", "<script"), (r"<foreignObject", "<foreignObject"),
                            (r"href\s*=\s*[\"']\s*https?:", "external href")):
@@ -1069,7 +1121,10 @@ def phrase_regex(phrase: str) -> re.Pattern:
     """Compile a FORBIDDEN_PHRASES entry (see its comment for the syntax)."""
     if phrase.startswith("re:"):
         return re.compile(rf"(?<!\w)(?:{phrase[3:]})", re.I)
-    body = r"\s+".join(re.escape(w) for w in phrase.split())
+    # Spaces and hyphens are interchangeable (CR2-3): "flight ready" matches
+    # "flight-ready" and vice versa.
+    words = [w for w in re.split(r"[\s-]+", phrase) if w]
+    body = r"[-\s]+".join(re.escape(w) for w in words)
     return re.compile(rf"(?<!\w){body}(?!\w)", re.I)
 
 
@@ -1102,24 +1157,34 @@ def css_content_strings(css: str) -> list[str]:
     return [s for s in out if s.strip()]
 
 
-@check("C13")
-def c13(site: Site) -> str:
-    doc = need_html(site)
-    problems = []
-    sources = [("index.html", visible_text(doc))]
-    # Public metadata (search/social previews) is held to the same standard.
-    for m in doc.find_all("meta"):
-        key = (m.attrs.get("name") or m.attrs.get("property") or "").lower()
-        if key == "description" or key.startswith("og:"):
-            sources.append((f"index.html meta {key}", normalise(m.attrs.get("content", ""))))
+def reader_attr_text(doc: Element, name: str) -> list[tuple[str, str]]:
+    """(where, text) for page text that lives outside text nodes but still
+    reaches a reader: public metadata (meta description / og:*), C13_ATTRS
+    values and <style> content strings. Used by C11 (phones) and C13."""
+    out = []
     for el in doc.iter():
+        if el.tag == "meta":
+            key = (el.attrs.get("name") or el.attrs.get("property") or "").lower()
+            if key == "description" or key.startswith("og:"):
+                out.append((f"{name} meta {key}", normalise(el.attrs.get("content", ""))))
         for attr in C13_ATTRS:
             if el.attrs.get(attr):
-                sources.append((f"index.html {attr} of {el.describe()}",
-                                normalise(el.attrs[attr])))
+                out.append((f"{name} {attr} of {el.describe()}", normalise(el.attrs[attr])))
         if el.tag == "style":
-            for s in css_content_strings(el.raw_text()):
-                sources.append((f"index.html <style> content", normalise(s)))
+            out += [(f"{name} <style> content", normalise(s))
+                    for s in css_content_strings(el.raw_text())]
+    return out
+
+
+@check("C13")
+def c13(site: Site) -> str:
+    need_html(site)
+    problems = []
+    sources = []
+    # Every *.html page under docs/, not only index.html (CR2-4).
+    for p, doc in site.html_docs.items():
+        sources.append((site.rel(p), visible_text(doc)))
+        sources += reader_attr_text(doc, site.rel(p))
     for p, text in site.text_files():
         if p.suffix.lower() == ".css":
             for s in css_content_strings(text):

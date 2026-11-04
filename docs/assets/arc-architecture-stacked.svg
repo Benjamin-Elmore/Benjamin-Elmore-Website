@@ -1,13 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 640" role="img" aria-labelledby="arcs-title arcs-desc" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 616" role="img" aria-labelledby="arcs-title arcs-desc" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
   <title id="arcs-title">ARC intended system architecture</title>
-  <desc id="arcs-desc">Intended system architecture, top to bottom: optical and external sensors connect over I²C to an I²C multiplexer; the multiplexed I²C bus connects over I²C to the ESP32-S3 running ARC firmware on the ARSENAL board, marked as the subject of this case study; the ESP32-S3 exchanges data with the VEX V5 Brain, the robot controller, over a bidirectional half-duplex RS-485 link.</desc>
+  <desc id="arcs-desc">Intended system architecture, top to bottom: optical and other external sensors connect over I²C to an I²C multiplexer; the multiplexed I²C bus connects over I²C to the ESP32-S3 running ARC firmware on the ARSENAL board, marked as the subject of this case study; the ESP32-S3 exchanges data with the VEX V5 Brain, the robot controller, over a bidirectional half-duplex RS-485 link.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="#8fbcff"/>
     </marker>
   </defs>
-  <rect x="1" y="1" width="358" height="638" rx="20" fill="#0b1f3a" stroke="#4a78b5" stroke-width="2"/>
-  <text x="24" y="46" font-size="22" font-weight="700" fill="#ffffff">Intended system architecture</text>
+  <rect x="1" y="1" width="358" height="614" rx="20" fill="#0b1f3a" stroke="#4a78b5" stroke-width="2"/>
+  <text x="24" y="44" font-size="20" font-weight="700" fill="#ffffff">Intended system architecture</text>
 
   <!-- Links -->
   <g stroke="#8fbcff" stroke-width="3" fill="none">
@@ -16,9 +16,9 @@
     <line x1="150" y1="453" x2="150" y2="501" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
   </g>
   <g font-size="17" fill="#e8eef8">
-    <text x="168" y="194">I²C</text>
-    <text x="168" y="338">I²C</text>
-    <text x="168" y="482">half-duplex RS-485</text>
+    <text x="170" y="194">I²C</text>
+    <text x="170" y="338">I²C</text>
+    <text x="170" y="482">half-duplex RS-485</text>
   </g>
 
   <!-- Blocks -->
@@ -38,7 +38,7 @@
     <text x="42" y="540">VEX V5 Brain</text>
   </g>
   <g font-size="17" fill="#d6e2f3">
-    <text x="42" y="138">optical and external sensors</text>
+    <text x="42" y="138">optical and other external sensors</text>
     <text x="42" y="282">multiplexed I²C</text>
     <text x="42" y="426">ARC firmware on ARSENAL board</text>
     <text x="42" y="570">robot controller</text>

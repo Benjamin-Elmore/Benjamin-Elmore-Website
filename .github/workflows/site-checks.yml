@@ -15,10 +15,11 @@ on:
 permissions:
   contents: read
 
-# A newer push to the same ref cancels the run in progress (CR1-22).
+# A newer push to the same pull request cancels the run in progress (CR1-22);
+# pushes to main always run to completion (CR2-10).
 concurrency:
   group: site-checks-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   checks:

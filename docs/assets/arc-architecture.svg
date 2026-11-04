@@ -11,41 +11,42 @@
 
   <!-- Links -->
   <g stroke="#8fbcff" stroke-width="3" fill="none">
-    <line x1="204" y1="228" x2="239" y2="228" marker-end="url(#arrow)"/>
-    <line x1="410" y1="228" x2="445" y2="228" marker-end="url(#arrow)"/>
-    <line x1="639" y1="228" x2="763" y2="228" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+    <line x1="196" y1="228" x2="246" y2="228" marker-end="url(#arrow)"/>
+    <line x1="386" y1="228" x2="436" y2="228" marker-end="url(#arrow)"/>
+    <line x1="628" y1="228" x2="758" y2="228" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
   </g>
-  <g font-size="22" fill="#e8eef8" text-anchor="middle">
-    <text x="222" y="214">I²C</text>
-    <text x="428" y="214">I²C</text>
-    <text x="701" y="214">half-duplex</text>
-    <text x="701" y="258">RS-485</text>
+  <g font-size="20" fill="#e8eef8" text-anchor="middle">
+    <text x="221" y="206">I²C</text>
+    <text x="411" y="206">I²C</text>
+    <text x="693" y="206">half-duplex</text>
+    <text x="693" y="263">RS-485</text>
   </g>
 
   <!-- Blocks -->
   <g stroke-width="3" fill="#13325e">
-    <rect x="12" y="138" width="190" height="180" rx="12" stroke="#8fbcff"/>
-    <rect x="242" y="138" width="166" height="180" rx="12" stroke="#8fbcff"/>
-    <rect x="448" y="138" width="188" height="180" rx="12" stroke="#ffc857"/>
-    <rect x="766" y="138" width="182" height="180" rx="12" stroke="#8fbcff"/>
+    <rect x="12" y="138" width="181" height="180" rx="12" stroke="#8fbcff"/>
+    <rect x="249" y="138" width="134" height="180" rx="12" stroke="#8fbcff"/>
+    <rect x="439" y="138" width="186" height="180" rx="12" stroke="#ffc857"/>
+    <rect x="761" y="138" width="186" height="180" rx="12" stroke="#8fbcff"/>
   </g>
-  <rect x="474" y="90" width="136" height="36" rx="18" fill="#ffc857"/>
-  <text x="542" y="115.5" font-size="22" font-weight="700" fill="#0b1f3a" text-anchor="middle">case study</text>
+  <rect x="460" y="90" width="144" height="36" rx="18" fill="#ffc857"/>
+  <text x="532" y="115.5" font-size="22" font-weight="700" fill="#0b1f3a" text-anchor="middle">case study</text>
 
   <g text-anchor="middle">
-    <g font-size="26" font-weight="700" fill="#ffffff">
-      <text x="107" y="196">Sensors</text>
-      <text x="325" y="196">I²C mux</text>
-      <text x="542" y="196">ESP32-S3</text>
-      <text x="857" y="196">VEX V5 Brain</text>
+    <g font-size="24" font-weight="700" fill="#ffffff">
+      <text x="102.5" y="198">Sensors</text>
+      <text x="316" y="198">I²C mux</text>
+      <text x="532" y="198">ESP32-S3</text>
+      <text x="854" y="198">VEX V5 Brain</text>
     </g>
-    <g font-size="22" fill="#d6e2f3">
-      <text x="107" y="242">optical and other</text>
-      <text x="107" y="270">external sensors</text>
-      <text x="325" y="242">multiplexed I²C</text>
-      <text x="542" y="242">ARC firmware on</text>
-      <text x="542" y="270">ARSENAL board</text>
-      <text x="857" y="242">robot controller</text>
+    <g font-size="20" fill="#d6e2f3">
+      <text x="102.5" y="240">optical and other</text>
+      <text x="102.5" y="266">external sensors</text>
+      <text x="316" y="240">multiplexed</text>
+      <text x="316" y="266">I²C</text>
+      <text x="532" y="240">ARC firmware on</text>
+      <text x="532" y="266">ARSENAL board</text>
+      <text x="854" y="240">robot controller</text>
     </g>
   </g>
 </svg>

@@ -628,6 +628,90 @@ class CheckerFixtureTest(unittest.TestCase):
         failed = {k for k, (ok, _) in results.items() if not ok}
         self.assertEqual(failed, {"C07", "C18"})
 
+    # -- fix round 2: C11 split emails (CR2-2) -----------------------------
+    def test_c11_email_split_by_markup(self):
+        cases = {
+            "<span>@</span>": "ben.elmore<span>@</span>example.com",
+            "empty comment": "ben.elmore<!-- -->@example.com",
+            "<code> local part": "<code>ben.elmore</code>@example.com",
+            "entity @": "ben.elmore&#64;<b>example</b>.com",
+        }
+        for label, text in cases.items():
+            with self.subTest(label):
+                detail = self.assert_only_fails("C11", lambda f: edit(
+                    f, "index.html", "Find me on GitHub", f"Write to {text}. Find me on GitHub"))
+                self.assertIn("ben.elmore@example.com", detail)
+
+    # -- fix round 2: C13 word forms and spellings (CR2-3) -----------------
+    def test_c13_round2_forms(self):
+        forms = [
+            "proves the design", "proving the bus", "provably correct",
+            "validates the bus", "validating the bus", "production-grade",
+            "production grade", "battle tested", "flight ready", "hardware tested",
+            "hardware verified", "production ready", "real time", "end to end tested",
+            "fully-tested", "real—time", "releasing the firmware", "release the lock",
+            "releases the mutex",
+        ]
+        for phrase in forms:
+            with self.subTest(phrase):
+                self.assert_only_fails("C13", lambda f: edit(
+                    f, "index.html", "Optical bring-up.", f"Optical bring-up, {phrase}."))
+
+    # -- fix round 2: every HTML page for C11 phones, C12, C13 (CR2-4) -----
+    def test_second_page_is_checked(self):
+        page = '<!doctype html><html lang="en"><body><p>{}</p></body></html>'
+        cases = {
+            "C13": page.format("Proven firmware"),
+            "C11": page.format("Call (951) 555-0142"),
+            "C12": page.format("x</p><script>var x = 1;</script><p>"),
+        }
+        for cid, html in cases.items():
+            for rel in ("about.html", "notes/about.html"):
+                with self.subTest(cid=cid, page=rel):
+                    detail = self.assert_only_fails(cid, lambda f: f.update({rel: html}))
+                    self.assertIn(rel, detail)
+        # The second page may load the site's own script by a relative path.
+        self.assert_all_pass(lambda f: f.update({
+            "notes/about.html": '<!doctype html><html lang="en"><body><p>Notes.</p>'
+                                '<script src="../assets/site.js"></script></body></html>'}))
+
+    def test_c11_phone_in_attribute_and_css(self):
+        cases = {
+            "title attribute": lambda f: edit(
+                f, "index.html", '<p class="section__lede">',
+                '<p class="section__lede" title="Call (951) 555-0142">'),
+            "aria-label": lambda f: edit(
+                f, "index.html", '<p class="section__lede">',
+                '<p class="section__lede" aria-label="Call +1 951 555 0142">'),
+            "CSS content": lambda f: edit(
+                f, "assets/site.css", "a:focus-visible {",
+                'footer::after { content: "(951) 555-0142"; }\na:focus-visible {'),
+            "inline <style> content": lambda f: edit(
+                f, "index.html", "</head>",
+                '<style>footer::after { content: "(951) 555-0142"; }</style>\n</head>'),
+        }
+        for label, mutate in cases.items():
+            with self.subTest(label):
+                self.assert_only_fails("C11", mutate)
+
+    # -- fix round 2: C08 residual vectors (CR2-8) -------------------------
+    def test_c08_round2_vectors(self):
+        cases = {
+            "CSS escape u\\72l()": lambda f: edit(
+                f, "assets/site.css", "body { background: var(--color-bg);",
+                "body { background: var(--color-bg) u\\72l(//evil.example/x.png);"),
+            "image-set string": lambda f: edit(
+                f, "assets/site.css", "body { background: var(--color-bg);",
+                'body { background-image: image-set("//evil.example/x.png" 1x);'
+                " background: var(--color-bg);"),
+            "meta refresh": lambda f: edit(
+                f, "index.html", "</head>",
+                '<meta http-equiv="refresh" content="0;url=//evil.example/">\n</head>'),
+        }
+        for label, mutate in cases.items():
+            with self.subTest(label):
+                self.assert_only_fails("C08", mutate)
+
     # -- false-positive guards (all must still pass) ----------------------
     def test_no_false_positives(self):
         def mutate(f):
@@ -636,7 +720,10 @@ class CheckerFixtureTest(unittest.TestCase):
                  "resumed work, unproven, approved, improved, reliance on mentors, validation, "
                  "end-to-end checks, flight software, manufacturing, production line, "
                  "race condition, freedom, sole maintainer, author, snapshot, unit tests, "
-                 "releasing, inaccurate, shipping, CFDs, robot, "
+                 "inaccurate, shipping, CFDs, robot, provides, provenance, improves, "
+                 "approval, invalid, end-to-end checks, flight software, hardware test plan, "
+                 "production line, real-world, "
+                 "See https://github.com/Benjamin-Elmore. "
                  "framework/ notes, RS-485 at 115200. "
                  "Find me on GitHub or LinkedIn.")
             edit(f, "index.html", '<time datetime="2026-11-03">',
@@ -648,6 +735,7 @@ class CheckerFixtureTest(unittest.TestCase):
             edit(f, "index.html", "<!-- ARC case study -->",
                  "<!-- ARC case study: steps 1-4, 2025 - 2026 -->")
             edit(f, "assets/site.js", "})();", "// docs: https://example.com/notes\n})();")
+            f["assets/arc-cv2.png"] = b"\x89PNG\r\n"  # "cv2" is OpenCV, not a CV (CR2-7)
         self.assert_all_pass(mutate)
 
     def test_phone_and_email_helpers(self):
