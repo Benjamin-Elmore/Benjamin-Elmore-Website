@@ -7,3 +7,7 @@ work/
 # Loads work/CLAUDE.md; not part of the public site
 CLAUDE.md
 tools/private-names.txt
+
+# React site build
+site/node_modules/
+site/.ssr/
