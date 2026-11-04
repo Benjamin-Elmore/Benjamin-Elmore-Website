@@ -215,7 +215,7 @@ main,
   min-height: var(--tap);
   color: var(--color-text);
   font-size: clamp(1rem, 2.1vw, 1.5rem);
-  font-weight: 800;
+  font-weight: 750;
   letter-spacing: -0.04em;
   text-decoration: none;
   text-transform: uppercase;
@@ -239,6 +239,8 @@ main,
 .site-nav__list a {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: var(--tap);
   min-height: var(--tap);
   color: var(--color-text);
   font-family: var(--font-mono);
@@ -345,10 +347,10 @@ main {
 .intro__name {
   max-width: 13ch;
   margin-top: var(--space-4);
-  font-size: clamp(2.625rem, 8.25vw, 6.75rem);
+  font-size: clamp(2.5rem, 8.25vw, 6.75rem);
   line-height: 0.98;
-  font-weight: 800;
-  letter-spacing: -0.065em;
+  font-weight: 750;
+  letter-spacing: -0.045em;
   text-wrap: wrap;
 }
 
@@ -437,9 +439,9 @@ main {
 
 .work-row__name {
   font-size: clamp(1.625rem, 3.7vw, 2.625rem);
-  font-weight: 800;
+  font-weight: 750;
   line-height: 1.1;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.035em;
 }
 
 .work-row__description {
