@@ -1,5 +1,4 @@
 import { Link } from 'react-router';
-import { BASE } from '../routes.js';
 import SlideList from '../components/SlideList.jsx';
 
 export default function Home() {

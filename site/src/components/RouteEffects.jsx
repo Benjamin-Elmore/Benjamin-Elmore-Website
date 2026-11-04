@@ -11,7 +11,7 @@ export default function RouteEffects() {
   const keyRef = useRef(location.key);
 
   useEffect(() => {
-    const onScroll = () => positions.current.set(keyRef.current, window.scrollY);
+    const onScroll = () => { if (keyRef.current !== 'default') positions.current.set(keyRef.current, window.scrollY); };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -31,6 +31,8 @@ export default function RouteEffects() {
       return document.getElementById(id);
     };
     if (navType === 'POP') {
+      // Entries the browser made for same-page #frag clicks have no router key, and the browser has already scrolled.
+      if (location.key === 'default') { const el = target(); if (el) el.scrollIntoView(); return; }
       const saved = positions.current.get(location.key);
       if (saved !== undefined) window.scrollTo(0, saved);
       else if (location.hash) { const el = target(); if (el) el.scrollIntoView(); }

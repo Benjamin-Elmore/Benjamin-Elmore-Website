@@ -12,12 +12,12 @@ export default function Arc() {
       </div>
       <section className="section case-study" aria-labelledby="arc-title">
         <figure className="photo-slot" id="arc-board">
-          {/* Photo slot "arc-board": replace the .photo-slot__box div with <img src="../assets/photos/arc-board.jpg" alt="..." width="..." height="..."> (file: docs/assets/photos/arc-board.jpg). Keep the caption. */}
+          {/* Photo slot "arc-board": replace the .photo-slot__box div with <img src={BASE + 'assets/photos/arc-board.jpg'} alt="..." width="..." height="..." /> (file: site/public/assets/photos/arc-board.jpg), then rebuild. Keep the caption. */}
           <div className="photo-slot__box">Photo: ARSENAL board</div>
           <figcaption className="figure__caption">The ARSENAL board, the team’s custom ESP32-S3 board. Photo to be added.</figcaption>
         </figure>
         <figure className="photo-slot photo-slot--16x9" id="arc-software">
-          {/* Diagram slot "arc-software": replace the .photo-slot__box div with <img src="../assets/arc-software.svg" alt="..."> (files: docs/assets/arc-software.puml and arc-software.svg) and add a "PlantUML source" link. Keep the caption. */}
+          {/* Diagram slot "arc-software": replace the .photo-slot__box div with <img src={BASE + 'assets/arc-software.svg'} alt="..." /> (files: site/public/assets/arc-software.puml and arc-software.svg) and add a "PlantUML source" link, then rebuild. Keep the caption. */}
           <div className="photo-slot__box">Diagram: ARC software architecture (PlantUML)</div>
           <figcaption className="figure__caption">Software architecture of the ARC firmware. Diagram to be added.</figcaption>
         </figure>

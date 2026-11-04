@@ -12,7 +12,7 @@ export default function CbuRobotics() {
       </div>
       <section className="section case-study section--page" aria-labelledby="role-title">
         <figure className="photo-slot photo-slot--21x9" id="cbu-team">
-          {/* Photo slot "cbu-team": replace the .photo-slot__box div with <img src="../assets/photos/cbu-team.jpg" alt="..." width="..." height="..."> (file: docs/assets/photos/cbu-team.jpg). Keep the caption. */}
+          {/* Photo slot "cbu-team": replace the .photo-slot__box div with <img src={BASE + 'assets/photos/cbu-team.jpg'} alt="..." width="..." height="..." /> (file: site/public/assets/photos/cbu-team.jpg), then rebuild. Keep the caption. */}
           <div className="photo-slot__box">Photo: CBU1 VEX U team</div>
           <figcaption className="figure__caption">The CBU1 VEX U Robotics team. Photo to be added.</figcaption>
         </figure>

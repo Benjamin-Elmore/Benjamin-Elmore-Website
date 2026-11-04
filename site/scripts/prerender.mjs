@@ -22,7 +22,7 @@ for (const route of [...ROUTES, NOT_FOUND]) {
   const page = template
     .replace('<!--app-head-->', () => headTags(route))
     .replace('<!--app-css-->', () => arcLink(route))
-    .replace('<!--app-script-->', () => scriptTag(route))
+    .replace(/\n[ \t]*<!--app-script-->/, () => { const t = scriptTag(route); return t ? '\n  ' + t : ''; })
     .replace('<!--app-html-->', () => html);
   const file = join(out, route.file);
   mkdirSync(dirname(file), { recursive: true });

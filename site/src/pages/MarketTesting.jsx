@@ -12,7 +12,7 @@ export default function MarketTesting() {
       </div>
       <section className="section case-study" aria-labelledby="mt-title">
         <figure className="photo-slot photo-slot--16x9" id="markettesting-table">
-          {/* Photo slot "markettesting-table": replace the .photo-slot__box div with <img src="../assets/photos/markettesting-table.jpg" alt="..." width="..." height="..."> (file: docs/assets/photos/markettesting-table.jpg). Keep the caption. */}
+          {/* Photo slot "markettesting-table": replace the .photo-slot__box div with <img src={BASE + 'assets/photos/markettesting-table.jpg'} alt="..." width="..." height="..." /> (file: site/public/assets/photos/markettesting-table.jpg), then rebuild. Keep the caption. */}
           <div className="photo-slot__box">Screenshot: prediction table</div>
           <figcaption className="figure__caption">Prediction table output from a run. Screenshot to be added.</figcaption>
         </figure>
@@ -38,13 +38,13 @@ export default function MarketTesting() {
             <li className="tag">yfinance</li>
           </ul>
         </div>
-        {/* Pipeline diagram: replace with the render of Ben's PUML (assets/markettesting-pipeline.svg, from his .puml) when it arrives. */}
+        {/* Pipeline diagram: replace with the render of Ben's PUML (site/public/assets/markettesting-pipeline.svg, from his .puml) when it arrives, then rebuild. */}
         <figure className="figure figure--diagram figure--narrow" id="markettesting-pipeline">
           <img src={BASE + 'assets/markettesting-pipeline.svg'} width="360" height="620" alt="Pipeline diagram, top to bottom: CSV or yfinance data, pandas and NumPy preprocessing, RobustScaler feature scaling, 100-day windows, LSTM, prediction table." loading="lazy" decoding="async" />
           <figcaption className="figure__caption">The MarketTesting pipeline, from data source to prediction table.</figcaption>
         </figure>
         <figure className="photo-slot photo-slot--16x9" id="markettesting-terminal">
-          {/* Photo slot "markettesting-terminal": replace the .photo-slot__box div with <img src="../assets/photos/markettesting-terminal.jpg" alt="..." width="..." height="..."> (file: docs/assets/photos/markettesting-terminal.jpg). Keep the caption. */}
+          {/* Photo slot "markettesting-terminal": replace the .photo-slot__box div with <img src={BASE + 'assets/photos/markettesting-terminal.jpg'} alt="..." width="..." height="..." /> (file: site/public/assets/photos/markettesting-terminal.jpg), then rebuild. Keep the caption. */}
           <div className="photo-slot__box">Screenshot: terminal run</div>
           <figcaption className="figure__caption">A terminal run of the pipeline. Screenshot to be added.</figcaption>
         </figure>

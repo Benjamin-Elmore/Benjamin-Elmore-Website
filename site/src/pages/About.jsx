@@ -1,5 +1,4 @@
 import { Link } from 'react-router';
-import { BASE } from '../routes.js';
 
 export default function About() {
   return (
