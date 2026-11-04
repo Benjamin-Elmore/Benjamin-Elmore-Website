@@ -25,7 +25,7 @@
       try { localStorage.setItem('theme', next); } catch (e) {}
       render();
     });
-    // After the click handler, and guarded for old Safari's addListener-only MediaQueryList (CR2-6).
+    // After the click handler, and guarded for old Safari's addListener-only MediaQueryList.
     var mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
     if (mq) mq.addEventListener ? mq.addEventListener('change', render) : mq.addListener(render);
   });
