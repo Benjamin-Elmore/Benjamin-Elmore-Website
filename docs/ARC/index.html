@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ARC firmware for ARSENAL | Benjamin Elmore</title>
+  <meta name="description" content="Case study: ARC, C++ sensor firmware for a custom ESP32-S3 board that connects external sensors to a VEX V5 Brain. Role, design decisions and verification.">
+  <meta property="og:title" content="ARC firmware for ARSENAL | Benjamin Elmore">
+  <meta property="og:description" content="Case study: ARC, C++ sensor firmware for a custom ESP32-S3 board that connects external sensors to a VEX V5 Brain. Role, design decisions and verification.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://benjamin-elmore.github.io/Benjamin-Elmore-Website/ARC/">
+  <link rel="canonical" href="https://benjamin-elmore.github.io/Benjamin-Elmore-Website/ARC/">
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="site-header__name" href="../">Benjamin Elmore</a>
+    <nav class="site-nav" aria-label="Sections">
+      <ul class="site-nav__list">
+        <li><a href="../#work">Work</a></li>
+        <li><a href="../#experience">Experience</a></li>
+        <li><a href="../#education">About</a></li>
+        <li><a href="../#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="theme-toggle" type="button" hidden aria-pressed="false">Dark theme</button>
+  </header>
+
+  <main id="main">
+    <div class="page-header">
+      <a class="back-link" href="../#work">← All work</a>
+      <h1>ARC firmware for ARSENAL</h1>
+      <p class="page-header__meta">CBU1 VEX U Robotics · C++ · ESP32-S3 · ESP-IDF</p>
+      <p class="page-header__summary">I contribute to ARC, the C++ sensor firmware for my robotics team’s custom board. This case study covers the failure modes I reasoned about, how the design responds to them, and what has been checked so far.</p>
+    </div>
+
+    <section class="section case-study" aria-labelledby="arc-title">
+      <figure class="photo-slot" id="arc-board">
+        <!-- Photo slot "arc-board": replace the .photo-slot__box div with <img src="../assets/photos/arc-board.jpg" alt="..." width="..." height="..."> (file: docs/assets/photos/arc-board.jpg). Keep the caption. -->
+        <div class="photo-slot__box">Photo: ARSENAL board</div>
+        <figcaption class="figure__caption">The ARSENAL board, the team’s custom ESP32-S3 board. Photo to be added.</figcaption>
+      </figure>
+
+      <h2 id="arc-title" class="section__title">Case study</h2>
+
+      <div class="case-study__block" id="arc-problem">
+        <h3>The problem</h3>
+        <p>The CBU1 VEX U team is developing ARSENAL, a custom ESP32-S3 board designed to connect external sensors to a VEX V5 Brain. ARC is the C++ sensor firmware written for it. The ARSENAL board is the team’s work. The existing sensor code came from the team and from earlier reference code.</p>
+      </div>
+
+      <div class="case-study__block" id="arc-role">
+        <h3>My role</h3>
+        <p>I’m a firmware contributor. I work with electrical and computer engineers on device interfaces. My part:</p>
+        <ul>
+          <li>Prototyped the sensor abstraction.</li>
+          <li>Moved I²C communication toward the <span class="nowrap">ESP-IDF</span> master API.</li>
+          <li>Added optical sensor register access and position decoding.</li>
+          <li>Worked on mutex-protected bus access.</li>
+          <li>Worked on UART and <span class="nowrap">RS-485</span> diagnostics.</li>
+          <li>Added explicit error propagation.</li>
+        </ul>
+      </div>
+
+      <figure class="figure figure--diagram" id="arc-architecture">
+        <picture>
+          <source media="(max-width: 44.99875em)" srcset="../assets/arc-architecture-stacked.svg" width="360" height="616">
+          <img src="../assets/arc-architecture.svg" width="960" height="360" alt="Block diagram of the intended ARC system architecture: sensors to I²C multiplexer to ESP32-S3 to VEX V5 Brain over half-duplex RS-485." loading="lazy" decoding="async">
+        </picture>
+        <figcaption class="figure__caption">Intended system architecture. This is the path the board is designed for. The full sensor-to-V5 path has not had a hardware test yet.
+        <ol class="figure__steps">
+          <li>Optical and other external sensors connect over I²C.</li>
+          <li>An I²C multiplexer puts several sensors on one shared bus.</li>
+          <li>In the design, the ESP32-S3 on the ARSENAL board runs the ARC firmware and reads the sensors.</li>
+          <li>In the design, the ESP32-S3 talks to the VEX V5 Brain over half-duplex <span class="nowrap">RS-485</span>.</li>
+        </ol></figcaption>
+      </figure>
+
+      <figure class="photo-slot photo-slot--16x9" id="arc-software">
+        <!-- Diagram slot "arc-software": replace the .photo-slot__box div with <img src="../assets/arc-software.svg" alt="..."> (files: docs/assets/arc-software.puml and arc-software.svg) and add a "PlantUML source" link. Keep the caption. -->
+        <div class="photo-slot__box">Diagram: ARC software architecture (PlantUML)</div>
+        <figcaption class="figure__caption">Software architecture of the ARC firmware. Diagram to be added.</figcaption>
+      </figure>
+
+      <div class="case-study__block" id="arc-decisions">
+        <h3>Engineering decisions</h3>
+        <ol class="decision-list" role="list">
+          <li class="decision">
+            <h4 class="decision__title">Evolve the sensor abstraction</h4>
+            <dl class="decision__body">
+              <dt class="decision__label">Failure mode</dt>
+              <dd class="decision__text">If each sensor type gets its own code, the acquisition logic gets copied from sensor to sensor.</dd>
+              <dt class="decision__label">Design response</dt>
+              <dd class="decision__text">Early work used a sensor base class with an optical specialization. The later design moved to configurable setup and read callbacks plus preconfiguration, so one acquisition path can serve different sensor types. Optical register reads, writes and offset handling are the concrete example.</dd>
+            </dl>
+          </li>
+          <li class="decision">
+            <h4 class="decision__title">Give the bus a clear owner</h4>
+            <dl class="decision__body">
+              <dt class="decision__label">Failure mode</dt>
+              <dd class="decision__text">The mux is shared. Another task can switch its channel between the channel select and the sensor transaction that depends on it.</dd>
+              <dt class="decision__label">Design response</dt>
+              <dd class="decision__text">A templated <code>I2CBus&lt;N&gt;</code> owns device registrations, register operations, mux selection and a bus mutex. The channel select and its matching transaction run under the same lock. A noncopyable lock guard scopes the lock, and later work checks whether taking the lock failed.</dd>
+            </dl>
+          </li>
+          <li class="decision">
+            <h4 class="decision__title">Separate acquisition from requests</h4>
+            <dl class="decision__body">
+              <dt class="decision__label">Failure mode</dt>
+              <dd class="decision__text">A request from the controller should not have to run a sensor-specific I²C sequence itself.</dd>
+              <dt class="decision__label">Design response</dt>
+              <dd class="decision__text">The architecture gives acquisition and communication separate tasks. The acquisition side selects the channel and stores readings. The communication side uses a sensor-ID registry and a small readings and offset interface.</dd>
+            </dl>
+          </li>
+          <li class="decision">
+            <h4 class="decision__title">Isolate bring-up failures</h4>
+            <dl class="decision__body">
+              <dt class="decision__label">Failure mode</dt>
+              <dd class="decision__text">A transceiver problem can hide sensor bugs, and a sensor problem can look like a communication bug.</dd>
+              <dt class="decision__label">Design response</dt>
+              <dd class="decision__text">The current entry point starts the <span class="nowrap">RS-485</span> path with an empty sensor registry, so I can debug communication with the sensor hardware out of the loop. UART startup and status reporting, plus I²C error logging, help narrow a failure to one layer.</dd>
+            </dl>
+          </li>
+        </ol>
+      </div>
+
+      <div class="case-study__block" id="arc-verification">
+        <h3>Verification so far</h3>
+        <ul class="evidence-list" role="list">
+          <li class="evidence">
+            <p class="evidence__date"><time datetime="2026-11-03">November 3, 2026</time></p>
+            <p class="evidence__text">A local check of the ARC repository’s <code>CPPDev</code> branch at <code>3eb3ed6</code>, the same commit as the public branch, with a clean working tree. <code>pio run -e seeed_xiao_esp32s3</code> passed. The build warned about flash size: the project configuration expects 8 MB, but the SDK settings report 2 MB. The board’s actual flash size hasn’t been checked. This was a build of the <span class="nowrap">RS-485-only</span> entry point, so it shows the target builds. No hardware test was run as part of this check, and a passing compile covers only part of the integration.</p>
+          </li>
+          <li class="evidence">
+            <p class="evidence__date"><time datetime="2026-10-28">October 28, 2026</time></p>
+            <p class="evidence__text">Commit <code>cef105f</code> records successful <span class="nowrap">RS-485</span> protocol checks across multiple packet formats, per the commit message. That message is the only evidence for this earlier test. Later commits changed the communication code.</p>
+          </li>
+        </ul>
+      <figure class="photo-slot photo-slot--text" id="arc-serial">
+        <!-- Text slot "arc-serial": replace the placeholder line in the pre block with real captured output. -->
+        <pre aria-label="Placeholder for sample serial output">[Sample serial output goes here]</pre>
+        <figcaption class="figure__caption">Sample serial output. Date, board and commit to be added with the capture.</figcaption>
+      </figure>
+
+        <h4>Open work</h4>
+        <ul class="open-work">
+          <li>Optical I²C bring-up.</li>
+          <li>A sensor-to-V5 hardware test on the current code.</li>
+          <li>Per-command parsers. Header dispatch is prepared; the parsers are still stubs.</li>
+          <li>Resolving the flash-size mismatch and checking the board’s actual flash size.</li>
+        </ul>
+      </div>
+
+      <p class="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/ARC" rel="noopener">Benjamin-Elmore/ARC on GitHub</a>. The build checked above is the public <code>CPPDev</code> branch at <code>3eb3ed6</code>. The default <code>main</code> branch is a different revision.</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Benjamin Elmore <span aria-hidden="true">/</span> California Baptist University</p>
+    <p>2026</p>
+  </footer>
+</body>
+</html>

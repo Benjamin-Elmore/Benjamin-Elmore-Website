@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MarketTesting | Benjamin Elmore</title>
+  <meta name="description" content="MarketTesting: an independent Python learning project that builds a data pipeline from CSV or yfinance data to a TensorFlow LSTM and a prediction table.">
+  <meta property="og:title" content="MarketTesting | Benjamin Elmore">
+  <meta property="og:description" content="MarketTesting: an independent Python learning project that builds a data pipeline from CSV or yfinance data to a TensorFlow LSTM and a prediction table.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://benjamin-elmore.github.io/Benjamin-Elmore-Website/MarketTesting/">
+  <link rel="canonical" href="https://benjamin-elmore.github.io/Benjamin-Elmore-Website/MarketTesting/">
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="site-header__name" href="../">Benjamin Elmore</a>
+    <nav class="site-nav" aria-label="Sections">
+      <ul class="site-nav__list">
+        <li><a href="../#work">Work</a></li>
+        <li><a href="../#experience">Experience</a></li>
+        <li><a href="../#education">About</a></li>
+        <li><a href="../#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="theme-toggle" type="button" hidden aria-pressed="false">Dark theme</button>
+  </header>
+
+  <main id="main">
+    <div class="page-header">
+      <a class="back-link" href="../#work">← All work</a>
+      <h1>MarketTesting</h1>
+      <p class="page-header__meta">Independent Python learning project, October 2025 to June 2026</p>
+      <p class="page-header__summary">A data pipeline I built on my own for financial time series, from market data ingestion to a prediction table. It’s a learning project, so I don’t report forecast results.</p>
+    </div>
+
+    <section class="section case-study" aria-labelledby="mt-title">
+      <figure class="photo-slot photo-slot--16x9" id="markettesting-table">
+        <!-- Photo slot "markettesting-table": replace the .photo-slot__box div with <img src="../assets/photos/markettesting-table.jpg" alt="..." width="..." height="..."> (file: docs/assets/photos/markettesting-table.jpg). Keep the caption. -->
+        <div class="photo-slot__box">Screenshot: prediction table</div>
+        <figcaption class="figure__caption">Prediction table output from a run. Screenshot to be added.</figcaption>
+      </figure>
+
+      <h2 id="mt-title" class="section__title">What it is</h2>
+      <div class="case-study__block" id="mt-what">
+        <p>MarketTesting is a Python project that ingests historical market data from CSV or yfinance, organizes it for per-ticker LSTM experiments, and produces prediction tables.</p>
+      </div>
+
+      <div class="case-study__block" id="mt-built">
+        <h3>What I built</h3>
+        <ul>
+          <li>The entry point, and the model and training structure around a <code>StockModel</code>.</li>
+          <li>CSV and yfinance data pull paths, later extended with general CSV ingestion and VIX retrieval.</li>
+          <li>pandas and NumPy preprocessing with per-ticker scaling and 100-day input windows.</li>
+          <li>TensorFlow LSTM training, including loss protection.</li>
+          <li>Data logging and the prediction-table output.</li>
+          <li>A reorganization into a <code>src</code> package.</li>
+        </ul>
+      </div>
+
+      <figure class="figure figure--diagram" id="markettesting-pipeline">
+        <img src="../assets/markettesting-pipeline.svg" width="360" height="620" alt="Pipeline diagram, top to bottom: CSV or yfinance data, pandas and NumPy preprocessing, per-ticker scaling, 100-day windows, LSTM, prediction table." loading="lazy" decoding="async">
+        <figcaption class="figure__caption">The MarketTesting pipeline, from data source to prediction table.</figcaption>
+      </figure>
+
+      <figure class="photo-slot photo-slot--16x9" id="markettesting-terminal">
+        <!-- Photo slot "markettesting-terminal": replace the .photo-slot__box div with <img src="../assets/photos/markettesting-terminal.jpg" alt="..." width="..." height="..."> (file: docs/assets/photos/markettesting-terminal.jpg). Keep the caption. -->
+        <div class="photo-slot__box">Screenshot: terminal run</div>
+        <figcaption class="figure__caption">A terminal run of the pipeline. Screenshot to be added.</figcaption>
+      </figure>
+
+      <div class="case-study__block" id="mt-scope">
+        <h3>What it does not claim</h3>
+        <p>This project shows iterative development and data handling. It doesn’t establish forecast accuracy, investment usefulness or trading performance, and I make no such claim.</p>
+        <ul class="tag-list">
+          <li class="tag">Python</li>
+          <li class="tag">pandas/NumPy</li>
+          <li class="tag">TensorFlow</li>
+          <li class="tag">yfinance</li>
+        </ul>
+      </div>
+
+      <p class="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener">Benjamin-Elmore/MarketTesting on GitHub</a>.</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Benjamin Elmore <span aria-hidden="true">/</span> California Baptist University</p>
+    <p>2026</p>
+  </footer>
+</body>
+</html>
