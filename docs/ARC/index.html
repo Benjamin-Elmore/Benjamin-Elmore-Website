@@ -23,7 +23,7 @@
       <ul class="site-nav__list">
         <li><a href="../#work">Work</a></li>
         <li><a href="../#experience">Experience</a></li>
-        <li><a href="../#education">About</a></li>
+        <li><a href="../#about">About</a></li>
         <li><a href="../#contact">Contact</a></li>
       </ul>
     </nav>
@@ -32,10 +32,10 @@
 
   <main id="main">
     <div class="page-header">
-      <a class="back-link" href="../#work">← All work</a>
+      <p><a class="back-link" href="../#work">← All work</a></p>
       <h1>ARC firmware for ARSENAL</h1>
       <p class="page-header__meta">CBU1 VEX U Robotics · C++ · ESP32-S3 · ESP-IDF</p>
-      <p class="page-header__summary">I contribute to ARC, the C++ sensor firmware for my robotics team’s custom board. This case study covers the failure modes I reasoned about, how the design responds to them, and what has been checked so far.</p>
+      <p class="page-header__summary">I contribute to ARC, the C++ sensor firmware for my robotics team’s custom board. This page covers my part in it, the data path from sensor to V5 Brain, how to write a sensor instance, and what has been checked so far.</p>
     </div>
 
     <section class="section case-study" aria-labelledby="arc-title">
@@ -61,14 +61,14 @@
 
       <div class="case-study__block" id="role">
         <h3>My role</h3>
-        <p>I'm a firmware contributor on ARC. My commits start on 2026-09-19 and run through <code>3eb3ed6</code> on the public <code>CPPDev</code> branch. The areas below are the ones I worked on.</p>
+        <p>I'm a firmware contributor on ARC. My commits on the public <code>CPPDev</code> branch start on 2026-09-19 (earlier work from August 2026 is in a separate team repository) and run through <code>3eb3ed6</code>. The areas below are the ones I worked on there.</p>
         <ul>
-        <li><strong>Sensor abstraction.</strong> I built <code>Sensor&lt;N&gt;</code> in <code>ARC_Sensor.h</code>: the FreeRTOS task loop (<code>b396134</code>), setup and loop callbacks, appended methods and variables (<code>d350038</code>, <code>ad95894</code>), a non-copyable class with a checked reader and setup (<code>3398b6f</code>), callbacks that take a reference to the sensor (<code>3c0387d</code>), and the <code>sensor_status_t</code> codes (<code>cddda79</code>, <code>39eeaaf</code>) so the first caller gets an accurate status.</li>
-        <li><strong>I²C ownership.</strong> I moved bus handling into <code>I2CBus&lt;N&gt;</code> (<code>7a6fa87</code>, <code>9f0b6af</code>). The class owns the ESP-IDF master bus, the mux device handles, the sensor registry and the bus mutex. I wrote <code>selectMuxChannel()</code> (<code>007ec83</code>) and moved the optical sensor onto the <code>i2c_master</code> device handles (<code>fc116f9</code>). <code>I2CBusInstance.h</code> (<code>934d614</code>) holds the shared mux bus and direct bus, and <code>3c7255f</code> made its add and remove calls return <code>esp_err_t</code> and require the caller's lock.</li>
+        <li><strong>Sensor abstraction.</strong> I built <code>Sensor&lt;N&gt;</code> in <code>ARC_Sensor.h</code>: the FreeRTOS task loop (<code>b396134</code>), setup and loop callbacks, appended methods and variables (<code>d350038</code>, <code>ad95894</code>), a non-copyable class with a checked reader and setup (<code>3398b6f</code>), callbacks that take a reference to the sensor (<code>3c0387d</code>), and error handling around the <code>sensor_status_t</code> codes (<code>cddda79</code>, <code>39eeaaf</code>), which started from a teammate’s status enums, so the first caller gets an accurate status.</li>
+        <li><strong>I²C ownership.</strong> I moved bus handling into <code>I2CBus&lt;N&gt;</code> (<code>7a6fa87</code>, <code>9f0b6af</code>). The class owns the ESP-IDF master bus, the mux device handles, the sensor registry and the bus mutex. I wrote the first mux channel select, <code>Mux::selectChannel()</code> (<code>007ec83</code>), which became <code>I2CBus::selectMuxChannel()</code> in <code>9f0b6af</code>, and moved the optical sensor onto the <code>i2c_master</code> device handles (<code>fc116f9</code>). <code>I2CBusInstance.h</code> (<code>934d614</code>) holds the shared mux bus and direct bus, and <code>3c7255f</code> made its add and remove calls return <code>esp_err_t</code>: add requires the caller's lock, and remove takes the bus lock itself.</li>
         <li><strong>Bus mutex and <code>LockGuard</code>.</strong> <code>LockGuard</code> is a noncopyable RAII wrapper over a FreeRTOS semaphore. In <code>19e7deb</code> I made its destructor release the mutex only if that guard actually took it, and <code>isMutexLocked()</code> reports which case you're in. Every register operation and mux select takes a <code>LockGuard&amp;</code> and returns an error when it isn't held, so the channel select and its transaction stay under one lock. <code>b59101e</code> added error handling for a failed acquire in <code>resetMuxes()</code>.</li>
-        <li><strong>Optical sensor.</strong> I added register reads and writes, offset setting and position decoding (<code>8b73163</code>, <code>ab0cb74</code>, <code>c2c8812</code>). At <code>3eb3ed6</code> that preconfiguration is not included in the build while optical bring-up is paused.</li>
+        <li><strong>Optical sensor.</strong> I added register reads and writes, offset setting and position decoding (<code>8b73163</code>, <code>ab0cb74</code>, <code>c2c8812</code>). At <code>3eb3ed6</code> that preconfiguration is not included in the build; the optical preset work is deferred.</li>
         <li><strong>RS-485 protocol.</strong> I wrote <code>RS485Comm</code> (<code>ae9c93f</code>) with a byte-wise parse state machine (<code>7f8d0e5</code>), the packet format with timestamps and packed sensor IDs (<code>1d33555</code>, <code>65ec388</code>), checksum and escape-sequence framing, reply packet compilation (<code>8467715</code>) and <code>uart_write_bytes</code> to the V5 (<code>9e42136</code>). <code>3eb3ed6</code> prepared header-based dispatch, with the per-command parsers still stubs.</li>
-        <li><strong>Diagnostics and error propagation.</strong> <code>RS485Comm::serialStatus()</code> prints the parse state, buffers and sensor IDs (<code>e85ecbb</code>). <code>I2CBus::confirmStatus()</code> logs each failure with its location through <code>ESP_LOGE</code> and keeps the first error in <code>getStatus()</code> (<code>f961457</code>). Sensor status is atomic because the comm task can change it, and failed bus or mux operations invalidate the reading so the packet carries <code>0xFFFF</code> instead of stale data. <code>4dd3cfd</code> fixed the UART config so the build passes with warnings treated as errors.</li>
+        <li><strong>Diagnostics and error propagation.</strong> <code>RS485Comm::serialStatus()</code> prints the parse state, buffers and sensor IDs (<code>cef105f</code>), building on earlier RS-485 debugging in <code>e85ecbb</code>. <code>I2CBus::confirmStatus()</code> logs each failure with its location through <code>ESP_LOGE</code> and keeps the first error in <code>getStatus()</code> (<code>f961457</code>). Sensor status is atomic because the comm task can change it, and failed bus or mux operations invalidate the reading so the packet carries <code>0xFFFF</code> instead of stale data. <code>4dd3cfd</code> fixed the UART config so the build passes with warnings treated as errors.</li>
         <li><strong>Pipeline checks.</strong> <code>cef105f</code> records RS-485 protocol checks across multiple packet formats, per its commit message. The full sensor-to-V5 path is still to be tested on hardware.</li>
         </ul>
       </div>
@@ -85,12 +85,12 @@
       </figure>
         <ol>
         <li><strong>Sensor hardware.</strong> Each physical sensor is one <code>Sensor&lt;N&gt;</code> object. It holds the sensor's I²C address, an optional mux channel and a numeric sensor ID from 1 to 15. Its read callback pulls registers over I²C and stores a three-value reading (<code>Vec3&lt;uint16_t&gt;</code>).</li>
-        <li><strong>I²C mux.</strong> <code>I2CBus&lt;N&gt;</code> wraps the ESP-IDF <code>i2c_master</code> driver, where <code>N</code> is the number of muxes on the bus. <code>I2CARSENAL</code> builds two buses: <code>I2CBus&lt;2&gt;</code> for the mux bus and <code>I2CBus&lt;0&gt;</code> for a direct bus, each on its own I²C port. <code>selectMuxChannel()</code> writes a one-bit control byte (<code>1 &lt;&lt; channel</code>) to the sensor's mux and writes zero to the other muxes, so one channel is open at a time. Every bus operation takes a <code>LockGuard&amp;</code> and returns <code>ESP_ERR_INVALID_STATE</code> if the lock isn't held. The channel select and the sensor transfer therefore happen under one bus mutex.</li>
+        <li><strong>I²C mux.</strong> <code>I2CBus&lt;N&gt;</code> wraps the ESP-IDF <code>i2c_master</code> driver, where <code>N</code> is the number of muxes on the bus. <code>I2CARSENAL</code> builds two buses: <code>I2CBus&lt;2&gt;</code> for the mux bus and <code>I2CBus&lt;0&gt;</code> for a direct bus, each on its own I²C port. <code>selectMuxChannel()</code> writes a one-bit control byte (<code>1 &lt;&lt; channel</code>) to the sensor's mux and writes zero to the other muxes, so one channel is open at a time. Every bus operation takes a <code>LockGuard&amp;</code> and returns an error (<code>ESP_ERR_INVALID_ARG</code> from <code>I2CBus</code>) if the lock isn't held. The channel select and the sensor transfer therefore happen under one bus mutex.</li>
         <li><strong>ESP32-S3 running ARC.</strong> <code>Sensor::setup()</code> registers the sensor on the bus, selects its channel, runs any setup callbacks, registers it with the RS-485 side, then starts a FreeRTOS task pinned to core 1. Each pass of the task loop takes the bus lock, selects the channel and calls the read callback with the lock. Loop callbacks run after the lock is released. The task keeps the latest reading behind a critical section. If a mux select or register read fails, it marks the reading invalid and the sensor's atomic status moves to an I/O error.</li>
         <li><strong>Half-duplex RS-485.</strong> <code>RS485Comm</code> configures UART1 at 115200 baud, 8N1. It uses <code>UART_MODE_RS485_HALF_DUPLEX</code> and passes the enable pin to <code>uart_set_pin</code> as the RTS line, so the driver handles transmit/receive direction. A task on core 1 calls <code>uart_read_bytes</code> in 128-byte chunks and feeds each byte to <code>parseByte()</code>, a state machine with the states <code>WAITING_FOR_HEADER</code>, <code>LENGTH</code>, <code>BODY</code>, <code>FIRST_ESCAPE_SEQUENCE</code>, <code>CHECKSUM</code> and <code>SECOND_ESCAPE_SEQUENCE</code>.</li>
         <li><strong>VEX V5 Brain.</strong> The Brain sends a request, and ARC answers each valid request with one packet. Framing as implemented, with multi-byte fields big-endian: a header byte whose top six bits are one of six header codes (read, three reset codes, reboot, failure); a 16-bit length counted from the byte after the length field; two 32-bit microsecond timestamps (time since last receive, time sent); an 8-byte block of packed 4-bit sensor IDs; then 6 bytes of data per sensor slot (three 16-bit values). The body is followed by the 32-bit escape value <code>0xDEADBEEF</code>, a 32-bit checksum (sum of the body bytes mod 256) and the escape value again. <code>compileSentPacket()</code> builds the reply and <code>uart_write_bytes</code> sends it. If a requested sensor has no valid reading, its three values go out as <code>0xFFFF</code>.</li>
         </ol>
-        <p><strong>Status.</strong> Commit <code>cef105f</code> says the RS-485 protocol worked for multiple packet formats; that commit message is the only record of that test, and the parser was restructured afterward in <code>3eb3ed6</code>. Header dispatch is in place, but the per-command parsers in <code>RS485CommParser.h</code> are stubs that return true. The offset-from-first-packet code in <code>extractData()</code> is commented out. The I²C path is designed but not hardware-tested (<code>3c7255f</code>: “comms still need validation on hardware”). The current <code>app_main</code> starts only RS-485 with an empty sensor registry, so the sensor-to-V5 path has not been exercised on this code.</p>
+        <p><strong>Status.</strong> Commit <code>cef105f</code> says the RS-485 protocol worked for multiple packet formats; that commit message is the only record of that test, and the parser was restructured afterward in <code>3eb3ed6</code>. Header-based dispatch is only started: <code>extractData()</code> checks for one header code, and the per-command parsers in <code>RS485CommParser.h</code> are stubs that return true. The offset-from-first-packet code in <code>extractData()</code> is commented out. The I²C path is designed but not hardware-tested (<code>3c7255f</code>: “comms still need validation on hardware”). The current <code>app_main</code> starts only RS-485 with an empty sensor registry, so the sensor-to-V5 path has not been exercised on this code.</p>
       </div>
 
       <div class="case-study__block" id="sensor-instances">
@@ -102,10 +102,10 @@
         <li><strong>Register it.</strong> Call <code>setup()</code>. It adds the sensor to the I²C bus, calls <code>registerSensor()</code> (which calls <code>RS485ARSENAL::addSensor</code>) and starts the task. Registration has to happen before <code>RS485Comm::start()</code>, because the registry is locked once the receive task exists. A duplicate ID is rejected.</li>
         </ol>
         <p>Read callback:</p>
-<pre class="code-block" tabindex="0"><code>static void readMySensor(Sensor&lt;2&gt;&amp; s, LockGuard&amp; lock) {
+<pre class="code-block" tabindex="0" role="region" aria-label="Read callback example"><code>static void readMySensor(Sensor&lt;2&gt;&amp; s, LockGuard&amp; lock) {
     uint8_t raw[6]{};
     if (s.readDeviceRegister(SENSOR_DATA_REG, raw, sizeof(raw), lock) != ESP_OK) {
-return;  // readDeviceRegister already marks the reading invalid
+        return;  // readDeviceRegister already marks the reading invalid
     }
     Vec3&lt;uint16_t&gt; r{};
     r.x = static_cast&lt;uint16_t&gt;(i2cUtils::convertTo16Bits(&amp;raw[0]));
@@ -114,7 +114,7 @@ return;  // readDeviceRegister already marks the reading invalid
     s.setReadings(r);
 }</code></pre>
         <p>Bus, sensor and registration (minimal usage, using the constructor signatures at <code>3eb3ed6</code>):</p>
-<pre class="code-block" tabindex="0"><code>I2CBus&lt;2&gt; muxBus(BUS_SCL_GPIO, BUS_SDA_GPIO, I2C_NUM_0,
+<pre class="code-block" tabindex="0" role="region" aria-label="Bus, sensor and registration example"><code>I2CBus&lt;2&gt; muxBus(BUS_SCL_GPIO, BUS_SDA_GPIO, I2C_NUM_0,
                  MUX_RESET_GPIO, {MUX_ADDR_A, MUX_ADDR_B});
 
 Sensor&lt;2&gt; mySensor("my_sensor", muxBus, SENSOR_I2C_ADDR, SENSOR_ID,

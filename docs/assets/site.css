@@ -16,7 +16,7 @@
 
 /*
   Benjamin Elmore portfolio: site styles.
-  Mobile-first (base = 360px), min-width media queries only. System fonts; no third-party requests.
+  Mobile-first (base = 360px), min-width media queries only. System fonts plus self-hosted B612 Mono (assets/fonts, OFL); no third-party requests.
 */
 
 :root {
@@ -362,10 +362,13 @@ main {
 }
 
 .case-study > *,
-#projects > *,
-#contact > * {
+#projects > * {
   max-width: var(--measure);
   margin-inline: auto;
+}
+
+#contact > * {
+  max-width: var(--measure);
 }
 
 /* ---------- Intro ---------- */
@@ -894,6 +897,25 @@ main {
   background-size: 100% 1px;
 }
 
+.exp-details summary {
+  text-decoration: none;
+  list-style: none;
+}
+
+.exp-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.exp-details summary::after {
+  content: "+";
+  margin-left: var(--space-2);
+  font-family: var(--font-num);
+}
+
+.exp-details[open] summary::after {
+  content: "\2212";
+}
+
 .exp-details .role__points {
   margin-top: var(--space-2);
 }
@@ -1334,4 +1356,23 @@ time {
 .about__link,
 .edu {
   max-width: var(--measure);
+}
+
+/* Tall tap targets: keep the underline close to the text, not the bottom of the 44px box. */
+.back-link,
+.link-list a,
+.card__link a {
+  background-position: 0 calc(100% - 0.55rem), 0 calc(100% - 0.55rem);
+}
+
+.role-section h4 {
+  margin-top: var(--space-5);
+}
+
+.role-section > p:not(.meta) {
+  margin-top: var(--space-3);
+}
+
+.case-study__block ol + p {
+  margin-top: var(--space-4);
 }

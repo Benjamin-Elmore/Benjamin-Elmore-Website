@@ -65,8 +65,12 @@
       });
       list.addEventListener('mouseleave', function () {
         var a = document.activeElement;
-        if (!(a && list.contains(a) && a.matches(':focus-visible'))) hide();
+        var fv = false;
+        try { fv = a && a.matches(':focus-visible'); } catch (e) {}
+        if (a && list.contains(a) && fv && (a.classList.contains('work-row') || a.classList.contains('exp-row__link'))) show(a);
+        else hide();
       });
+      window.addEventListener('resize', hide);
     });
   });
 })();
