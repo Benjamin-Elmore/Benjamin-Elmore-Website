@@ -236,6 +236,23 @@ async function main() {
     await sleep(300);
     check(await tab.eval(q.inView('contact')), '#contact not in view (scrollY ' + await tab.eval('scrollY') + ')');
   });
+  await step('K6c home #work click, scroll, Vice President row, Back keeps the scroll', async () => {
+    await tab.goto(url(''), SETTLE);
+    await tab.eval('window.__marker=1');  // K7 below checks this marker too
+    await tab.eval(q.click('#work'));
+    await tab.until("location.hash==='#work'", '#work hash');
+    await sleep(300);
+    await tab.eval("scrollTo({top:1100,behavior:'instant'})");
+    await sleep(150);
+    const saved = await tab.eval('scrollY');
+    await tab.eval(q.click(BASE + 'CBU-Robotics/#vice-president'));
+    await tab.until(`location.pathname===${JSON.stringify(BASE + 'CBU-Robotics/')} && location.hash==='#vice-president'`, 'route');
+    await tab.eval('history.back()');
+    await tab.until(`location.pathname===${JSON.stringify(BASE)} && location.hash==='#work' && document.title===${JSON.stringify(homeTitle)}`, 'back to home #work');
+    const y = await tab.eval(FRAME_Y);
+    check(await tab.eval('window.__marker') === 1, 'page reloaded (marker lost)');
+    check(Math.abs(y - saved) <= 5, `scrollY ${y}, expected ${saved}`);
+  });
   await step('K7 subpage nav "Experience" -> /#experience, "All work" -> /#work', async () => {
     await tab.eval(q.click(BASE + 'ARC/'));
     await tab.until(`location.pathname===${JSON.stringify(BASE + 'ARC/')}`, 'ARC');

@@ -19,6 +19,7 @@ export default function RouteEffects() {
   const first = useRef(true);
   const positions = useRef(new Map());
   const keyRef = useRef(location.key);
+  const lastIdx = useRef(0);
 
   useEffect(() => {
     const onScroll = () => { if (keyRef.current !== 'default') positions.current.set(keyRef.current, window.scrollY); };
@@ -34,6 +35,7 @@ export default function RouteEffects() {
 
   useLayoutEffect(() => {
     applyHead(routeFor(location.pathname));
+    if (history.state && typeof history.state.idx === 'number') lastIdx.current = history.state.idx;
     keyRef.current = location.key;
     // Hydration: only the head sync runs, so deep links keep the browser fragment scroll.
     if (first.current) { first.current = false; return; }
@@ -55,7 +57,15 @@ export default function RouteEffects() {
     };
     if (navType === 'POP') {
       // Entries the browser made for same-page #frag clicks have no router key, and the browser has already scrolled.
-      if (location.key === 'default') { const el = target(); if (el) el.scrollIntoView(); return; }
+      if (location.key === 'default') {
+        const el = target(); if (el) el.scrollIntoView();
+        // A same-page #frag entry made by the browser: stamp a router key so Back can restore its scroll later.
+        const key = Math.random().toString(36).slice(2, 10);
+        lastIdx.current += 1;
+        try { history.replaceState({ usr: null, key, idx: lastIdx.current }, ''); } catch (e) {}
+        keyRef.current = key;
+        return;
+      }
       const saved = positions.current.get(location.key);
       if (saved !== undefined) instant(() => window.scrollTo(0, saved));
       else if (location.hash) { const el = target(); if (el) instant(() => el.scrollIntoView()); }

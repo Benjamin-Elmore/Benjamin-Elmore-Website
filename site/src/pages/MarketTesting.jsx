@@ -24,12 +24,12 @@ export default function MarketTesting() {
         <div className="case-study__block" id="mt-built">
           <h3>What I built</h3>
           <ul>
-            <li>The entry point, and the model and training structure around a{' '}<code>StockModel</code>.</li>
-            <li>CSV and yfinance data pull paths. On the{' '}<span className="nowrap"><code>LSTM-feature-implement</code></span>{' '}branch, I extended them with general CSV ingestion and VIX retrieval.</li>
-            <li>pandas and NumPy preprocessing, feature scaling with a scikit-learn{' '}<code>RobustScaler</code>, and 100-day input windows.</li>
+            <li>The entry point, and the model and training structure around a <code>StockModel</code>.</li>
+            <li>CSV and yfinance data pull paths. On the <span className="nowrap"><code>LSTM-feature-implement</code></span> branch, I extended them with general CSV ingestion and VIX retrieval.</li>
+            <li>pandas and NumPy preprocessing, feature scaling with a scikit-learn <code>RobustScaler</code>, and 100-day input windows.</li>
             <li>TensorFlow LSTM training with early stopping on validation loss, and a check that skips tickers whose scaled data is out of range.</li>
             <li>Data logging and the prediction-table output.</li>
-            <li>A reorganization into a{' '}<code>src</code>{' '}package.</li>
+            <li>A reorganization into a <code>src</code> package.</li>
           </ul>
           <ul className="tag-list">
             <li className="tag">Python</li>
@@ -48,7 +48,7 @@ export default function MarketTesting() {
           <div className="photo-slot__box">Screenshot: terminal run</div>
           <figcaption className="figure__caption">A terminal run of the pipeline. Screenshot to be added.</figcaption>
         </figure>
-        <p className="case-study__repo">Code:{' '}<a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener">Benjamin-Elmore/MarketTesting on GitHub</a>. The pipeline above is the default{' '}<code>main</code>{' '}branch at{' '}<code>79f6e12</code>. The VIX and general CSV work is on the{' '}<span className="nowrap"><code>LSTM-feature-implement</code></span>{' '}branch.</p>
+        <p className="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener">Benjamin-Elmore/MarketTesting on GitHub</a>. The pipeline above is the default <code>main</code> branch at <code>79f6e12</code>. The VIX and general CSV work is on the <span className="nowrap"><code>LSTM-feature-implement</code></span> branch.</p>
       </section>
     </>
   );
