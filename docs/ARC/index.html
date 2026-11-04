@@ -68,7 +68,7 @@
         <li><strong>Bus mutex and <code>LockGuard</code>.</strong> <code>LockGuard</code> is a noncopyable RAII wrapper over a FreeRTOS semaphore. In <code>19e7deb</code> I made its destructor release the mutex only if that guard actually took it, and <code>isMutexLocked()</code> reports which case you're in. Every register operation and mux select takes a <code>LockGuard&amp;</code> and returns an error when it isn't held, so the channel select and its transaction stay under one lock.</li>
         <li><strong>Optical sensor.</strong> I added register reads and writes, offset setting and position decoding (<code>8b73163</code>, <code>ab0cb74</code>), and set up <code>OpticalPreconfig</code> to attach those functions to optical sensors (<code>c2c8812</code>). At <code>3eb3ed6</code> its include is commented out, so it isn't in the build; the optical preset work is deferred.</li>
         <li><strong>RS-485 protocol.</strong> I wrote <code>RS485Comm</code> (<code>ae9c93f</code>) with a byte-wise parse state machine (<code>7f8d0e5</code>), the packet format with timestamps and packed sensor IDs (<code>1d33555</code>, <code>65ec388</code>), checksum and escape-sequence framing, reply packet compilation (<code>8467715</code>) and <code>uart_write_bytes</code> to the V5 (<code>9e42136</code>). <code>3eb3ed6</code> prepared header-based dispatch, with the per-command parsers still stubs.</li>
-        <li><strong>Diagnostics and error propagation.</strong> <code>RS485Comm::serialStatus()</code> prints the parse state, buffers and sensor IDs (<code>cef105f</code>), building on earlier RS-485 debugging in <code>e85ecbb</code>. <code>I2CBus::confirmStatus()</code> logs each failure with its location through <code>ESP_LOGE</code> and keeps the first error in <code>getStatus()</code> (<code>f961457</code>). Sensor status is atomic because the comm task can change it, and a failed register read or mux select invalidates the reading, so the packet carries <code>0xFFFF</code> instead of stale data. <code>4dd3cfd</code> rewrote the UART config to fix a build problem with warnings treated as errors.</li>
+        <li><strong>Diagnostics and error propagation.</strong> <code>RS485Comm::serialStatus()</code> prints the parse state, buffers and sensor IDs (<code>cef105f</code>), building on earlier RS-485 debugging in <code>e85ecbb</code>. <code>I2CBus::confirmStatus()</code> logs each failure with its location through <code>ESP_LOGE</code> and keeps the first error in <code>getStatus()</code> (<code>f961457</code>). Sensor status is atomic so the RS-485 task's offset path can change it safely (that path is commented out at <code>3eb3ed6</code>), and a failed register read or mux select invalidates the reading, so the packet carries <code>0xFFFF</code> instead of stale data. <code>4dd3cfd</code> rewrote the UART config to fix a build problem with warnings treated as errors.</li>
         <li><strong>Pipeline checks.</strong> <code>cef105f</code> records RS-485 protocol checks across multiple packet formats, per its commit message. The full sensor-to-V5 path is still to be tested on hardware.</li>
         </ul>
       </div>
@@ -104,7 +104,8 @@
         <p>Read callback:</p>
 <pre class="code-block" tabindex="0" role="region" aria-label="Read callback example"><code>static void readMySensor(Sensor&lt;2&gt;&amp; s, LockGuard&amp; lock) {
     uint8_t raw[6]{};
-    if (s.readDeviceRegister(SENSOR_DATA_REG, raw, sizeof(raw), lock) != ESP_OK) {
+    if (s.readDeviceRegister(SENSOR_DATA_REG, raw, sizeof(raw),
+                             lock) != ESP_OK) {
         return;  // readDeviceRegister already marks the reading invalid
     }
     Vec3&lt;uint16_t&gt; r{};
@@ -121,9 +122,11 @@ Sensor&lt;2&gt; mySensor("my_sensor", muxBus, SENSOR_I2C_ADDR, SENSOR_ID,
                    false, SensorPreconfig::NONE, SENSOR_MUX_CHANNEL,
                    DEFAULT_PRIORITY, {}, {}, {}, {}, readMySensor);
 
-SensorUtils::sensor_status_t st = mySensor.setup();  // bus add, RS-485 registry, task
+// setup(): bus add, RS-485 registry, task
+SensorUtils::sensor_status_t st = mySensor.setup();
 if (st != SensorUtils::SENSOR_OK) {
-    ESP_LOGE("APP", "setup failed: %s", SensorUtils::sensor_status_str(st));
+    ESP_LOGE("APP", "setup failed: %s",
+             SensorUtils::sensor_status_str(st));
 }
 // then: RS485ARSENAL::startRS485ARSENAL();</code></pre>
         <p>The bus must outlive the sensor. As of <code>3eb3ed6</code>, <code>app_main</code> doesn't build any sensors, and this I²C path hasn't been tested on hardware.</p>
