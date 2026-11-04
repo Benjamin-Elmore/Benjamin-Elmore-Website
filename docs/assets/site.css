@@ -1,3 +1,19 @@
+@font-face {
+  font-family: "B612 Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/B612Mono-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "B612 Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/B612Mono-Bold.woff2") format("woff2");
+}
+
 /*
   Benjamin Elmore portfolio: site styles.
   Mobile-first (base = 360px), min-width media queries only. System fonts; no third-party requests.
@@ -14,6 +30,7 @@
   --color-code-bg: #efede8;
 
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-num: "B612 Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
   --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
 
   /* In rem, not ch, so an element's own font (e.g. the mono footer) can't change the column width. */
@@ -115,14 +132,47 @@ p + p {
   margin-top: var(--space-3);
 }
 
+/* Sliding underline on every link: a resting 1px line plus a 2px line that slides in from the left
+   on hover and keyboard focus. Works on wrapped links (clone) and in both themes (currentColor). */
 a {
   color: var(--color-accent);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.18em;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor), linear-gradient(var(--color-muted), var(--color-muted));
+  background-repeat: no-repeat;
+  background-position: 0 calc(100% - 0.02em), 0 calc(100% - 0.02em);
+  background-size: 0 2px, 100% 1px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 0.28s ease;
 }
 
-a:hover {
-  text-decoration-thickness: 2px;
+a:hover,
+a:focus-visible {
+  background-size: 100% 2px, 100% 1px;
+}
+
+/* Navigation, name, skip link and the work/experience rows have no resting line; they only slide one in. */
+.site-nav__list a,
+.site-header__name,
+.skip-link,
+.work-row,
+.exp-row__link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-size: 0 2px;
+}
+
+.site-nav__list a:hover,
+.site-nav__list a:focus-visible,
+.site-header__name:hover,
+.site-header__name:focus-visible,
+.skip-link:hover,
+.skip-link:focus-visible,
+.work-row:hover,
+.work-row:focus-visible,
+.exp-row__link:hover,
+.exp-row__link:focus-visible {
+  background-size: 100% 2px;
 }
 
 :focus-visible {
@@ -247,11 +297,6 @@ main,
   text-transform: uppercase;
 }
 
-.site-nav__list a:hover,
-.site-header__name:hover {
-  text-decoration: underline;
-}
-
 .theme-toggle {
   justify-self: end;
   min-height: var(--tap);
@@ -318,7 +363,6 @@ main {
 
 .case-study > *,
 #projects > *,
-#education > *,
 #contact > * {
   max-width: var(--measure);
   margin-inline: auto;
@@ -378,13 +422,15 @@ main {
 
 .section--work,
 .section--experience,
-.section--skills {
+.section--skills,
+.section--num {
   border-top: 0;
 }
 
 .section--work .section__title,
 .section--experience .section__title,
-.section--skills .section__title {
+.section--skills .section__title,
+.section--num .section__title {
   display: flex;
   align-items: baseline;
   gap: var(--space-2);
@@ -395,7 +441,8 @@ main {
 
 .section--work .section__title::after,
 .section--experience .section__title::after,
-.section--skills .section__title::after {
+.section--skills .section__title::after,
+.section--num .section__title::after {
   flex: 1;
   margin-left: var(--space-2);
   border-top: 1px solid;
@@ -427,16 +474,38 @@ main {
   text-decoration: none;
 }
 
-.work-row:hover {
-  background: var(--color-code-bg);
+.work-row:hover,
+.work-row:focus-visible,
+.exp-row__link:hover,
+.exp-row__link:focus-visible {
+  background-color: var(--color-code-bg);
 }
 
-.work-row:hover .work-row__name {
-  text-decoration: underline;
+/* Shared indicator (site.js): one line slides between rows. Without JS each row draws its own. */
+.slide-list {
+  position: relative;
+}
+
+.slide-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 2px;
+  width: 0;
+  background: var(--color-text);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.28s ease, width 0.28s ease, opacity 0.15s ease;
+}
+
+.slide-list.has-indicator .work-row,
+.slide-list.has-indicator .exp-row__link {
+  background-size: 0 2px;
 }
 
 .work-row__name {
-  font-size: clamp(1.625rem, 3.7vw, 2.625rem);
+  font-family: var(--font-num);
+  font-size: clamp(1.5rem, 3.2vw, 2.25rem);
   font-weight: 750;
   line-height: 1.1;
   letter-spacing: -0.035em;
@@ -736,6 +805,97 @@ main {
   font-size: 0.875rem;
   text-decoration: underline;
   text-underline-offset: 0.18em;
+}
+
+/* ---------- Experience rows ---------- */
+
+.exp-list {
+  border-bottom: 1px solid var(--color-text);
+  list-style: none;
+  padding: 0;
+}
+
+.exp-list > li + li {
+  border-top: 1px solid var(--color-text);
+}
+
+.exp-row__link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-4);
+  min-height: var(--tap);
+  padding: var(--space-4) var(--space-3);
+  color: var(--color-text);
+  background-repeat: no-repeat;
+}
+
+.exp-row__role {
+  font-size: clamp(1.25rem, 2.5vw, 1.625rem);
+  font-weight: 750;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.exp-row__arrow {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.exp-row__org,
+.exp-row__dates {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.exp-row__dates,
+.exp-row__dates time {
+  font-family: var(--font-num);
+  font-size: 0.8125rem;
+}
+
+.exp-row__org {
+  grid-column: 1 / -1;
+}
+
+.exp-row__dates {
+  grid-column: 1 / -1;
+}
+
+.exp-details {
+  padding: 0 var(--space-3) var(--space-3);
+}
+
+.exp-details summary {
+  width: fit-content;
+  min-height: var(--tap);
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 calc(100% - 0.6rem);
+  background-size: 0 2px;
+  transition: background-size 0.28s ease;
+}
+
+.exp-details summary:hover,
+.exp-details summary:focus-visible {
+  background-size: 100% 2px;
+}
+
+.exp-details[open] summary {
+  background-size: 100% 1px;
+}
+
+.exp-details .role__points {
+  margin-top: var(--space-2);
 }
 
 .role__title {
@@ -1143,3 +1303,35 @@ main {
 
 .section--page ul:not([class]) { margin-top: var(--space-3); padding-left: 1.25rem; }
 .section--page ul:not([class]) li + li { margin-top: var(--space-2); }
+
+/* ---------- Numerals in B612 Mono ---------- */
+
+.section__title > span[aria-hidden="true"],
+.meta,
+.page-header__meta,
+.card__meta,
+time {
+  font-family: var(--font-num);
+}
+
+@media print {
+  a {
+    background: none;
+    text-decoration: underline;
+  }
+
+  .slide-indicator {
+    display: none;
+  }
+}
+
+.about__link {
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+}
+
+#about .section__lede,
+.about__link,
+.edu {
+  max-width: var(--measure);
+}
