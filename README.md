@@ -41,7 +41,7 @@ python tools/check_site.py                       # site checks (C01–C19), exit
 ```
 
 The checks enforce what the site is allowed to say and link to, as well as how it's built. Examples:
-- every fact is dated and attributed where the brief requires it
+- the required dates, commit hashes and AI-assisted credit appear on the page
 - no forbidden claims (throughput, latency, reliability, "validated" and similar)
 - external links come from an allowlist
 - no email or phone number
