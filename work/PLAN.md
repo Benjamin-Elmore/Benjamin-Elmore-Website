@@ -10,7 +10,8 @@ Single-page static portfolio in `docs/`, plain HTML + CSS, one small local JS fi
 | `docs/.nojekyll` | content-engineer | Empty file. |
 | `docs/assets/site.css` | style-engineer | All styling, tokens, light/dark, print-safe basics. |
 | `docs/assets/site.js` | style-engineer | Theme toggle only (under 40 lines). |
-| `docs/assets/arc-architecture.svg` | diagram-engineer | Standalone SVG file, see section 2.5. |
+| `docs/assets/arc-architecture.svg` | diagram-engineer | Wide standalone SVG, see section 2.5. |
+| `docs/assets/arc-architecture-stacked.svg` | diagram-engineer | Vertically stacked SVG for narrow screens (amendment A1). |
 | `tools/check_site.py` | test-engineer | Checks from section 4, stdlib only, Python 3.12-compatible. |
 | `tools/test_check_site.py` | test-engineer | `unittest` self-test: one failing fixture per check plus a passing fixture. |
 | `.github/workflows/site-checks.yml` | test-engineer | Runs on `pull_request` and `push` to `main`. |
@@ -87,7 +88,7 @@ Required section ids, in this order: `top, arc, experience, projects, skills, ed
 - `viewBox="0 0 960 360"`, `role="img"`, `<title>` and `<desc>` inside, `xmlns` set. No scripts, no external refs, no `<foreignObject>`, no web fonts (use `font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"`).
 - Four boxes left to right with arrows: **Sensors** ("optical and other external sensors") → **I²C mux** ("multiplexed I²C") → **ESP32-S3** ("ARC firmware on ARSENAL board") → **VEX V5 Brain**. The link between ESP32-S3 and V5 Brain is labelled **"half-duplex RS-485"**; the sensor-side links are labelled **"I²C"**. Heading text in the SVG: "Intended system architecture".
 - Self-contained palette on an opaque background rect (rounded, dark navy "blueprint" or light paper; diagram-engineer's choice), every text/background pair at least 4.5:1, strokes at least 3:1 against the panel. Must look fine on both page themes.
-- Legible when scaled to 328px wide (360px viewport minus gutters): minimum label font-size 18 user units. If labels can't fit at that width, stack vertically is NOT allowed (one file); instead shorten sub-labels.
+- **Amendment A1 (lead, fix round 1, CR1-11):** the 18-unit rule could not reach 12px rendered text at 328px. There are now two files: the wide SVG with a minimum font of 22u (box names 26u or more), and `arc-architecture-stacked.svg` (`viewBox 0 0 360 640`, same palette and restrictions, one-line sub-labels at 17u or more) served below 720px via `<picture><source media="(max-width: 719px)" srcset="assets/arc-architecture-stacked.svg">`. Both must render text at 12px or more at their target widths. Add a panel stroke so the panel edge shows in the dark theme (CR1-12).
 - No ESP32 pin numbers, part numbers, data rates or anything not in the brief. Do not reproduce the team PlantUML.
 - Content-engineer must use `width="960" height="360"` on the `<img>`; style-engineer sets `.figure--diagram img { width:100%; height:auto }`.
 
@@ -119,10 +120,10 @@ Required section ids, in this order: `top, arc, experience, projects, skills, ed
   3. Acquisition vs requests: a controller request should not have to run a sensor-specific I²C sequence → separate acquisition and communication tasks; sensor-ID registry and a small readings/offset interface. Say "the architecture gives…" (design), not "proven".
   4. Bring-up isolation: a transceiver problem can hide sensor bugs → entry point runs RS-485 with an empty registry; UART startup/status reporting and I²C error logging narrow failures to a layer.
 - **Verification** (dated, attributed):
-  - November 3, 2026: local check of the `ARC-Testing` `CPPDev` branch at `3eb3ed6`, clean tree, `pio run -e seeed_xiao_esp32s3` passed with a flash-size configuration warning (8 MB expected, 2 MB configured). Build of the RS-485-only entry point; it shows the target builds; no hardware test was run.
+  - November 3, 2026: a local check of the ARC repository's `CPPDev` branch at `3eb3ed6` (matching the public branch), clean tree, `pio run -e seeed_xiao_esp32s3` passed with a flash-size configuration warning (8 MB expected, 2 MB configured). Build of the RS-485-only entry point; it shows the target builds; no hardware test was run.
   - October 28, 2026: commit `cef105f` records successful RS-485 protocol checks across multiple packet formats "per the commit message"; later commits changed the communication code.
   - Open work: optical I²C bring-up; a current sensor-to-V5 hardware test; per-command parser stubs (header dispatch is prepared); resolving the flash configuration warning.
-- **Repo link.** Link `https://github.com/Benjamin-Elmore/ARC` with a sentence like "The public repository is a separate snapshot from the ARC-Testing branch checked above." Never say the repo contains the verified build.
+- **Repo link (corrected, findings C1/B1).** Link `https://github.com/Benjamin-Elmore/ARC`. The verified build is that repo's public `CPPDev` branch at `3eb3ed6`; its default branch `main` is a different revision. Never say `main` holds the verified build. Never use "ARC-Testing" (old name) or SdBenE URLs.
 - **Experience.** CBU1 VEX U Robotics: Software Engineer since September 2025; Vice President since October 2026. Coordinates milestones across disciplines, helps plan events and competition prep. Earlier PROS/C++ drivetrain work: driver controls, baseline point navigation with odometry and robot-frame error, PID/Pure Pursuit *exploration*; spline/odometry work had open items. In-N-Out Burger, Associate since May 2024, one line (teamwork, service quality in a fast-paced environment).
 - **FSW-UAV-SIM.** No link. "I lead and orchestrate an AI-assisted UAV simulation effort" with mechanical/aerodynamic collaborators; C++ flight-software logic and Simulink plant behind a Level-2 S-function; generated interface contracts, standalone replay. Status: staged prototype; GNC stubbed, aero data draft; October 2026 review verified generator tests and interface checks at its snapshot. Credit AI-assisted implementation explicitly.
 - **MarketTesting.** Linked. Independent Python learning project: CSV/yfinance ingestion, pandas/NumPy preprocessing, per-ticker scaling, 100-day windows, TensorFlow LSTM training, prediction-table output. Pipeline ownership only; no results.
@@ -130,7 +131,7 @@ Required section ids, in this order: `top, arc, experience, projects, skills, ed
 - **Education.** California Baptist University, B.S. Computer Science, Machine Learning and Artificial Intelligence concentration, expected May 2029.
 - **Contact.** GitHub and LinkedIn only.
 
-**Forbidden claims** (content reviewer enforces; section 4 automates the phrase list): deployment/release/production use; throughput, latency, timing, real-time or determinism; reliability or robustness; forecasting accuracy, returns or financial performance; that ARC was hardware-tested end to end or that the sensor-to-V5 path works; that the public ARC repo holds `3eb3ed6`; that Ben designed the ARSENAL board or wrote the team's existing sensor code; that Ben led VEX U as a whole; that FSW-UAV-SIM is flight-ready, complete, or hand-written without AI; any defense/space job experience; email, phone, address, résumé.
+**Forbidden claims** (content reviewer enforces; section 4 automates the phrase list): deployment/release/production use; throughput, latency, timing, real-time or determinism; reliability or robustness; forecasting accuracy, returns or financial performance; that ARC was hardware-tested end to end or that the sensor-to-V5 path works; that the ARC repo's `main` branch holds the verified build; "separate snapshot" wording; that Ben designed the ARSENAL board or wrote the team's existing sensor code; that Ben led VEX U as a whole; that FSW-UAV-SIM is flight-ready, complete, or hand-written without AI; any defense/space job experience; email, phone, address, résumé.
 
 ## 4. Acceptance checks (`tools/check_site.py`)
 
