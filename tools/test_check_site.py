@@ -54,8 +54,12 @@ INDEX_HTML = """<!doctype html>
 </section>
 <section id="arc" class="section case-study" aria-labelledby="arc-title">
 <h2 id="arc-title" class="section__title">ARC sensor firmware</h2>
+<!-- ARC case study -->
 <figure class="figure figure--diagram" id="arc-architecture">
+<picture>
+<source media="(max-width: 719px)" srcset="assets/arc-architecture-stacked.svg" width="360" height="640">
 <img src="assets/arc-architecture.svg" width="960" height="360" alt="Block diagram of the intended ARC system architecture." loading="lazy" decoding="async">
+</picture>
 <figcaption class="figure__caption">Intended system architecture.</figcaption>
 <ol class="figure__steps"><li>The ESP32-S3 talks to the V5 Brain over half-duplex RS-485.</li></ol>
 </figure>
@@ -63,7 +67,7 @@ INDEX_HTML = """<!doctype html>
 <h3>Verification so far</h3>
 <ul class="evidence-list">
 <li class="evidence"><p class="evidence__date"><time datetime="2026-11-03">November 3, 2026</time></p>
-<p class="evidence__text">Built <code>3eb3ed6</code> with a flash warning (8 MB expected, 2 MB configured). No hardware test was run.</p></li>
+<p class="evidence__text">Built <code>3eb3ed6</code> on the <code>CPPDev</code> branch with a flash warning (8 MB expected, 2 MB configured). No hardware test was run.</p></li>
 <li class="evidence"><p class="evidence__date"><time datetime="2026-10-28">October 28, 2026</time></p>
 <p class="evidence__text">Commit <code>cef105f</code> records protocol checks.</p></li>
 </ul>
@@ -144,12 +148,16 @@ SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img
 </svg>
 """
 
+# PLAN 2.5 amendment A1: the narrow-screen diagram served via <picture>.
+STACKED_SVG = SVG.replace('viewBox="0 0 960 360"', 'viewBox="0 0 360 640"')
+
 BASE_FILES: dict[str, str] = {
     "index.html": INDEX_HTML,
     ".nojekyll": "",
     "assets/site.css": SITE_CSS,
     "assets/site.js": SITE_JS,
     "assets/arc-architecture.svg": SVG,
+    "assets/arc-architecture-stacked.svg": STACKED_SVG,
 }
 
 Files = dict[str, "str | bytes | None"]
@@ -325,12 +333,12 @@ class CheckerFixtureTest(unittest.TestCase):
     def test_c13_forbidden_phrase(self):
         detail = self.assert_only_fails("C13", lambda f: edit(
             f, "index.html", "Optical bring-up.", "Optical bring-up of a ROBUST bus."))
-        self.assertIn("robust", detail)
+        self.assertIn("ROBUST", detail)
 
     def test_c13_forbidden_phrase_in_alt(self):
         detail = self.assert_only_fails("C13", lambda f: edit(
             f, "index.html", 'alt="Block diagram', 'alt="Proven block diagram'))
-        self.assertIn("proven", detail)
+        self.assertIn("Proven", detail)
 
     def test_c13_forbidden_phrase_in_svg(self):
         detail = self.assert_only_fails("C13", lambda f: edit(
@@ -341,7 +349,7 @@ class CheckerFixtureTest(unittest.TestCase):
         def mutate(f):
             edit(f, "index.html", "Optical bring-up.", "Optical bring-up is robust.")
         original = dict(check_site.ALLOW)
-        check_site.ALLOW["robust"] = "test exemption"
+        check_site.ALLOW[r"robust\w*"] = "test exemption"
         try:
             self.assert_all_pass(mutate)
         finally:
@@ -375,9 +383,9 @@ class CheckerFixtureTest(unittest.TestCase):
     def test_c16_dark_block_missing_token(self):
         detail = self.assert_only_fails("C16", lambda f: edit(
             f, "assets/site.css",
-            "  --color-focus: #8cc4ff; --color-code-bg: #222222;\n}\n@import",
-            "  --color-focus: #8cc4ff;\n}\n@import"))
-        self.assertIn("--color-code-bg", detail)
+            " --color-border: #444444;\n  --color-focus: #8cc4ff; --color-code-bg: #222222;\n}\n@import",
+            "\n  --color-focus: #8cc4ff; --color-code-bg: #222222;\n}\n@import"))
+        self.assertIn("--color-border", detail)
 
     def test_c17_low_contrast(self):
         detail = self.assert_only_fails("C17", lambda f: edit(
@@ -404,17 +412,242 @@ class CheckerFixtureTest(unittest.TestCase):
             {"assets/site.js": SITE_JS + "/*" + "x" * 3100 + "*/\n"}))
         self.assertIn("site.js", detail)
 
+    # -- fix round 1: C07 <picture>/srcset (CR1-11, CR1-20) ----------------
+    def test_c07_picture_source_missing_file(self):
+        detail = self.assert_only_fails("C07", lambda f: edit(
+            f, "index.html", 'srcset="assets/arc-architecture-stacked.svg"',
+            'srcset="assets/nope.svg"'))
+        self.assertIn("nope.svg", detail)
+
+    def test_c07_srcset_second_candidate_missing(self):
+        detail = self.assert_only_fails("C07", lambda f: edit(
+            f, "index.html", 'srcset="assets/arc-architecture-stacked.svg"',
+            'srcset="assets/arc-architecture-stacked.svg 1x, assets/stacked@2x.svg 2x"'))
+        self.assertIn("stacked@2x.svg", detail)
+
+    def test_c07_picture_without_img(self):
+        def mutate(f):
+            html = f["index.html"]
+            a = html.index("<img src=\"assets/arc-architecture.svg\"")
+            b = html.index(">", a) + 1
+            f["index.html"] = html[:a] + html[b:]
+        detail = self.assert_only_fails("C07", mutate)
+        self.assertIn("<img> fallback", detail)
+
+    def test_c07_picture_source_without_srcset(self):
+        detail = self.assert_only_fails("C07", lambda f: edit(
+            f, "index.html", 'srcset="assets/arc-architecture-stacked.svg"', 'data-x="1"'))
+        self.assertIn("no srcset", detail)
+
+    # -- fix round 1: C08 (CR1-18, T2) -------------------------------------
+    def test_c08_new_vectors(self):
+        cases = {
+            "inline <style> @import url()": lambda f: edit(
+                f, "index.html", "</head>",
+                '<style>@import url("https://evil.example/x.css");</style>\n</head>'),
+            "inline <style> @import string": lambda f: edit(
+                f, "index.html", "</head>",
+                "<style>@import 'https://evil.example/y.css';</style>\n</head>"),
+            "style attribute url()": lambda f: edit(
+                f, "index.html", '<p class="section__lede">',
+                '<p class="section__lede" style="background:url(//evil.example/s.png)">'),
+            "protocol-relative url() in CSS": lambda f: edit(
+                f, "assets/site.css", "body { background: var(--color-bg);",
+                "body { background: var(--color-bg) url(//evil.example/x.png);"),
+            "protocol-relative href": lambda f: edit(
+                f, "index.html", 'href="https://github.com/Benjamin-Elmore" rel',
+                'href="//evil.example/" rel'),
+            "backslash scheme https:\\\\": lambda f: edit(
+                f, "index.html", 'href="https://github.com/Benjamin-Elmore" rel',
+                'href="https:\\\\evil.example/" rel'),
+            "backslash scheme https:/\\": lambda f: edit(
+                f, "index.html", 'href="https://github.com/Benjamin-Elmore" rel',
+                'href="https:/\\evil.example/" rel'),
+            "tab inside scheme": lambda f: edit(
+                f, "index.html", 'href="https://github.com/Benjamin-Elmore" rel',
+                'href="ht\ttps://evil.example/" rel'),
+            "srcset external candidate": lambda f: edit(
+                f, "index.html", 'srcset="assets/arc-architecture-stacked.svg"',
+                'srcset="assets/arc-architecture-stacked.svg 1x, https://evil.example/b.svg 2x"'),
+            "SVG xlink:href //host": lambda f: (
+                edit(f, "assets/arc-architecture.svg", 'xmlns="http://www.w3.org/2000/svg"',
+                     'xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"'),
+                edit(f, "assets/arc-architecture.svg", "</svg>",
+                     '<image xlink:href="//evil.example/a.png" width="1" height="1"/>\n</svg>')),
+            "second HTML page": lambda f: f.update(
+                {"about.html": '<!doctype html><p><a href="https://evil.example/">x</a></p>'}),
+            "extra CSS file": lambda f: f.update(
+                {"assets/extra.css": "body { background: url(https://evil.example/x.png); }"}),
+            "URL in an HTML comment": lambda f: edit(
+                f, "index.html", "<!-- ARC case study -->",
+                "<!-- ARC case study, see https://evil.example/ -->"),
+            "URL in a .txt file": lambda f: f.update(
+                {"humans.txt": "Built by me. https://evil.example/"}),
+            "T2 SdBenE link": lambda f: edit(
+                f, "index.html", 'href="https://github.com/Benjamin-Elmore" rel',
+                'href="https://github.com/SdBenE" rel'),
+            "T2 CBU-Robotics in a comment": lambda f: edit(
+                f, "index.html", "<!-- ARC case study -->",
+                "<!-- ARC case study, mirror at github.com/CBU-Robotics -->"),
+            "T2 RobotBenjaminLucas in prose": lambda f: edit(
+                f, "index.html", "Find me on GitHub", "Thanks RobotBenjaminLucas. Find me on GitHub"),
+        }
+        for label, mutate in cases.items():
+            with self.subTest(label):
+                self.assert_only_fails("C08", mutate)
+
+    # -- fix round 1: C09 percent-encoding ----------------------------------
+    def test_c09_percent_encoded_fsw(self):
+        detail = self.assert_only_fails("C09", lambda f: edit(
+            f, "index.html", "A staged prototype;",
+            "github.com/Benjamin-Elmore/%46SW-UAV-SIM A staged prototype;"))
+        self.assertIn("FSW", detail)
+
+    # -- fix round 1: C10 resume/CV file names (CR1-20) ---------------------
+    def test_c10_resume_file_name(self):
+        for name in ("assets/Benjamin-Elmore-resume.pdf", "assets/résumé.pdf",
+                     "assets/Elmore_CV.pdf"):
+            with self.subTest(name):
+                detail = self.assert_only_fails("C10", lambda f: f.update({name: b"%PDF-1.4\n"}))
+                self.assertIn("resume/CV", detail)
+
+    # -- fix round 1: C11 (CR1-17) -----------------------------------------
+    def test_c11_hidden_places(self):
+        cases = {
+            "email in HTML comment": lambda f: edit(
+                f, "index.html", "<!-- ARC case study -->",
+                "<!-- ARC case study, contact ben.elmore@example.com -->"),
+            "phone in HTML comment": lambda f: edit(
+                f, "index.html", "<!-- ARC case study -->", "<!-- (951) 555-0142 -->"),
+            "email in <template>": lambda f: edit(
+                f, "index.html", "</main>",
+                "<template><p>ben.elmore@example.com</p></template>\n</main>"),
+            "phone in <template>": lambda f: edit(
+                f, "index.html", "</main>", "<template><p>(951) 555-0142</p></template>\n</main>"),
+            "email in CSS content": lambda f: edit(
+                f, "assets/site.css", "a:focus-visible {",
+                'footer::after { content: "ben.elmore@example.com"; }\na:focus-visible {'),
+            "email in JS string": lambda f: edit(
+                f, "assets/site.js", "})();", "var m = 'ben.elmore@example.com';\n})();"),
+            "email in .txt": lambda f: f.update({"humans.txt": "Contact: ben.elmore@example.com"}),
+            "phone in .txt": lambda f: f.update({"humans.txt": "Call +1 951 555 0142"}),
+            "tel: in SVG": lambda f: edit(
+                f, "assets/arc-architecture.svg", "</svg>", "<!-- tel:9515550142 -->\n</svg>"),
+        }
+        for label, mutate in cases.items():
+            with self.subTest(label):
+                self.assert_only_fails("C11", mutate)
+
+    # -- fix round 1: C13 word forms, T1/T3 phrases, more sources -----------
+    def test_c13_word_forms_and_new_phrases(self):
+        forms = [
+            "adds robustness", "reads sensors reliably", "ordering is guaranteed",
+            "ready to deploy", "a deployable build", "predicts accurately",
+            "a profitable strategy", "outperforms the baseline", "proved on hardware",
+            "proven design", "new releases", "released firmware", "low latencies",
+            "behaves deterministically", "real time loop", "throughputs",
+            "validated", "flight-validated", "autonomous navigation",
+            "autonomously navigates", "autonomous flight", "autonomously flying",
+            "CFD model", "race-free queue", "race freedom", "sole author",
+            "sole authorship", "a production system", "production-ready",
+            "ARC-Testing branch", "a separate snapshot", "hardware-tested",
+            "my résumé", "my resume",
+        ]
+        for phrase in forms:
+            with self.subTest(phrase):
+                self.assert_only_fails("C13", lambda f: edit(
+                    f, "index.html", "Optical bring-up.", f"Optical bring-up, {phrase}."))
+
+    def test_c13_normaliser_tricks(self):
+        cases = {
+            "en dash": "real–time",
+            "non-breaking hyphen": "real‑time",
+            "zero-width space": "reli​able",
+            "word joiner": "rob⁠ust",
+            "<wbr>": "real<wbr>-time",
+        }
+        for label, text in cases.items():
+            with self.subTest(label):
+                self.assert_only_fails("C13", lambda f: edit(
+                    f, "index.html", "Optical bring-up.", f"Optical bring-up, {text}."))
+
+    def test_c13_attribute_and_css_sources(self):
+        cases = {
+            "title attribute": lambda f: edit(
+                f, "index.html", '<p class="section__lede">',
+                '<p class="section__lede" title="Production-ready firmware">'),
+            "aria-label": lambda f: edit(
+                f, "index.html", '<p class="section__lede">',
+                '<p class="section__lede" aria-label="Proven ARC firmware">'),
+            "CSS content": lambda f: edit(
+                f, "assets/site.css", "a:focus-visible {",
+                'footer::after { content: " Proven on hardware."; }\na:focus-visible {'),
+            "stacked SVG text": lambda f: edit(
+                f, "assets/arc-architecture-stacked.svg", ">V5 Brain<", ">V5 Brain, robust<"),
+        }
+        for label, mutate in cases.items():
+            with self.subTest(label):
+                self.assert_only_fails("C13", mutate)
+
+    # -- fix round 1: C14 CPPDev (T3) --------------------------------------
+    def test_c14_missing_cppdev(self):
+        detail = self.assert_only_fails("C14", lambda f: edit(
+            f, "index.html", " on the <code>CPPDev</code> branch", ""))
+        self.assertIn("CPPDev", detail)
+
+    # -- fix round 1: C17 code-bg pairs (CR1-20) ----------------------------
+    def test_c17_low_contrast_on_code_bg(self):
+        detail = self.assert_only_fails("C17", lambda f: edit(
+            f, "assets/site.css", "--color-focus: #0050a0; --color-code-bg: #eeeeee;",
+            "--color-focus: #0050a0; --color-code-bg: #999999;"))
+        self.assertIn("--color-code-bg", detail)
+
+    # -- fix round 1: C18 every SVG (CR1-11, CR1-20) ------------------------
+    def test_c18_stacked_svg_lacks_label(self):
+        def mutate(f):
+            edit(f, "assets/arc-architecture-stacked.svg", "VEX V5 Brain over", "VEX robot over")
+            edit(f, "assets/arc-architecture-stacked.svg", ">V5 Brain<", ">Robot<")
+        detail = self.assert_only_fails("C18", mutate)
+        self.assertIn("arc-architecture-stacked.svg", detail)
+        self.assertIn("V5 Brain", detail)
+
+    def test_c18_stacked_svg_malformed(self):
+        detail = self.assert_only_fails("C18", lambda f: edit(
+            f, "assets/arc-architecture-stacked.svg", "</svg>", "<g></svg>"))
+        self.assertIn("well-formed", detail)
+
+    def test_c18_extra_svg_without_title(self):
+        detail = self.assert_only_fails("C18", lambda f: f.update({
+            "assets/icon.svg": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" '
+                               'role="img"><desc>dot</desc></svg>'}))
+        self.assertIn("icon.svg has no child <title>", detail)
+
+    def test_c18_wide_svg_missing(self):
+        # The wide file is also the <img> fallback, so C07 fails with it.
+        results = self.run_fixture(lambda f: f.update({"assets/arc-architecture.svg": None}))
+        failed = {k for k, (ok, _) in results.items() if not ok}
+        self.assertEqual(failed, {"C07", "C18"})
+
     # -- false-positive guards (all must still pass) ----------------------
     def test_no_false_positives(self):
         def mutate(f):
             edit(f, "index.html", "Find me on GitHub or LinkedIn.",
                  "Commit 1a2b3c4d5e6f7a8b9c0d at 2026-11-03, years 2025 - 2026, 8 MB, "
-                 "resumed work, unproven, reliably, framework/ notes, RS-485 at 115200. "
+                 "resumed work, unproven, approved, improved, reliance on mentors, validation, "
+                 "end-to-end checks, flight software, manufacturing, production line, "
+                 "race condition, freedom, sole maintainer, author, snapshot, unit tests, "
+                 "releasing, inaccurate, shipping, CFDs, robot, "
+                 "framework/ notes, RS-485 at 115200. "
                  "Find me on GitHub or LinkedIn.")
             edit(f, "index.html", '<time datetime="2026-11-03">',
                  '<time datetime="2026-11-03T10:00:00-08:00">')
             edit(f, "assets/site.css", "@import url(\"print.css\") print;",
-                 "@import url(\"print.css\") print;\n@media (min-width: 40em) { body { margin: 0; } }")
+                 "@import url(\"print.css\") print;\n@media (min-width: 40em) { body { margin: 0; } }\n"
+                 ".logo { background: url(\"logo@2x.png\"); }\n"
+                 ".x::before { content: \"No hardware test yet\"; }")
+            edit(f, "index.html", "<!-- ARC case study -->",
+                 "<!-- ARC case study: steps 1-4, 2025 - 2026 -->")
+            edit(f, "assets/site.js", "})();", "// docs: https://example.com/notes\n})();")
         self.assert_all_pass(mutate)
 
     def test_phone_and_email_helpers(self):

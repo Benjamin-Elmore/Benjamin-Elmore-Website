@@ -13,13 +13,13 @@
   document.addEventListener('DOMContentLoaded', function () {
     var btn = document.querySelector('.theme-toggle');
     if (!btn) return;
+    // Fixed label "Dark theme"; aria-pressed carries the state (true = dark is on).
     function render() {
-      var dark = current() === 'dark';
-      btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
-      btn.textContent = dark ? 'Light theme' : 'Dark theme';
+      btn.setAttribute('aria-pressed', current() === 'dark' ? 'true' : 'false');
     }
     btn.hidden = false;
     render();
+    if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', render);
     btn.addEventListener('click', function () {
       var next = current() === 'dark' ? 'light' : 'dark';
       root.dataset.theme = next;

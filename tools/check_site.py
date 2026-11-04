@@ -21,48 +21,59 @@ import re
 import sys
 import unicodedata
 import xml.etree.ElementTree as ET
+from html import unescape
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Callable
+from urllib.parse import unquote
 
 # ---------------------------------------------------------------------------
 # Tunable constants (reviewers edit these, not the check code)
 # ---------------------------------------------------------------------------
 
-#: C13. Matched case-insensitively on word boundaries against the visible text
-#: of index.html, its public metadata (meta description / og:*) and SVG text.
+#: C13. Matched case-insensitively against the visible text of index.html,
+#: its public metadata (meta description / og:*), the text of title /
+#: aria-label / aria-description / placeholder attributes, CSS ``content:``
+#: strings and SVG text. A plain entry is a whole-word phrase (word boundary
+#: on both sides; spaces match any whitespace). An entry starting with ``re:``
+#: is a regex with a word boundary at the start only, so a stem such as
+#: ``reliab\w*`` also catches "reliably" and "reliability" (CR1-16). Stems
+#: start at a word boundary, so negated forms like "unproven" still pass.
 FORBIDDEN_PHRASES: tuple[str, ...] = (
-    "throughput",
-    "latency",
-    "low-latency",
-    "deterministic",
-    "determinism",
-    "real-time",
-    "realtime",
-    "reliable",
-    "reliability",
-    "robust",
-    "deployed",
-    "deployment",
+    r"re:throughputs?\b",
+    r"re:latenc\w*",                      # latency, latencies, low-latency
+    r"re:determinis\w*",                  # deterministic(ally), determinism
+    r"re:real[-\s]?time\b",               # real-time, real time, realtime
+    r"re:reliab\w*",                      # reliable, reliably, reliability
+    r"re:robust\w*",                      # robust, robustness, robustly
+    r"re:deploy\w*",                      # deploy, deployed, deployment
     "in production",
-    "production-ready",
-    "production ready",
-    "released",
+    r"re:production[-\s]ready\b",
+    r"re:production[-\s]systems?\b",
+    r"re:release[sd]?\b",                 # release, released, releases
     "flight-ready",
     "flight-tested",
+    "flight-validated",
     "battle-tested",
-    "proven",
-    "guarantee",
-    "accuracy",
-    "accurate",
-    "outperform",
-    "profit",
+    "hardware-tested",
+    "hardware-verified",
+    r"re:prove[nd]\b",                    # proven, proved ("unproven" passes)
+    r"re:guarantee\w*",                   # guarantee, guaranteed, guarantees
+    r"re:accura\w*",                      # accuracy, accurate, accurately
+    r"re:outperform\w*",
+    r"re:profit\w*",                      # profit, profitable, profits
     "returns",
     "fully tested",
     "end-to-end tested",
-    "hardware-verified",
-    "résumé",
-    "resume",
+    "validated",                          # not bare "validation" (CONTENT-REVIEW-1)
+    r"re:autonomous(?:ly)?[-\s]+navigat\w*",
+    r"re:autonomous(?:ly)?[-\s]+(?:flight|fl(?:y|ies|ying|own|ew))\b",
+    "CFD",
+    r"re:race[-\s]free(?:dom)?\b",        # race-free, race freedom
+    r"re:sole[-\s]author\w*",             # sole author, sole authorship
+    "ARC-Testing",                        # T3: the public branch is CPPDev
+    "separate snapshot",
+    r"re:r[eé]sum[eé]\b",                # whole word, so "resumed" passes
 )
 
 #: C13 exemptions: phrase -> reason. A phrase listed here is not reported.
@@ -85,6 +96,7 @@ REQUIRED_FACTS: tuple[str, ...] = (
     "Vice President",
     "September 2025",
     "October 2026",
+    "CPPDev",
 )
 
 SECTION_IDS: tuple[str, ...] = (
@@ -122,8 +134,34 @@ REQUIRED_TOKENS: tuple[str, ...] = (
 TOTAL_BUDGET_BYTES = 300 * 1024
 JS_BUDGET_BYTES = 3 * 1024
 
-TEXT_EXTENSIONS = {".html", ".css", ".js", ".svg", ".txt", ".xml", ".json"}
+#: C08 (T2). Denied anywhere in the raw text of any file under docs/: team and
+#: teammate accounts stay off the page (FINDINGS B2/B7).
+DENY_RE = re.compile(r"SdBenE|CBU-Robotics|RobotBenjaminLucas", re.I)
+#: C08. Namespace URIs that are identifiers, not requests.
+XMLNS_URLS = frozenset({
+    "http://www.w3.org/2000/svg", "http://www.w3.org/1999/xlink",
+    "http://www.w3.org/1999/xhtml", "http://www.w3.org/XML/1998/namespace",
+})
+#: C07/C08. Attributes whose value is a URL (srcset/imagesrcset are lists).
+URL_ATTRS = frozenset({
+    "href", "src", "srcset", "imagesrcset", "poster", "action", "formaction",
+    "data", "cite", "background", "manifest", "longdesc", "icon", "ping",
+    "xlink:href",
+})
+SRCSET_ATTRS = frozenset({"srcset", "imagesrcset"})
+#: C10 (CR1-20). File names that look like a resume/CV.
+RESUME_NAME_RE = re.compile(r"r[eé]sum[eé]|(?<![a-z])cv(?![a-z])", re.I)
+
+BINARY_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif", ".ico",
+                     ".pdf", ".woff", ".woff2", ".ttf", ".otf", ".zip", ".bin"}
+TEXT_EXTENSIONS = {".html", ".htm", ".css", ".js", ".mjs", ".svg", ".txt",
+                   ".xml", ".json", ".webmanifest", ".map"}
 SVG_PATH = "assets/arc-architecture.svg"
+STACKED_SVG_PATH = "assets/arc-architecture-stacked.svg"
+#: C18. Architecture diagrams (PLAN 2.5 amendment A1). Each must exist and
+#: carry the required labels; every other *.svg under assets/ gets the
+#: structural checks only.
+ARCH_SVG_PATHS: tuple[str, ...] = (SVG_PATH, STACKED_SVG_PATH)
 CSS_PATH = "assets/site.css"
 JS_PATH = "assets/site.js"
 
@@ -135,7 +173,7 @@ VOID_TAGS = {
 INLINE_TAGS = {
     "a", "abbr", "b", "bdi", "bdo", "cite", "code", "data", "dfn", "em", "i",
     "kbd", "mark", "q", "s", "samp", "small", "span", "strong", "sub", "sup",
-    "time", "u", "var",
+    "time", "u", "var", "wbr",
 }
 HIDDEN_TEXT_TAGS = {"script", "style", "template"}
 
@@ -212,6 +250,8 @@ class TreeBuilder(HTMLParser):
         self.document = Element("#document", {}, None, 0)
         self.stack: list[Element] = [self.document]
         self.errors: list[str] = []
+        #: (line, text) of every HTML comment; comments are published (C11).
+        self.comments: list[tuple[int, str]] = []
 
     def _make(self, tag: str, attrs) -> Element:
         attr_map: dict[str, str] = {}
@@ -252,6 +292,9 @@ class TreeBuilder(HTMLParser):
     def handle_data(self, data):
         self.stack[-1].children.append(data)
 
+    def handle_comment(self, data):
+        self.comments.append((self.getpos()[0], data))
+
     def close(self):
         super().close()
         for el in self.stack[1:]:
@@ -259,9 +302,14 @@ class TreeBuilder(HTMLParser):
         del self.stack[1:]
 
 
+_INVISIBLE_RE = re.compile("[\u00ad\u200b-\u200d\u2060\ufeff]")
+_DASH_RE = re.compile("[\u2010-\u2013\u2212]")
+
+
 def normalise(text: str) -> str:
+    """NFC, drop soft hyphen / zero-width characters, fold dashes to '-'."""
     text = unicodedata.normalize("NFC", text)
-    text = text.replace("­", "").replace("‑", "-")
+    text = _DASH_RE.sub("-", _INVISIBLE_RE.sub("", text))
     return " ".join(text.split())
 
 
@@ -409,6 +457,13 @@ def contrast(a: str, b: str) -> float:
 # Site loader
 # ---------------------------------------------------------------------------
 
+def parse_html(text: str) -> TreeBuilder:
+    builder = TreeBuilder()
+    builder.feed(text)
+    builder.close()
+    return builder
+
+
 class Site:
     def __init__(self, root: Path) -> None:
         self.root = root
@@ -419,16 +474,28 @@ class Site:
         self.html_error: str | None = None
         self.doc: Element | None = None
         self.balance_errors: list[str] = []
+        self.comments: list[tuple[int, str]] = []
         if self.index_path.is_file():
             try:
                 self.html = self.index_path.read_text(encoding="utf-8")
-                builder = TreeBuilder()
-                builder.feed(self.html)
-                builder.close()
+                builder = parse_html(self.html)
                 self.doc = builder.document
                 self.balance_errors = builder.errors
+                self.comments = builder.comments
             except Exception as exc:  # decode or parser failure
                 self.html_error = f"{type(exc).__name__}: {exc}"
+        #: Every *.html under docs/ (index included), parsed (C08 scans all).
+        self.html_docs: dict[Path, Element] = {}
+        for p in self.files:
+            if p.suffix.lower() in (".html", ".htm"):
+                if p == self.index_path and self.doc is not None:
+                    self.html_docs[p] = self.doc
+                    continue
+                try:
+                    self.html_docs[p] = parse_html(
+                        p.read_text(encoding="utf-8", errors="replace")).document
+                except Exception:
+                    pass
         self.css_path = root / CSS_PATH
         self.css: str | None = (
             strip_css_comments(self.css_path.read_text(encoding="utf-8"))
@@ -454,11 +521,16 @@ class Site:
             return str(p)
 
     def text_files(self) -> list[tuple[Path, str]]:
-        out = []
-        for p in self.files:
-            if p.suffix.lower() in TEXT_EXTENSIONS:
-                out.append((p, p.read_text(encoding="utf-8", errors="replace")))
-        return out
+        """Every text-like file under docs/ (by extension, or no NUL bytes)."""
+        if not hasattr(self, "_text_files"):
+            out = []
+            for p in self.files:
+                data = p.read_bytes()
+                if p.suffix.lower() in TEXT_EXTENSIONS or (data and b"\0" not in data[:4096]
+                                                          and p.suffix.lower() not in BINARY_EXTENSIONS):
+                    out.append((p, data.decode("utf-8", errors="replace")))
+            self._text_files = out
+        return self._text_files
 
     def elements(self) -> list[Element]:
         return list(self.doc.iter())[1:] if self.doc else []
@@ -664,8 +736,35 @@ def c06(site: Site) -> str:
     return fail_if(problems, "landmarks ok, skip link first")
 
 
+SCHEME_RE = re.compile(r"^[a-z][a-z0-9+.-]*:", re.I)
+
+
+def browser_url(value: str) -> str:
+    """Normalise a URL the way browsers do before resolving it (CR1-18):
+    strip ASCII tab/newline/CR and outer whitespace, and turn every backslash
+    into a slash (http(s) URLs treat them alike)."""
+    return re.sub(r"[\t\n\r]", "", value).strip().replace("\\", "/")
+
+
 def is_external(value: str) -> bool:
-    return bool(re.match(r"^(https?:|mailto:|tel:|data:|javascript:|#)", value.strip(), re.I))
+    """True for anything that is not a local path: a scheme, //host or #."""
+    v = browser_url(value)
+    return bool(SCHEME_RE.match(v) or v.startswith("//") or v.startswith("#"))
+
+
+def srcset_urls(value: str) -> list[str]:
+    """The URL of each candidate in a srcset list ("a.svg 1x, b.svg 2x")."""
+    return [cand.split()[0] for cand in value.split(",") if cand.strip()]
+
+
+def attr_urls(name: str, value: str) -> list[str]:
+    """URLs held by an attribute named in URL_ATTRS (srcset lists split)."""
+    name = name.lower()
+    if name in SRCSET_ATTRS:
+        return srcset_urls(value or "")
+    if name in URL_ATTRS:
+        return [value or ""]
+    return []
 
 
 @check("C07")
@@ -677,27 +776,35 @@ def c07(site: Site) -> str:
         for attr in ("alt", "width", "height"):
             if not img.attrs.get(attr, "").strip():
                 problems.append(f"{img.describe()} missing {attr}")
+    pictures = doc.find_all("picture")
+    for pic in pictures:
+        if not pic.find_all("img"):
+            problems.append(f"{pic.describe()} has no <img> fallback")
+        for src in pic.find_all("source"):
+            if not src.attrs.get("srcset", "").strip():
+                problems.append(f"{src.describe()} in <picture> has no srcset")
     root = site.root.resolve()
     checked = 0
     for el in doc.iter():
-        for attr in ("src", "href"):
-            value = el.attrs.get(attr)
-            if value is None or is_external(value):
-                continue
-            value = value.strip()
-            if value.startswith("/"):
-                problems.append(f'root-absolute {attr}="{value}" on {el.describe()}')
-                continue
-            path = re.split(r"[?#]", value, maxsplit=1)[0]
-            if not path:
-                continue
-            checked += 1
-            target = (root / path).resolve()
-            if not target.is_relative_to(root):
-                problems.append(f'{attr}="{value}" points outside docs/')
-            elif not target.is_file():
-                problems.append(f'{attr}="{value}" on {el.describe()} does not exist')
-    return fail_if(problems, f"{len(imgs)} img ok, {checked} local paths exist")
+        for attr, raw in el.attrs.items():
+            for value in attr_urls(attr, raw):
+                if is_external(value):
+                    continue  # C08 judges external URLs
+                value = browser_url(value)
+                if value.startswith("/"):
+                    problems.append(f'root-absolute {attr}="{value}" on {el.describe()}')
+                    continue
+                path = re.split(r"[?#]", value, maxsplit=1)[0]
+                if not path:
+                    continue
+                checked += 1
+                target = (root / path).resolve()
+                if not target.is_relative_to(root):
+                    problems.append(f'{attr}="{value}" points outside docs/')
+                elif not target.is_file():
+                    problems.append(f'{attr}="{value}" on {el.describe()} does not exist')
+    return fail_if(problems, f"{len(imgs)} img, {len(pictures)} picture ok, "
+                             f"{checked} local paths exist")
 
 
 def html_urls(doc: Element):
@@ -706,7 +813,7 @@ def html_urls(doc: Element):
         for name, value in el.attrs.items():
             if name.startswith("xmlns"):
                 continue
-            for m in URL_RE.finditer(value or ""):
+            for m in URL_RE.finditer(browser_url(value or "")):
                 yield m.group(0), el, name
 
 
@@ -715,53 +822,133 @@ def js_without_comments(text: str) -> str:
     return re.sub(r"(?m)^\s*//.*$", "", text)
 
 
+#: Any http(s)/ftp URL in raw text, tolerating backslashes and odd slashes.
+RAW_URL_RE = re.compile(r"\b(?:https?|ftp)\s*:[\\/]*[^\s\"'<>()\\/][^\s\"'<>()]*", re.I)
+CSS_URL_RE = re.compile(r"""url\(\s*(?:"([^"]*)"|'([^']*)'|([^)\s]*))\s*\)""", re.I)
+CSS_IMPORT_RE = re.compile(r"""@import\s+(?:"([^"]*)"|'([^']*)')""", re.I)
+
+
+def css_targets(css: str) -> list[str]:
+    """Every url(...) and @import "..." target in a CSS text."""
+    css = strip_css_comments(css)
+    out = []
+    for rx in (CSS_URL_RE, CSS_IMPORT_RE):
+        for m in rx.finditer(css):
+            out.append(next(g for g in m.groups() if g is not None))
+    return out
+
+
+def canonical_external(value: str) -> str | None:
+    """The absolute URL a value would load if it leaves the site, else None.
+    A leading // becomes https://; "https:" followed by any run of slashes or
+    backslashes becomes "https://"."""
+    v = browser_url(value)
+    if v.startswith("//"):
+        return "https:" + v
+    m = re.match(r"^(https?|ftp):/*(.*)$", v, re.I | re.S)
+    if m:
+        return f"{m.group(1).lower()}://{m.group(2)}"
+    return None
+
+
 @check("C08")
 def c08(site: Site) -> str:
-    doc = need_html(site)
+    need_html(site)
     problems, count = [], 0
+    allowed_norm = {u.rstrip("/") for u in ALLOWED_URLS}
+    site_norm = SITE_URL.rstrip("/")
 
     def judge(url: str, where: str, site_url_ok: bool) -> None:
         nonlocal count
         count += 1
-        if url.lower().startswith("http://"):
-            problems.append(f"insecure http:// URL {url} in {where}")
-        elif url.rstrip("/") == SITE_URL.rstrip("/"):
+        if url.lower().startswith(("http://", "ftp://")):
+            problems.append(f"insecure {url.split(':', 1)[0]}:// URL {url} in {where}")
+        elif url.rstrip("/") == site_norm:
             if not site_url_ok:
                 problems.append(f"site URL {url} outside og:url/canonical ({where})")
-        elif not url_allowed(url):
+        elif url.rstrip("/") not in allowed_norm:
             problems.append(f"URL not on allowlist: {url} in {where}")
 
-    for url, el, attr in html_urls(doc):
-        is_og_url = el.tag == "meta" and el.attrs.get("property") == "og:url" and attr == "content"
-        is_canonical = (el.tag == "link" and attr == "href"
-                        and "canonical" in el.attrs.get("rel", "").lower().split())
-        judge(url, f"index.html {attr} of {el.describe()}", is_og_url or is_canonical)
-    if site.css is not None:
-        for m in URL_RE.finditer(site.css):
-            judge(m.group(0), CSS_PATH, False)
+    def judge_value(value: str, where: str, site_url_ok: bool = False) -> None:
+        url = canonical_external(value)
+        if url is not None:
+            judge(url, where, site_url_ok)
+
+    def judge_css(css: str, where: str) -> None:
+        for target in css_targets(css):
+            judge_value(target, f"{where} url()/@import")
+
+    def judge_raw(text: str, where: str) -> None:
+        # The site URL is policed in attributes (step 1), so raw text skips it.
+        for m in RAW_URL_RE.finditer(text):
+            url = canonical_external(m.group(0)) or m.group(0)
+            head = text[max(0, m.start() - 40):m.start()]
+            if url in XMLNS_URLS and re.search(r"xmlns(?::[\w-]+)?\s*=\s*[\"']$", head):
+                continue
+            if url.rstrip("/") != site_norm:
+                judge(url, where, False)
+
+    # 1. Every HTML file: URL attributes (incl. //host and backslash forms),
+    #    http(s) URLs inside any other attribute, style attributes, <style>.
+    for p, doc in site.html_docs.items():
+        name = site.rel(p)
+        for el in doc.iter():
+            is_og_url = el.tag == "meta" and el.attrs.get("property") == "og:url"
+            is_canonical = (el.tag == "link" and "canonical"
+                            in el.attrs.get("rel", "").lower().split())
+            for attr, value in el.attrs.items():
+                if attr.startswith("xmlns"):
+                    continue
+                where = f"{name} {attr} of {el.describe()}"
+                ok = (is_og_url and attr == "content") or (is_canonical and attr == "href")
+                urls = attr_urls(attr, value or "")
+                for u in urls:
+                    judge_value(u, where, ok)
+                if not urls:
+                    for m in URL_RE.finditer(browser_url(value or "")):
+                        judge(m.group(0), where, ok)
+                if attr == "style":
+                    judge_css(value or "", where)
+            if el.tag == "style":
+                judge_css(el.raw_text(), f"{name} <style> {el.describe()}")
+    # 2. Every CSS file and every SVG: url()/@import targets, href/src.
+    for p, text in site.text_files():
+        if p.suffix.lower() == ".css":
+            judge_css(text, site.rel(p))
     for p, root in site.svgs.items():
         if root is None:
             continue
         for el in root.iter():
             for name, value in el.attrib.items():
-                for m in URL_RE.finditer(value):
-                    judge(m.group(0), f"{site.rel(p)} attribute {local_name(name)}", False)
+                lname = local_name(name)
+                if lname in ("href", "src"):
+                    judge_value(value, f"{site.rel(p)} attribute {lname}")
+                elif lname == "style":
+                    judge_css(value, f"{site.rel(p)} style attribute")
             if local_name(el.tag) == "style" and el.text:
-                for m in URL_RE.finditer(el.text):
-                    judge(m.group(0), f"{site.rel(p)} <style>", False)
+                judge_css(el.text, f"{site.rel(p)} <style>")
+    # 3. Raw text of every text file: comments, prose, JS strings, .txt ...
     for p, text in site.text_files():
-        if p.suffix.lower() == ".js":
-            for m in URL_RE.finditer(js_without_comments(text)):
-                judge(m.group(0), site.rel(p), False)
-    return fail_if(problems, f"{count} external URLs, all allowlisted https")
+        if p.suffix.lower() in (".js", ".mjs"):
+            text = js_without_comments(text)
+        judge_raw(text, site.rel(p))
+    # 4. T2: team and teammate accounts are denied anywhere, links or prose.
+    for p, text in site.text_files():
+        for m in DENY_RE.finditer(text):
+            problems.append(f"{site.rel(p)}: denied account '{m.group(0)}'")
+    problems = list(dict.fromkeys(problems))
+    return fail_if(problems, f"{count} external URL uses, all allowlisted https")
 
 
 @check("C09")
 def c09(site: Site) -> str:
     problems = []
     for p, text in site.text_files():
-        for m in FSW_URL_RE.finditer(text):
-            problems.append(f"{site.rel(p)}: FSW URL '{m.group(0)}'")
+        # Also decode %xx so "%46SW-UAV-SIM" can't slip past (CR1 mutation run).
+        for variant in dict.fromkeys((text, unquote(text))):
+            for m in FSW_URL_RE.finditer(variant):
+                problems.append(f"{site.rel(p)}: FSW URL '{m.group(0)}'")
+    problems = list(dict.fromkeys(problems))
     return fail_if(problems, "no FSW-UAV-SIM URL")
 
 
@@ -771,12 +958,14 @@ def c10(site: Site) -> str:
     for p in site.files:
         if p.suffix.lower() == ".md":
             problems.append(f"markdown file {site.rel(p)} under docs/")
+        if RESUME_NAME_RE.search(p.name):
+            problems.append(f"file name {site.rel(p)} looks like a resume/CV")
     for p, text in site.text_files():
         for pat in WORK_FILE_PATTERNS:
             m = re.search(pat, text, re.I)
             if m:
                 problems.append(f"{site.rel(p)}: references '{m.group(0)}'")
-    return fail_if(problems, "no handoff/work-file references, no .md files")
+    return fail_if(problems, "no handoff/work-file references, no .md or resume files")
 
 
 def find_phones(text: str) -> list[str]:
@@ -796,34 +985,45 @@ def find_emails(text: str) -> list[str]:
             if not EMAIL_FILE_EXT_RE.search(m.group(0))]
 
 
+def hidden_html_text(doc: Element) -> list[tuple[str, str]]:
+    """(where, text) for published-but-unrendered HTML text: <template> bodies."""
+    out = []
+    for el in doc.find_all("template"):
+        out.append((f"<template> {el.describe()}", normalise(el.raw_text())))
+    return out
+
+
 @check("C11")
 def c11(site: Site) -> str:
     doc = need_html(site)
     problems = []
-    vis = visible_text(doc)
-    # Email + mailto/tel: HTML text (not CSS/JS) and every attribute value.
-    html_strings = [("index.html text", vis)]
-    for el in doc.iter():
-        for name, value in el.attrs.items():
-            html_strings.append((f"index.html {name} of {el.describe()}", value or ""))
-    for p, root in site.svgs.items():
-        if root is None:
-            continue
-        html_strings.append((f"{site.rel(p)} text", svg_text(root)))
-        for el in root.iter():
-            for name, value in el.attrib.items():
-                html_strings.append((f"{site.rel(p)} attribute {local_name(name)}", value))
-    for where, s in html_strings:
-        for e in find_emails(s):
-            problems.append(f"email-like '{e}' in {where}")
-        m = re.search(r"\b(mailto|tel):", s, re.I)
+    # Emails and mailto:/tel: in the raw text of every text file under docs/
+    # (HTML incl. comments, <template> and attributes; CSS; JS; SVG; .txt).
+    # "@media"/"@import" never follow a word character, so CSS at-rules
+    # don't look like emails (CR1-17).
+    for p, text in site.text_files():
+        for e in find_emails(unescape(text)):
+            problems.append(f"email-like '{e}' in {site.rel(p)}")
+        m = re.search(r"\b(mailto|tel):", unescape(text), re.I)
         if m:
-            problems.append(f"'{m.group(0)}' in {where}")
-    # Phone numbers: visible text only (attributes like datetime are excluded).
-    for where, s in [("index.html", vis)] + [
-            (site.rel(p), svg_text(r)) for p, r in site.svgs.items() if r is not None]:
+            problems.append(f"'{m.group(0)}' in {site.rel(p)}")
+    # Phone numbers: text a reader can see (visible text, SVG text, HTML
+    # comments, <template> bodies, .txt files). Not attributes, CSS or SVG
+    # geometry, where long digit runs are coordinates.
+    phone_sources = [("index.html visible text", visible_text(doc))]
+    phone_sources += [(f"index.html {w}", t) for w, t in hidden_html_text(doc)]
+    phone_sources += [(f"index.html comment at line {ln}", normalise(c))
+                      for ln, c in site.comments]
+    for p, root in site.svgs.items():
+        if root is not None:
+            phone_sources.append((f"{site.rel(p)} text", svg_text(root)))
+    for p, text in site.text_files():
+        if p.suffix.lower() == ".txt":
+            phone_sources.append((site.rel(p), normalise(text)))
+    for where, s in phone_sources:
         for ph in find_phones(s):
-            problems.append(f"phone-like '{ph}' in {where} visible text")
+            problems.append(f"phone-like '{ph}' in {where}")
+    problems = list(dict.fromkeys(problems))
     return fail_if(problems, "no email, phone, mailto: or tel:")
 
 
@@ -866,20 +1066,40 @@ def c12(site: Site) -> str:
 
 
 def phrase_regex(phrase: str) -> re.Pattern:
+    """Compile a FORBIDDEN_PHRASES entry (see its comment for the syntax)."""
+    if phrase.startswith("re:"):
+        return re.compile(rf"(?<!\w)(?:{phrase[3:]})", re.I)
     body = r"\s+".join(re.escape(w) for w in phrase.split())
     return re.compile(rf"(?<!\w){body}(?!\w)", re.I)
+
+
+def phrase_label(phrase: str) -> str:
+    return phrase[3:] if phrase.startswith("re:") else phrase
 
 
 def find_forbidden(text: str) -> list[str]:
     hits = []
     for phrase in FORBIDDEN_PHRASES:
-        if phrase in ALLOW:
+        if phrase in ALLOW or phrase_label(phrase) in ALLOW:
             continue
         m = phrase_regex(phrase).search(text)
         if m:
             lo, hi = max(0, m.start() - 30), min(len(text), m.end() + 30)
-            hits.append(f"'{phrase}' in \"...{text[lo:hi]}...\"")
+            hits.append(f"'{m.group(0)}' (rule {phrase_label(phrase)}) in "
+                        f"\"...{text[lo:hi]}...\"")
     return hits
+
+
+#: C13. Attributes whose text a reader sees or hears (tooltip, screen reader).
+C13_ATTRS = ("title", "aria-label", "aria-description", "placeholder")
+CSS_CONTENT_RE = re.compile(r"""content\s*:\s*((?:"[^"]*"|'[^']*'|[^;}"'])*)""", re.I)
+
+
+def css_content_strings(css: str) -> list[str]:
+    out = []
+    for m in CSS_CONTENT_RE.finditer(strip_css_comments(css)):
+        out.extend(a or b for a, b in re.findall(r'"([^"]*)"|\'([^\']*)\'', m.group(1)))
+    return [s for s in out if s.strip()]
 
 
 @check("C13")
@@ -892,6 +1112,18 @@ def c13(site: Site) -> str:
         key = (m.attrs.get("name") or m.attrs.get("property") or "").lower()
         if key == "description" or key.startswith("og:"):
             sources.append((f"index.html meta {key}", normalise(m.attrs.get("content", ""))))
+    for el in doc.iter():
+        for attr in C13_ATTRS:
+            if el.attrs.get(attr):
+                sources.append((f"index.html {attr} of {el.describe()}",
+                                normalise(el.attrs[attr])))
+        if el.tag == "style":
+            for s in css_content_strings(el.raw_text()):
+                sources.append((f"index.html <style> content", normalise(s)))
+    for p, text in site.text_files():
+        if p.suffix.lower() == ".css":
+            for s in css_content_strings(text):
+                sources.append((f"{site.rel(p)} content", normalise(s)))
     for p, root in site.svgs.items():
         if root is not None:
             sources.append((site.rel(p), svg_text(root)))
@@ -996,7 +1228,10 @@ def c17(site: Site) -> str:
     root, media_dark, attr_dark = css_sets(site)
     problems, worst = [], None
     pairs = [(fg, bg, 4.5) for fg in ("--color-text", "--color-muted", "--color-accent")
-             for bg in ("--color-bg", "--color-surface")] + [("--color-focus", "--color-bg", 3.0)]
+             for bg in ("--color-bg", "--color-surface")] + [
+        # .tag and inline code sit on --color-code-bg (CR1-20).
+        ("--color-text", "--color-code-bg", 4.5), ("--color-muted", "--color-code-bg", 4.5),
+        ("--color-focus", "--color-bg", 3.0)]
     for label, decls in (("light", root), ("dark-media", {**root, **media_dark}),
                          ("dark-attr", {**root, **attr_dark})):
         for fg, bg, need in pairs:
@@ -1023,29 +1258,42 @@ def c17(site: Site) -> str:
 
 @check("C18")
 def c18(site: Site) -> str:
-    path = site.root / SVG_PATH
-    if not path.is_file():
-        raise CheckFailed(f"{SVG_PATH} missing")
-    root = site.svgs.get(path)
-    if root is None:
-        raise CheckFailed(f"{SVG_PATH} is not well-formed XML ({site.svg_errors.get(path)})")
+    """Every *.svg under docs/assets/ is well-formed, an <svg role="img"> with
+    viewBox, <title> and <desc>; each ARCH_SVG_PATHS file must exist and carry
+    the architecture labels (PLAN 2.5 amendment A1, CR1-20)."""
     problems = []
-    if local_name(root.tag) != "svg":
-        problems.append(f"root element is <{local_name(root.tag)}>, not <svg>")
-    if not root.get("viewBox"):
-        problems.append("root has no viewBox")
-    if root.get("role") != "img":
-        problems.append('root lacks role="img"')
-    kids = {local_name(c.tag) for c in root}
-    for need in ("title", "desc"):
-        if need not in kids:
-            problems.append(f"no child <{need}>")
-    text = svg_text(root).lower()
-    for needed in (("Intended system architecture",), ("I²C", "I2C"), ("ESP32-S3",),
-                   ("RS-485",), ("V5 Brain",)):
-        if not any(n.lower() in text for n in needed):
-            problems.append("text lacks " + " or ".join(f"'{n}'" for n in needed))
-    return fail_if(problems, f"{SVG_PATH} well-formed with title, desc and labels")
+    arch = {site.root / rel for rel in ARCH_SVG_PATHS}
+    for path in sorted(arch):
+        if not path.is_file():
+            problems.append(f"{site.rel(path)} missing")
+    assets = site.root / "assets"
+    svgs = sorted(p for p in site.svgs if assets in p.parents) + sorted(
+        p for p in arch if p.is_file() and assets not in p.parents)
+    for path in svgs:
+        name = site.rel(path)
+        root = site.svgs.get(path)
+        if root is None:
+            problems.append(f"{name} is not well-formed XML ({site.svg_errors.get(path)})")
+            continue
+        if local_name(root.tag) != "svg":
+            problems.append(f"{name} root element is <{local_name(root.tag)}>, not <svg>")
+        if not root.get("viewBox"):
+            problems.append(f"{name} root has no viewBox")
+        if root.get("role") != "img":
+            problems.append(f'{name} root lacks role="img"')
+        kids = {local_name(c.tag) for c in root}
+        for need in ("title", "desc"):
+            if need not in kids:
+                problems.append(f"{name} has no child <{need}>")
+        if path in arch:
+            text = svg_text(root).lower()
+            for needed in (("Intended system architecture",), ("I²C", "I2C"), ("ESP32-S3",),
+                           ("RS-485",), ("V5 Brain",)):
+                if not any(n.lower() in text for n in needed):
+                    problems.append(f"{name} text lacks "
+                                    + " or ".join(f"'{n}'" for n in needed))
+    return fail_if(problems, f"{len(svgs)} SVGs well-formed with title and desc; "
+                             f"{len(arch)} architecture diagrams carry the labels")
 
 
 @check("C19")

@@ -15,9 +15,15 @@ on:
 permissions:
   contents: read
 
+# A newer push to the same ref cancels the run in progress (CR1-22).
+concurrency:
+  group: site-checks-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   checks:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

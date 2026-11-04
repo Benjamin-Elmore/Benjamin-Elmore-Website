@@ -15,6 +15,7 @@
     accent #6fb3f5    8.45     7.78        6.95
     focus  #6fb3f5    8.45     7.78        6.95   (needs 3:1)
   --color-border is decorative (dividers and card edges) and carries no information.
+  The theme toggle's edge uses --color-muted (6.46:1 light, 8.08:1 dark) so the control is visible.
 */
 
 :root {
@@ -30,8 +31,10 @@
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
 
-  --measure: 68ch;
-  --page-max: 72rem;
+  /* In rem, not ch, so an element's own font (e.g. the mono footer) can't change the column width. */
+  --measure: 36.5rem;
+  --page-max: 72rem; /* reserved for a future wide layout; unused today */
+  --tap: 44px; /* minimum tap-target height (rubric item 8, WCAG 2.5.5) */
   --gutter: 16px;
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -83,7 +86,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  scroll-padding-top: 6.5rem;
+  scroll-padding-top: 1rem;
 }
 
 body {
@@ -112,6 +115,7 @@ h4 {
   line-height: 1.25;
   font-weight: 650;
   letter-spacing: -0.01em;
+  text-wrap: balance;
 }
 
 p,
@@ -196,53 +200,60 @@ time {
 
 /* ---------- Header ---------- */
 
+/*
+  Row 1: name (left) and theme toggle (right). Row 2: the nav.
+  Edges line up with the content column at every width. Static on phones; from 720px the header
+  sticks with a negative top so row 1 scrolls away and only the nav row stays on screen.
+*/
 .site-header {
-  position: sticky;
-  top: 0;
+  position: static;
   z-index: 50;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2) var(--space-4);
-  padding: var(--space-3) var(--gutter) 0;
+  gap: 0 var(--space-4);
+  padding: var(--space-2) max(var(--gutter), calc((100% - var(--measure)) / 2));
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
 }
 
 .site-header__name {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
   color: var(--color-text);
   font-weight: 700;
   letter-spacing: -0.01em;
   text-decoration: none;
 }
 
-/* On narrow screens the nav takes its own row and scrolls inside itself, never the page. */
+/* No overflow container: it clipped the focus ring (CR1-3). Phones get a 3 x 2 grid. */
 .site-nav {
   order: 3;
   flex: 1 0 100%;
   min-width: 0;
-  overflow-x: auto;
-  scrollbar-width: thin;
 }
 
 .site-nav__list {
-  display: flex;
-  gap: var(--space-4);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 var(--space-3);
   list-style: none;
   margin: 0;
-  padding: 0 0 var(--space-2);
-  white-space: nowrap;
+  padding: 0;
 }
 
 .site-nav__list a {
-  display: inline-block;
-  padding: var(--space-1) 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
   color: var(--color-muted);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   letter-spacing: 0.02em;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .site-nav__list a:hover {
@@ -251,21 +262,28 @@ time {
 }
 
 .theme-toggle {
-  min-height: 2rem;
-  padding: var(--space-1) var(--space-3);
+  min-height: var(--tap);
+  padding: 0 var(--space-4);
   font: inherit;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.02em;
   color: var(--color-text);
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-muted);
   border-radius: var(--radius);
   cursor: pointer;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .theme-toggle:hover {
+  border-color: var(--color-accent);
+}
+
+/* Fixed label "Dark theme"; aria-pressed="true" means dark is on, shown by an accent edge and fill. */
+.theme-toggle[aria-pressed="true"] {
+  color: var(--color-accent);
+  background: var(--color-code-bg);
   border-color: var(--color-accent);
 }
 
@@ -313,6 +331,7 @@ main {
   margin-bottom: var(--space-5);
   color: var(--color-muted);
   font-size: 1.0625rem;
+  text-wrap: pretty;
 }
 
 .section h3 {
@@ -343,6 +362,7 @@ main {
   margin-top: var(--space-5);
   font-size: 1.125rem;
   line-height: 1.65;
+  text-wrap: pretty;
 }
 
 .intro__links {
@@ -354,12 +374,16 @@ main {
 .link-list {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2) var(--space-5);
+  gap: 0 var(--space-5);
   list-style: none;
   padding: 0;
 }
 
-.link-list a {
+.link-list a,
+.card__link a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
   font-weight: 600;
 }
 
@@ -390,6 +414,7 @@ main {
   border-left: 3px solid var(--color-accent);
   font-size: 1.125rem;
   line-height: 1.65;
+  text-wrap: pretty;
 }
 
 .case-study__block {
@@ -419,6 +444,11 @@ main {
   padding-left: 1.25rem;
 }
 
+.case-study__block p + ul,
+.case-study__block p + ol {
+  margin-top: var(--space-3);
+}
+
 .case-study__block ul:not([class]) li + li,
 .case-study__block ol:not([class]) li + li,
 .open-work li + li,
@@ -441,9 +471,20 @@ main {
   margin-top: var(--space-7);
 }
 
+/* <picture>: stacked SVG below 720px, wide SVG above. Capped on large phones so the tall version stays in view. */
+.figure--diagram picture {
+  display: block;
+}
+
+.figure--diagram picture,
 .figure--diagram img {
   width: 100%;
   height: auto;
+}
+
+.figure--diagram img {
+  max-width: 26rem;
+  margin-inline: auto;
   border-radius: var(--radius);
 }
 
@@ -512,7 +553,7 @@ main {
   margin-top: var(--space-3);
   color: var(--color-muted);
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -597,6 +638,8 @@ main {
 
 /* ---------- Projects ---------- */
 
+/* One column at every width: the reading column is ~36rem, too narrow for two cards side by side,
+   and stacked cards size to their own content (no stretched card with an empty gap). */
 .card-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -629,8 +672,8 @@ main {
 }
 
 .card__link {
-  margin-top: auto;
-  padding-top: var(--space-4);
+  margin-top: 0;
+  padding-top: var(--space-3);
   font-weight: 600;
 }
 
@@ -671,6 +714,9 @@ main {
   padding-block: var(--space-6);
   border-top: 1px solid var(--color-border);
   color: var(--color-muted);
+}
+
+.site-footer p {
   font-family: var(--font-mono);
   font-size: 0.75rem;
 }
@@ -686,19 +732,19 @@ main {
     scroll-padding-top: 4.5rem;
   }
 
+  /* top = -(padding-top + row 1), so only the nav row stays pinned. */
   .site-header {
-    flex-wrap: nowrap;
-    padding-bottom: var(--space-3);
-  }
-
-  .site-nav {
-    order: 0;
-    flex: 0 1 auto;
-    margin-left: auto;
+    position: sticky;
+    top: calc(-1 * (var(--space-2) + var(--tap)));
   }
 
   .site-nav__list {
-    padding-bottom: 0;
+    display: flex;
+    gap: var(--space-5);
+  }
+
+  .figure--diagram img {
+    max-width: 100%;
   }
 
   .section {
@@ -715,10 +761,6 @@ main {
 
   .section__title {
     font-size: 1.75rem;
-  }
-
-  .card-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .decision {
