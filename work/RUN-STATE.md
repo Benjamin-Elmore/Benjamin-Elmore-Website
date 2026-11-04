@@ -9,8 +9,8 @@ Ben asked: "go ahead and build it. Let's start with the initial framework like y
 
 | # | Phase | Item | State | Next action |
 |---|---|---|---|---|
-| 1 | Plan | Architect plan, `work/PLAN.md` | in progress | — |
-| 2 | Build | Implementers + test engineer | pending | — |
+| 1 | Plan | Architect plan, `work/PLAN.md` | **Done**, no Gate A blockers | — |
+| 2 | Build | content, style, diagram, test engineers (parallel) | in progress | — |
 | 3 | Verify / Review / Fix | Checks, code and content review | pending | — |
 | 4 | Validate changes | DEV-VAL-n | pending | — |
 | 5 | Validate codebase | Validation Council | pending | — |
