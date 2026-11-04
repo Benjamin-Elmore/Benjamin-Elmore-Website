@@ -32,7 +32,7 @@ For this audience, emphasize component bring-up, interface ownership, reproducib
 
 **Audience connection.** The story is strongest when the reader sees the failure modes Benjamin reasoned about. A shared mux can be switched between tasks, a transceiver problem can obscure sensor bugs, and a successful compile only covers a subset of the integration. Show how ownership of the bus and a communication-only harness make those failures easier to isolate. This maps naturally to bring-up and test software around robotics, avionics, and production test equipment.
 
-Public repository: [Benjamin-Elmore/ARC](https://github.com/Benjamin-Elmore/ARC). The public repo and the local ARC-Testing branch are separate evidence sources. Avoid implying the public repo contains the exact verified build revision.
+Public repository: [Benjamin-Elmore/ARC](https://github.com/Benjamin-Elmore/ARC). **Correction (2026-11-03, from the portfolio-findings review):** ARC-Testing is the repo's former name (SdBenE was the account's former name). The public `CPPDev` branch is `3eb3ed6`, the verified build; `main` is a different revision.
 
 ## Supporting experience and projects
 
