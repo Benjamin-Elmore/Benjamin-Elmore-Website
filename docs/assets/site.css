@@ -1035,3 +1035,101 @@ main {
     overflow-wrap: anywhere;
   }
 }
+
+/* ---------- Subpages: back link, page header, photo slots ---------- */
+
+.page-header {
+  padding-block: var(--space-5) var(--space-6);
+}
+
+.page-header > * {
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.page-header h1 {
+  margin-top: var(--space-3);
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
+}
+
+.page-header__meta {
+  margin-top: var(--space-3);
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+}
+
+.page-header .page-header__summary {
+  margin-top: var(--space-4);
+  color: var(--color-muted);
+  font-size: 1.0625rem;
+  text-wrap: pretty;
+}
+
+.section--page h2 {
+  margin-bottom: var(--space-4);
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+}
+
+.section--page .tag-list {
+  margin-top: var(--space-4);
+}
+
+.role-section + .role-section {
+  margin-top: var(--space-7);
+}
+
+/* Placeholder a photo or screenshot replaces. Swap .photo-slot__box for an <img> at the path in the comment. */
+.photo-slot {
+  margin-top: var(--space-6);
+}
+
+.photo-slot__box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  padding: var(--space-4);
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.photo-slot--16x9 .photo-slot__box {
+  aspect-ratio: 16 / 9;
+}
+
+.photo-slot--21x9 .photo-slot__box {
+  aspect-ratio: 21 / 9;
+}
+
+.photo-slot img {
+  width: 100%;
+  height: auto;
+}
+
+.photo-slot--text pre {
+  margin: 0;
+  padding: var(--space-4);
+  overflow-x: auto;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
