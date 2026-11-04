@@ -1,11 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig(({ isSsrBuild }) => ({
+export default defineConfig(({ isSsrBuild, isPreview }) => ({
   base: '/Benjamin-Elmore-Website/',
-  appType: 'spa',
+  appType: isPreview ? 'mpa' : 'spa',
   plugins: [react()],
-  preview: { appType: 'mpa' },
   build: isSsrBuild
     ? { outDir: '.ssr', emptyOutDir: true, copyPublicDir: false }
     : {

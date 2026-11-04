@@ -39,7 +39,7 @@ BUNDLE_ALLOWED = [
     "http://localhost", "https://react.dev/errors/",
     "https://reactrouter.com/en/main/routers/picking-a-router",
 ]
-BUNDLE_ALLOWED_PREFIX = [SITE_URL, "https://github.com/", "https://www.linkedin.com/", "https://linkedin.com/"]
+BUNDLE_ALLOWED_PREFIX = [SITE_URL]
 URL_RE = re.compile(r"""https?://[^\s"'`)\\<>]+""")
 SITE_TEXT_GLOBS = ["index.html", "vite.config.js", "package.json", "src/**/*", "public/**/*", "scripts/**/*"]
 TEXT_EXT = {".html", ".js", ".jsx", ".mjs", ".json", ".css", ".txt", ".svg", ".md"}
@@ -239,9 +239,9 @@ def check_links(errors, parsed):
                 errors.append(f"{p}: missing anchor {link}")
 
 
-def check_bundle_strings(errors, name, text):
+def check_bundle_strings(errors, name, text, page_urls=()):
     for url in sorted(set(URL_RE.findall(text))):
-        if url.startswith(tuple(BUNDLE_ALLOWED)) or url.startswith(tuple(BUNDLE_ALLOWED_PREFIX)):
+        if url.startswith(tuple(BUNDLE_ALLOWED)) or url.startswith(tuple(BUNDLE_ALLOWED_PREFIX)) or url in page_urls:
             continue
         errors.append(f"{name}: URL not on the vendor allowlist: {url}")
     # tel:!0 comes from React's input-type table; a real tel: link would be a leak.
@@ -280,7 +280,8 @@ def main():
     check_page_rules(errors, parsed, raw)
     check_links(errors, parsed)
     if len(bundles) == 1:
-        check_bundle_strings(errors, bundles[0], (DOCS / bundles[0]).read_text(encoding="utf-8"))
+        page_urls = {l for pg in parsed.values() for l in pg.links if l.startswith("https://")}
+        check_bundle_strings(errors, bundles[0], (DOCS / bundles[0]).read_text(encoding="utf-8"), page_urls)
 
     for name, (p, text) in REQUIRED.items():
         if p in raw and text not in raw[p]:
