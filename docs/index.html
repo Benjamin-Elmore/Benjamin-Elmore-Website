@@ -58,10 +58,10 @@
         <p>I’m a firmware contributor. I work with electrical and computer engineers on device interfaces. My part:</p>
         <ul>
           <li>Prototyped the sensor abstraction.</li>
-          <li>Moved I²C communication toward the ESP-IDF master API.</li>
+          <li>Moved I²C communication toward the <span class="nowrap">ESP-IDF</span> master API.</li>
           <li>Added optical sensor register access and position decoding.</li>
           <li>Worked on mutex-protected bus access.</li>
-          <li>Worked on UART and RS-485 diagnostics.</li>
+          <li>Worked on UART and <span class="nowrap">RS-485</span> diagnostics.</li>
           <li>Added explicit error propagation.</li>
         </ul>
       </div>
@@ -76,7 +76,7 @@
           <li>Optical and other external sensors connect over I²C.</li>
           <li>An I²C multiplexer puts several sensors on one shared bus.</li>
           <li>In the design, the ESP32-S3 on the ARSENAL board runs the ARC firmware and reads the sensors.</li>
-          <li>In the design, the ESP32-S3 talks to the VEX V5 Brain over half-duplex RS-485.</li>
+          <li>In the design, the ESP32-S3 talks to the VEX V5 Brain over half-duplex <span class="nowrap">RS-485</span>.</li>
         </ol></figcaption>
       </figure>
 
@@ -116,7 +116,7 @@
               <dt class="decision__label">Failure mode</dt>
               <dd class="decision__text">A transceiver problem can hide sensor bugs, and a sensor problem can look like a communication bug.</dd>
               <dt class="decision__label">Design response</dt>
-              <dd class="decision__text">The current entry point starts the RS-485 path with an empty sensor registry, so I can debug communication with the sensor hardware out of the loop. UART startup and status reporting, plus I²C error logging, help narrow a failure to one layer.</dd>
+              <dd class="decision__text">The current entry point starts the <span class="nowrap">RS-485</span> path with an empty sensor registry, so I can debug communication with the sensor hardware out of the loop. UART startup and status reporting, plus I²C error logging, help narrow a failure to one layer.</dd>
             </dl>
           </li>
         </ol>
@@ -127,11 +127,11 @@
         <ul class="evidence-list" role="list">
           <li class="evidence">
             <p class="evidence__date"><time datetime="2026-11-03">November 3, 2026</time></p>
-            <p class="evidence__text">A local check of the ARC repository’s <code>CPPDev</code> branch at <code>3eb3ed6</code>, the same commit as the public branch, with a clean working tree. <code>pio run -e seeed_xiao_esp32s3</code> passed. The build warned about flash size: the project configuration expects 8 MB, but the SDK settings report 2 MB. The board’s actual flash size hasn’t been checked. This was a build of the RS-485-only entry point, so it shows the target builds. No hardware test was run as part of this check, and a passing compile covers only part of the integration.</p>
+            <p class="evidence__text">A local check of the ARC repository’s <code>CPPDev</code> branch at <code>3eb3ed6</code>, the same commit as the public branch, with a clean working tree. <code>pio run -e seeed_xiao_esp32s3</code> passed. The build warned about flash size: the project configuration expects 8 MB, but the SDK settings report 2 MB. The board’s actual flash size hasn’t been checked. This was a build of the <span class="nowrap">RS-485-only</span> entry point, so it shows the target builds. No hardware test was run as part of this check, and a passing compile covers only part of the integration.</p>
           </li>
           <li class="evidence">
             <p class="evidence__date"><time datetime="2026-10-28">October 28, 2026</time></p>
-            <p class="evidence__text">Commit <code>cef105f</code> records successful RS-485 protocol checks across multiple packet formats, per the commit message. That message is the only evidence for this earlier test. Later commits changed the communication code.</p>
+            <p class="evidence__text">Commit <code>cef105f</code> records successful <span class="nowrap">RS-485</span> protocol checks across multiple packet formats, per the commit message. That message is the only evidence for this earlier test. Later commits changed the communication code.</p>
           </li>
         </ul>
         <h4>Open work</h4>

@@ -57,7 +57,7 @@ INDEX_HTML = """<!doctype html>
 <!-- ARC case study -->
 <figure class="figure figure--diagram" id="arc-architecture">
 <picture>
-<source media="(max-width: 719px)" srcset="assets/arc-architecture-stacked.svg" width="360" height="640">
+<source media="(max-width: 44.99875em)" srcset="assets/arc-architecture-stacked.svg" width="360" height="616">
 <img src="assets/arc-architecture.svg" width="960" height="360" alt="Block diagram of the intended ARC system architecture." loading="lazy" decoding="async">
 </picture>
 <figcaption class="figure__caption">Intended system architecture.</figcaption>

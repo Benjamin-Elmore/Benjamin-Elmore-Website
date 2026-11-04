@@ -198,6 +198,11 @@ time {
   transform: none;
 }
 
+/* Hyphenated technical terms in prose (ESP-IDF, RS-485) stay on one line (DEV-VAL-1.1). */
+.nowrap {
+  white-space: nowrap;
+}
+
 /* ---------- Header ---------- */
 
 /*
@@ -402,6 +407,7 @@ main {
 
 .tag {
   padding: 0.15em 0.65em;
+  white-space: nowrap; /* "S-function", "RS-485" never split at the hyphen (DEV-VAL-1.1) */
   color: var(--color-muted);
   background: var(--color-code-bg);
   border: 1px solid var(--color-border);
@@ -492,7 +498,8 @@ main {
   margin-top: var(--space-7);
 }
 
-/* <picture>: stacked SVG below 45em (720px), wide SVG above. Capped on large phones so the tall version stays in view. */
+/* <picture>: stacked SVG below 45em (720px), wide SVG above. Capped at 26rem so the tall version mostly stays in view on phones;
+   with a large default font (24px) at 720-1079px it can exceed a short window, which is accepted (DEV-VAL-1.3). */
 .figure--diagram picture {
   display: block;
 }

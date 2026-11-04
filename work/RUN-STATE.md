@@ -12,8 +12,8 @@ Ben asked: "go ahead and build it. Let's start with the initial framework like y
 | 1 | Plan | Architect plan, `work/PLAN.md` | **Done**, no Gate A blockers | — |
 | 2 | Build | content, style, diagram, test engineers (parallel) | **Done** (89db530) | — |
 | 3 | Verify / Review / Fix | Checks, code and content review | **Done**: VERIFY-4 PASS (1 Minor cosmetic FAIL, accepted below), CODE-REVIEW-4 APPROVE WITH MINORS; fix round 4 closes CR4-1 to CR4-4 | — |
-| 4 | Validate changes | DEV-VAL-n + visual appeal check | in progress | DEV-VAL-1 |
-| 5 | Validate codebase | Validation Council + visual analyst | pending | — |
+| 4 | Validate changes | DEV-VAL-n + visual appeal check | **Done**: DEV-VAL-1 SATISFIED (visual 9/9); Minors 1.1-1.4 applied | — |
+| 5 | Validate codebase | Validation Council + visual analyst | in progress | VAL run 1 |
 | 6 | Complete PR | CI green, description; Ben merges | pending | — |
 
 ## portfolio-findings branch (Ben, 2026-11-03; 09d157b)
@@ -29,6 +29,8 @@ Review: `work/reviews/FINDINGS-portfolio-findings.md` (13 new facts, 9 correctio
 - CR3-1: instead of the suggested `:has(:focus-visible)` rule, the whole header (both rows) sticks at `top: 0` from 720px, so its geometry never changes on focus. Trade-off: about 104px of sticky header on desktop instead of 52px. VERIFY-4's visual check judges whether that looks heavy.
 - VERIFY-4 double divider (Minor, accepted residual): at 1280px wide with an 800-860px tall window, jumping to Education or Contact leaves the Education rule 1-56px under the header rule, because the page bottom stops the scroll short. The only CSS fix is about a viewport of blank space under Contact, which looks worse (rubric item 4). Ben can ask for it.
 - CR4-1: the breakpoint is now `45em` (720px at a 16px default), and the diagram `<source>` uses `44.99875em`.
+
+- DEV-VAL-1.3 (accepted): with a 24px default font at 720-1079px, the stacked diagram can be taller than a short window. The comment says so.
 
 ## Needs Ben (after merge)
 - Turn on Pages: Settings → Pages → Deploy from branch `main`, folder `/docs`.
