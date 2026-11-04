@@ -10,25 +10,25 @@
   <text x="24" y="44" font-size="20" font-weight="700" fill="#ffffff">MarketTesting pipeline</text>
   <rect x="24" y="72" width="312" height="64" rx="12" fill="#333333" stroke="#b4b4b4" stroke-width="3"/>
   <text x="42" y="100" font-size="20" font-weight="700" fill="#ffffff">CSV or yfinance</text>
-  <text x="42" y="123" font-size="17" fill="#d6e2f3">historical market data</text>
+  <text x="42" y="123" font-size="17" fill="#ededed">historical market data</text>
   <line x1="180" y1="136" x2="180" y2="162" stroke="#b4b4b4" stroke-width="3" marker-end="url(#arrow)"/>
   <rect x="24" y="164" width="312" height="64" rx="12" fill="#333333" stroke="#b4b4b4" stroke-width="3"/>
   <text x="42" y="192" font-size="20" font-weight="700" fill="#ffffff">pandas / NumPy</text>
-  <text x="42" y="215" font-size="17" fill="#d6e2f3">preprocessing</text>
+  <text x="42" y="215" font-size="17" fill="#ededed">preprocessing</text>
   <line x1="180" y1="228" x2="180" y2="254" stroke="#b4b4b4" stroke-width="3" marker-end="url(#arrow)"/>
   <rect x="24" y="256" width="312" height="64" rx="12" fill="#333333" stroke="#b4b4b4" stroke-width="3"/>
   <text x="42" y="284" font-size="20" font-weight="700" fill="#ffffff">Feature scaling</text>
-  <text x="42" y="307" font-size="17" fill="#d6e2f3">RobustScaler, all tickers</text>
+  <text x="42" y="307" font-size="17" fill="#ededed">RobustScaler, all tickers</text>
   <line x1="180" y1="320" x2="180" y2="346" stroke="#b4b4b4" stroke-width="3" marker-end="url(#arrow)"/>
   <rect x="24" y="348" width="312" height="64" rx="12" fill="#333333" stroke="#b4b4b4" stroke-width="3"/>
   <text x="42" y="376" font-size="20" font-weight="700" fill="#ffffff">100-day windows</text>
-  <text x="42" y="399" font-size="17" fill="#d6e2f3">input sequences</text>
+  <text x="42" y="399" font-size="17" fill="#ededed">input sequences</text>
   <line x1="180" y1="412" x2="180" y2="438" stroke="#b4b4b4" stroke-width="3" marker-end="url(#arrow)"/>
   <rect x="24" y="440" width="312" height="64" rx="12" fill="#333333" stroke="#f2f0eb" stroke-width="3"/>
   <text x="42" y="468" font-size="20" font-weight="700" fill="#ffffff">LSTM</text>
-  <text x="42" y="491" font-size="17" fill="#d6e2f3">TensorFlow training</text>
+  <text x="42" y="491" font-size="17" fill="#ededed">TensorFlow training</text>
   <line x1="180" y1="504" x2="180" y2="530" stroke="#b4b4b4" stroke-width="3" marker-end="url(#arrow)"/>
   <rect x="24" y="532" width="312" height="64" rx="12" fill="#333333" stroke="#b4b4b4" stroke-width="3"/>
   <text x="42" y="560" font-size="20" font-weight="700" fill="#ffffff">Prediction table</text>
-  <text x="42" y="583" font-size="17" fill="#d6e2f3">output</text>
+  <text x="42" y="583" font-size="17" fill="#ededed">output</text>
 </svg>

@@ -501,6 +501,11 @@ main {
   transition: transform 0.28s ease, width 0.28s ease, opacity 0.15s ease;
 }
 
+.slide-list > .slide-indicator {
+  border-top: 0;
+  list-style: none;
+}
+
 .slide-list.has-indicator .work-row,
 .slide-list.has-indicator .exp-row__link {
   background-size: 0 2px;
@@ -1021,7 +1026,7 @@ main {
 }
 
 .edu .meta {
-  font-family: var(--font-mono);
+  font-family: var(--font-num);
 }
 
 /* ---------- Footer ---------- */

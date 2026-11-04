@@ -39,7 +39,7 @@
       <text x="532" y="198">ESP32-S3</text>
       <text x="854" y="198">VEX V5 Brain</text>
     </g>
-    <g font-size="20" fill="#d6e2f3">
+    <g font-size="20" fill="#ededed">
       <text x="102.5" y="240">optical and other</text>
       <text x="102.5" y="266">external sensors</text>
       <text x="316" y="240">multiplexed</text>

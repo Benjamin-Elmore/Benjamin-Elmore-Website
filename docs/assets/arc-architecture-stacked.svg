@@ -37,7 +37,7 @@
     <text x="42" y="396">ESP32-S3</text>
     <text x="42" y="540">VEX V5 Brain</text>
   </g>
-  <g font-size="17" fill="#d6e2f3">
+  <g font-size="17" fill="#ededed">
     <text x="42" y="138">optical and other external sensors</text>
     <text x="42" y="282">multiplexed I²C</text>
     <text x="42" y="426">ARC firmware on ARSENAL board</text>

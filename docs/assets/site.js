@@ -39,9 +39,10 @@
     Array.prototype.forEach.call(lists, function (list) {
       var rows = list.querySelectorAll('.work-row, .exp-row__link');
       if (!rows.length) return;
-      var bar = document.createElement('span');
+      var bar = document.createElement('li');
       bar.className = 'slide-indicator';
       bar.setAttribute('aria-hidden', 'true');
+      bar.setAttribute('role', 'presentation');
       list.appendChild(bar);
       list.classList.add('has-indicator');
 
@@ -70,7 +71,11 @@
         if (a && list.contains(a) && fv && (a.classList.contains('work-row') || a.classList.contains('exp-row__link'))) show(a);
         else hide();
       });
-      window.addEventListener('resize', hide);
+      window.addEventListener('resize', function () {
+        var a = document.activeElement;
+        if (a && list.contains(a) && (a.classList.contains('work-row') || a.classList.contains('exp-row__link'))) show(a);
+        else hide();
+      });
     });
   });
 })();
