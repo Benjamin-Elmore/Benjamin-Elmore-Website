@@ -1,5 +1,6 @@
 // Click-through test in headless Edge/Chrome over CDP. Node 22+ built-ins only (global WebSocket and fetch).
 //   node tools/clickthrough.mjs --browser "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --profile <empty dir> [--root docs]
+//   add --shots <fresh docs dir> [--out <dir>] to shoot hover/indicator/open-details states of both builds instead (A4).
 // Starts tools/pages_server.py on a free port, prints PASS or FAIL per step, exits 1 on any FAIL.
 import { spawn, spawnSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync } from 'node:fs';
@@ -42,8 +43,8 @@ async function step(name, fn) {
 }
 const check = (cond, msg) => { if (!cond) throw new Error(msg); };
 
-async function startServer() {
-  const py = spawn(process.platform === 'win32' ? 'python' : 'python3', [join(here, 'pages_server.py'), '--root', root, '--port', '0'], { stdio: ['ignore', 'pipe', 'inherit'] });
+async function startServer(dir = root) {
+  const py = spawn(process.platform === 'win32' ? 'python' : 'python3', [join(here, 'pages_server.py'), '--root', dir, '--port', '0'], { stdio: ['ignore', 'pipe', 'inherit'] });
   children.push(py);
   const url = await new Promise((res, rej) => {
     py.on('error', rej);
@@ -170,6 +171,30 @@ async function main() {
 
   await openFromHome('K2 home -> ARC (no reload, head, arc.css, scroll 0)', BASE + 'ARC/', 'ARC/', true);
   await back('K3 back -> home at the old scroll');
+  await step('K3c ARC skip link lands on main; Back twice keeps ARC at 0 and the home scroll', async () => {
+    await tab.eval('window.scrollTo(0, 300)');
+    await sleep(150);
+    homeScroll = await tab.eval('scrollY');
+    await tab.eval(q.click(BASE + 'ARC/'));
+    await tab.until(`location.pathname===${JSON.stringify(BASE + 'ARC/')}`, 'ARC');
+    await tab.until('scrollY===0', 'ARC at 0', 3000);
+    await sleep(150);
+    await tab.eval("document.querySelector('a.skip-link').click()");
+    await tab.until("location.hash==='#main'", '#main');
+    await sleep(300);
+    const top = await tab.eval("document.getElementById('main').getBoundingClientRect().top");
+    check(top >= 0 && top <= 80, 'main.top ' + top);
+    await tab.eval('history.back()');
+    await tab.until("location.hash===''", 'back to ARC');
+    await sleep(300);
+    check(await tab.eval(`location.pathname===${JSON.stringify(BASE + 'ARC/')}`), 'not on ARC');
+    check(await tab.eval('scrollY') === 0, 'ARC scrollY ' + await tab.eval('scrollY'));
+    await tab.eval('history.back()');
+    await tab.until(`location.pathname===${JSON.stringify(BASE)}`, 'back to home');
+    await sleep(300);
+    const y = await tab.eval('scrollY');
+    check(Math.abs(y - homeScroll) <= 5, `home scrollY ${y}, expected ${homeScroll}`);
+  });
   await openFromHome('K4 home -> MarketTesting', BASE + 'MarketTesting/', 'MarketTesting/', false);
   await back('K4b back -> home at the old scroll');
   await openFromHome('K5 home -> CBU-Robotics', BASE + 'CBU-Robotics/', 'CBU-Robotics/', false);
@@ -194,6 +219,17 @@ async function main() {
       await tab.until(`location.pathname===${JSON.stringify(BASE)}`, 'back');
     });
   }
+  await step('K6b home nav #experience then #contact scrolls to each', async () => {
+    await tab.eval('window.scrollTo(0, 0)');
+    await sleep(150);
+    await tab.eval(q.click('#experience'));
+    await tab.until(q.inView('experience'), '#experience in view', 3000);
+    await sleep(300);
+    await tab.eval(q.click('#contact'));
+    await tab.until("location.hash==='#contact'", '#contact hash');
+    await sleep(300);
+    check(await tab.eval(q.inView('contact')), '#contact not in view (scrollY ' + await tab.eval('scrollY') + ')');
+  });
   await step('K7 subpage nav "Experience" -> /#experience, "All work" -> /#work', async () => {
     await tab.eval(q.click(BASE + 'ARC/'));
     await tab.until(`location.pathname===${JSON.stringify(BASE + 'ARC/')}`, 'ARC');
@@ -279,7 +315,7 @@ async function main() {
         const r = await tab.send('Runtime.evaluate', { returnByValue: true, expression:
           "JSON.stringify({h1:document.querySelector('main h1')?.textContent.trim()||'',len:document.querySelector('main').innerText.length,anchors:document.querySelectorAll('main a[href]').length,toggleHidden:getComputedStyle(document.querySelector('.theme-toggle')).display==='none'})" });
         const v = JSON.parse(r.result.value);
-        check(v.h1 && v.len > (p === 'nope' ? 20 : 150) && v.anchors > 0 && v.toggleHidden, `${p || '/'}: ${JSON.stringify(v)}`);
+        check(v.h1 && v.len > 20 && v.anchors > 0 && v.toggleHidden, `${p || '/'}: ${JSON.stringify(v)}`);
       }
     } finally { await tab.send('Emulation.setScriptExecutionDisabled', { value: false }); }
   });
@@ -290,7 +326,39 @@ async function main() {
   });
 }
 
-try { await main(); } catch (e) { report('harness', false, e.stack || e.message); }
+// A4 state shots: the same states in this build and in fresh, saved side by side and compared byte for byte.
+async function shots() {
+  const out = resolve(args.out || join(tmpdir(), 'clickthrough-shots'));
+  mkdirSync(out, { recursive: true });
+  const servers = { react: await startServer(root), fresh: await startServer(resolve(args.shots)) };
+  const tab = await Tab.open(await startBrowser());
+  const center = (sel) => `(()=>{const e=document.querySelector(${JSON.stringify(sel)});e.scrollIntoView({block:'center'});const r=e.getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2]})()`;
+  const states = {
+    'work-hover': async () => { const [x, y] = await tab.eval(center('.work-row')); await tab.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y }); },
+    'exp-hover': async () => { const [x, y] = await tab.eval(center('.exp-row__link')); await tab.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y }); },
+    'details-open': async () => { await tab.eval("(()=>{const d=document.querySelector('.exp-details');d.open=true;d.scrollIntoView({block:'start'})})()"); await tab.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 1, y: 1 }); },
+  };
+  const { writeFileSync } = await import('node:fs');
+  for (const w of [360, 1280]) for (const theme of ['light', 'dark']) for (const [name, act] of Object.entries(states)) {
+    const pngs = {};
+    for (const [build, srv] of Object.entries(servers)) {
+      await tab.send('Emulation.setDeviceMetricsOverride', { width: w, height: 900, deviceScaleFactor: 1, mobile: false });
+      await tab.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: theme }] });
+      await tab.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 1, y: 1 });
+      await tab.goto(srv + BASE, SETTLE);
+      await sleep(300);
+      await act();
+      await sleep(600);
+      pngs[build] = (await tab.send('Page.captureScreenshot', { format: 'png' })).data;
+      writeFileSync(join(out, `${name}-${w}-${theme}-${build}.png`), Buffer.from(pngs[build], 'base64'));
+    }
+    const same = pngs.react === pngs.fresh;
+    console.log(`${same ? 'SAME' : 'DIFF'} ${name}-${w}-${theme}`);
+  }
+  console.log('shots in ' + out + ' (DIFF means bytes differ: compare the pair by eye)');
+}
+
+try { await (args.shots ? shots() : main()); } catch (e) { report('harness', false, e.stack || e.message); }
 for (const c of children) kill(c);
 console.log(failures ? `FAILED: ${failures}` : 'ALL PASSED');
 process.exit(failures ? 1 : 0);

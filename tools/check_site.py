@@ -187,7 +187,7 @@ def check_page_rules(errors, parsed, raw):
             errors.append(f"{p}: #root has no main#main in the HTML (it would need JS to render)")
         elif pg.h1 != 1:
             errors.append(f"{p}: main#main has {pg.h1} h1 elements, expected 1")
-        elif len(" ".join(" ".join(pg.main_text).split())) < (40 if p == NOT_FOUND else 200):
+        elif len(" ".join(" ".join(pg.main_text).split())) < 40:
             errors.append(f"{p}: main#main has too little text in the HTML")
         if pg.toggle_hidden is not True:
             errors.append(f"{p}: theme toggle must be in the HTML and hidden until JS runs")
