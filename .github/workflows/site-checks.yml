@@ -1,0 +1,29 @@
+# Site checks (PLAN.md section 4).
+# On every pull request and every push to main, this workflow:
+#   1. runs the checker's own self-test (tools/test_check_site.py), which proves
+#      each acceptance check C01-C19 can fail on a broken fixture site, then
+#   2. runs tools/check_site.py against the published site in docs/.
+# Either step failing fails the build. Standard-library Python only, pinned to
+# 3.12; read-only token; no third-party actions beyond checkout/setup-python.
+name: site-checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Self-test the checker
+        run: python -m unittest tools/test_check_site.py -v
+      - name: Check the site in docs/
+        run: python tools/check_site.py

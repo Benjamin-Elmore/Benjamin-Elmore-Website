@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Benjamin Elmore | Embedded and robotics software</title>
+  <meta name="description" content="Benjamin Elmore, computer science student and robotics software engineer, writing C++ sensor firmware that connects external sensors to a VEX V5 robot.">
+  <meta property="og:title" content="Benjamin Elmore | Embedded and robotics software">
+  <meta property="og:description" content="Computer science student and robotics software engineer, writing C++ sensor firmware that connects external sensors to a VEX V5 robot.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://benjamin-elmore.github.io/Benjamin-Elmore-Website/">
+  <link rel="canonical" href="https://benjamin-elmore.github.io/Benjamin-Elmore-Website/">
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/site.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="site-header__name" href="#top">Benjamin Elmore</a>
+    <nav class="site-nav" aria-label="Sections">
+      <ul class="site-nav__list">
+        <li><a href="#arc">ARC firmware</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <button class="theme-toggle" type="button" hidden aria-pressed="false">Dark theme</button>
+  </header>
+
+  <main id="main">
+
+    <section id="top" class="section section--intro" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="intro__name">Benjamin Elmore</h1>
+      <p class="intro__role">Computer science student and robotics software engineer</p>
+      <p class="intro__lede">I’m Benjamin Elmore, a computer science student and robotics software engineer. I’m developing embedded firmware that helps a VEX V5 robot work with external sensors, and I’m interested in applying that experience to defense and space manufacturing.</p>
+      <p class="section__lede">My work sits where sensors, a custom board and a robot controller meet. I care about component bring-up, clear ownership of interfaces, diagnostics and checks someone else can repeat. Sensor interfaces for test fixtures and manufacturing equipment are an area I want to grow into.</p>
+      <ul class="link-list intro__links">
+        <li><a href="https://github.com/Benjamin-Elmore" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/benjamin-n-elmore/" rel="noopener">LinkedIn</a></li>
+      </ul>
+    </section>
+
+    <section id="arc" class="section case-study" aria-labelledby="arc-title">
+      <h2 id="arc-title" class="section__title">Case study: ARC firmware for ARSENAL</h2>
+      <p class="case-study__summary">ARC is the C++ sensor firmware for ARSENAL, a custom ESP32-S3 board my robotics team is developing. I contribute to the firmware. This page covers the failure modes I reasoned about, how the design responds to them, and what has actually been checked so far.</p>
+
+      <div class="case-study__block" id="arc-problem">
+        <h3>The problem</h3>
+        <p>The CBU1 VEX U team is developing ARSENAL, a custom ESP32-S3 board designed to connect external sensors to a VEX V5 Brain. ARC is the C++ firmware that runs on it. The ARSENAL board and the existing sensor code are the team’s work.</p>
+      </div>
+
+      <div class="case-study__block" id="arc-role">
+        <h3>My role</h3>
+        <p>I’m a firmware contributor. I work with electrical and computer engineers on device interfaces. My part:</p>
+        <ul>
+          <li>Prototyped the sensor abstraction.</li>
+          <li>Moved I²C communication toward the ESP-IDF master API.</li>
+          <li>Added optical sensor register access and position decoding.</li>
+          <li>Worked on mutex-protected bus access.</li>
+          <li>Worked on UART and RS-485 diagnostics.</li>
+          <li>Committed implementation and debugging work.</li>
+        </ul>
+      </div>
+
+      <figure class="figure figure--diagram" id="arc-architecture">
+        <img src="assets/arc-architecture.svg" width="960" height="360" alt="Block diagram of the intended ARC system architecture: sensors to I²C multiplexer to ESP32-S3 to VEX V5 Brain over half-duplex RS-485." loading="lazy" decoding="async">
+        <figcaption class="figure__caption">Intended system architecture. This is the path the board is designed for. The full sensor-to-V5 path has not had a hardware test yet.</figcaption>
+        <ol class="figure__steps">
+          <li>Optical and other external sensors connect over I²C.</li>
+          <li>An I²C multiplexer puts several sensors on one shared bus.</li>
+          <li>The ESP32-S3 on the ARSENAL board runs the ARC firmware and reads the sensors.</li>
+          <li>The ESP32-S3 talks to the VEX V5 Brain over half-duplex RS-485.</li>
+        </ol>
+      </figure>
+
+      <div class="case-study__block" id="arc-decisions">
+        <h3>Engineering decisions</h3>
+        <ol class="decision-list">
+          <li class="decision">
+            <h4 class="decision__title">Evolve the sensor abstraction</h4>
+            <dl class="decision__body">
+              <dt class="decision__label">Failure mode</dt>
+              <dd class="decision__text">If each sensor type gets its own code, the acquisition logic is copied from sensor to sensor. Early work used a sensor base class with an optical specialization.</dd>
+              <dt class="decision__label">Design response</dt>
+              <dd class="decision__text">The testing design uses configurable setup and read callbacks plus preconfiguration, so one acquisition path serves different sensor types. Optical register reads, writes and offset handling are the concrete example.</dd>
+            </dl>
+          </li>
+          <li class="decision">
+            <h4 class="decision__title">Give the bus a clear owner</h4>
+            <dl class="decision__body">
+              <dt class="decision__label">Failure mode</dt>
+              <dd class="decision__text">The mux is shared. Another task can switch its channel between the channel select and the sensor transaction that depends on it.</dd>
+              <dt class="decision__label">Design response</dt>
+              <dd class="decision__text">A templated <code>I2CBus&lt;N&gt;</code> owns device registrations, register operations, mux selection and a bus mutex. The channel select and its matching transaction run under the same lock. A noncopyable lock guard scopes the lock, and later work checks for failed acquisition.</dd>
+            </dl>
+          </li>
+          <li class="decision">
+            <h4 class="decision__title">Separate acquisition from requests</h4>
+            <dl class="decision__body">
+              <dt class="decision__label">Failure mode</dt>
+              <dd class="decision__text">A request from the controller should not have to run a sensor-specific I²C sequence itself.</dd>
+              <dt class="decision__label">Design response</dt>
+              <dd class="decision__text">The architecture gives acquisition and communication separate tasks. The acquisition side selects the channel and stores readings. The communication side uses a sensor-ID registry and a small readings and offset interface.</dd>
+            </dl>
+          </li>
+          <li class="decision">
+            <h4 class="decision__title">Isolate bring-up failures</h4>
+            <dl class="decision__body">
+              <dt class="decision__label">Failure mode</dt>
+              <dd class="decision__text">A transceiver problem can hide sensor bugs, and a sensor problem can look like a communication bug.</dd>
+              <dt class="decision__label">Design response</dt>
+              <dd class="decision__text">The current entry point starts the RS-485 path with an empty sensor registry, so I can debug communication with the sensor hardware out of the loop. UART startup and status reporting, plus I²C error logging, help narrow a failure to one layer.</dd>
+            </dl>
+          </li>
+        </ol>
+      </div>
+
+      <div class="case-study__block" id="arc-verification">
+        <h3>Verification so far</h3>
+        <ul class="evidence-list">
+          <li class="evidence">
+            <p class="evidence__date"><time datetime="2026-11-03">November 3, 2026</time></p>
+            <p class="evidence__text">My local check of the <code>ARC-Testing</code> repository, branch <code>CPPDev</code>, at head <code>3eb3ed6</code> with a clean working tree. <code>pio run -e seeed_xiao_esp32s3</code> passed. The build emitted a flash configuration warning: 8 MB expected, 2 MB configured. This was a build of the RS-485-only entry point. It shows the target builds. No hardware test was run as part of this check, and a passing compile covers only part of the integration.</p>
+          </li>
+          <li class="evidence">
+            <p class="evidence__date"><time datetime="2026-10-28">October 28, 2026</time></p>
+            <p class="evidence__text">Commit <code>cef105f</code> records successful RS-485 protocol checks across multiple packet formats, per the commit message. That message is the only evidence for this earlier test. Later commits changed the communication code.</p>
+          </li>
+        </ul>
+        <h4>Open work</h4>
+        <ul class="open-work">
+          <li>Optical I²C bring-up.</li>
+          <li>A current sensor-to-V5 hardware test.</li>
+          <li>Per-command parsers. Header dispatch is prepared; the parsers are still stubs.</li>
+          <li>Resolving the flash configuration warning.</li>
+        </ul>
+      </div>
+
+      <p class="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/ARC" rel="noopener">Benjamin-Elmore/ARC on GitHub</a>. The public repository is a separate snapshot from the <code>ARC-Testing</code> branch checked above.</p>
+    </section>
+
+    <section id="experience" class="section" aria-labelledby="experience-title">
+      <h2 id="experience-title" class="section__title">Experience</h2>
+      <ol class="timeline">
+        <li class="role">
+          <h3 class="role__org">CBU1 VEX U Robotics</h3>
+          <p class="role__title">Vice President, since <time datetime="2026-10">October 2026</time></p>
+          <p class="role__title">Software Engineer, since <time datetime="2025-09">September 2025</time></p>
+          <ul class="role__points">
+            <li>Coordinate milestones across disciplines on the team.</li>
+            <li>Help plan events and competition preparation.</li>
+            <li>Contribute to the ARC sensor firmware described above.</li>
+            <li>Earlier PROS/C++ drivetrain work: driver controls and baseline point navigation using odometry and robot-frame error.</li>
+            <li>Explored PID and Pure Pursuit control. My spline and odometry work had open items.</li>
+          </ul>
+        </li>
+        <li class="role role--compact">
+          <h3 class="role__org">In-N-Out Burger</h3>
+          <p class="role__title">Associate, since <time datetime="2024-05">May 2024</time>. Teamwork and keeping service quality up in a fast-paced environment.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section id="projects" class="section" aria-labelledby="projects-title">
+      <h2 id="projects-title" class="section__title">Other projects</h2>
+      <div class="card-grid">
+        <article class="card">
+          <h3 class="card__title">FSW-UAV-SIM</h3>
+          <p class="card__meta">Staged engineering prototype. AI-assisted implementation. No public link.</p>
+          <p class="card__body">I lead and orchestrate an AI-assisted UAV simulation effort, working with mechanical and aerodynamic collaborators. The architecture separates C++ flight-software logic from a Simulink plant behind a Level-2 S-function. Generated interface contracts, standalone replay and configuration plumbing keep the interfaces explicit. An October 2026 review verified the generator tests and interface and rule checks at its snapshot, and documented a Windows checker self-test failure. GNC (guidance, navigation and control) is stubbed and the aerodynamic data is a draft.</p>
+          <ul class="tag-list">
+            <li class="tag">C++</li>
+            <li class="tag">MATLAB/Simulink</li>
+            <li class="tag">S-function</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3 class="card__title">MarketTesting</h3>
+          <p class="card__meta">Independent Python learning project</p>
+          <p class="card__body">A data pipeline I built on my own: CSV and yfinance ingestion, pandas and NumPy preprocessing, per-ticker scaling, 100-day input windows, TensorFlow LSTM training and a prediction-table output. It shows pipeline ownership. I make no claims about its forecasts.</p>
+          <ul class="tag-list">
+            <li class="tag">Python</li>
+            <li class="tag">pandas/NumPy</li>
+            <li class="tag">TensorFlow</li>
+          </ul>
+          <p class="card__link"><a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener">MarketTesting on GitHub</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section id="skills" class="section" aria-labelledby="skills-title">
+      <h2 id="skills-title" class="section__title">Skills</h2>
+      <div class="skill-groups">
+        <section class="skill-group" aria-labelledby="skills-embedded">
+          <h3 id="skills-embedded" class="skill-group__title">Embedded</h3>
+          <ul class="tag-list">
+            <li class="tag">C/C++</li>
+            <li class="tag">ESP-IDF</li>
+            <li class="tag">FreeRTOS</li>
+            <li class="tag">ESP32-S3</li>
+            <li class="tag">PlatformIO</li>
+            <li class="tag">I²C</li>
+            <li class="tag">UART</li>
+            <li class="tag">RS-485</li>
+            <li class="tag">VEX V5/PROS</li>
+          </ul>
+        </section>
+        <section class="skill-group" aria-labelledby="skills-software">
+          <h3 id="skills-software" class="skill-group__title">Software</h3>
+          <ul class="tag-list">
+            <li class="tag">Python</li>
+            <li class="tag">Java</li>
+            <li class="tag">TensorFlow</li>
+            <li class="tag">pandas/NumPy</li>
+            <li class="tag">MATLAB/Simulink</li>
+          </ul>
+        </section>
+        <section class="skill-group" aria-labelledby="skills-tools">
+          <h3 id="skills-tools" class="skill-group__title">Tools</h3>
+          <ul class="tag-list">
+            <li class="tag">Git</li>
+            <li class="tag">Linux</li>
+            <li class="tag">Arduino</li>
+          </ul>
+        </section>
+      </div>
+    </section>
+
+    <section id="education" class="section" aria-labelledby="education-title">
+      <h2 id="education-title" class="section__title">Education</h2>
+      <div class="edu">
+        <h3 class="edu__school">California Baptist University</h3>
+        <p class="edu__degree">B.S. Computer Science, Machine Learning and Artificial Intelligence concentration</p>
+        <p class="meta">Expected <time datetime="2029-05">May 2029</time></p>
+      </div>
+    </section>
+
+    <section id="contact" class="section" aria-labelledby="contact-title">
+      <h2 id="contact-title" class="section__title">Contact</h2>
+      <p class="section__lede">The best way to reach me is through GitHub or LinkedIn.</p>
+      <ul class="link-list contact__links">
+        <li><a href="https://github.com/Benjamin-Elmore" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/benjamin-n-elmore/" rel="noopener">LinkedIn</a></li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Benjamin Elmore, 2026</p>
+  </footer>
+</body>
+</html>

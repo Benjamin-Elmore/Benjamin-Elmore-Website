@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img" aria-labelledby="arc-title arc-desc" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <title id="arc-title">ARC intended system architecture</title>
+  <desc id="arc-desc">Intended system architecture, left to right: optical and other external sensors connect over I²C to an I²C multiplexer; the multiplexed I²C bus connects over I²C to the ESP32-S3 running ARC firmware on the ARSENAL board, marked as this work; the ESP32-S3 exchanges data with the VEX V5 Brain over a bidirectional half-duplex RS-485 link.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8fbcff"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="360" rx="20" fill="#0b1f3a"/>
+  <text x="40" y="56" font-size="28" font-weight="700" fill="#ffffff">Intended system architecture</text>
+
+  <!-- Links -->
+  <g stroke="#8fbcff" stroke-width="3" fill="none">
+    <line x1="198" y1="214" x2="238" y2="214" marker-end="url(#arrow)"/>
+    <line x1="416" y1="214" x2="456" y2="214" marker-end="url(#arrow)"/>
+    <line x1="638" y1="214" x2="758" y2="214" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  </g>
+  <g font-size="18" fill="#e8eef8" text-anchor="middle">
+    <text x="218" y="200">I²C</text>
+    <text x="436" y="200">I²C</text>
+    <text x="698" y="200">half-duplex</text>
+    <text x="698" y="242">RS-485</text>
+  </g>
+
+  <!-- Blocks -->
+  <g stroke-width="3">
+    <rect x="24" y="124" width="174" height="180" rx="12" fill="#13325e" stroke="#8fbcff"/>
+    <rect x="242" y="124" width="174" height="180" rx="12" fill="#13325e" stroke="#8fbcff"/>
+    <rect x="460" y="124" width="174" height="180" rx="12" fill="#13325e" stroke="#ffc857"/>
+    <rect x="762" y="124" width="174" height="180" rx="12" fill="#13325e" stroke="#8fbcff"/>
+  </g>
+  <rect x="489" y="86" width="116" height="30" rx="15" fill="#ffc857"/>
+  <text x="547" y="107" font-size="18" font-weight="700" fill="#0b1f3a" text-anchor="middle">this work</text>
+
+  <g text-anchor="middle">
+    <g font-size="22" font-weight="700" fill="#ffffff">
+      <text x="111" y="164">Sensors</text>
+      <text x="329" y="164">I²C mux</text>
+      <text x="547" y="164">ESP32-S3</text>
+      <text x="849" y="164">VEX V5 Brain</text>
+    </g>
+    <g font-size="18" fill="#d6e2f3">
+      <text x="111" y="204">optical and</text>
+      <text x="111" y="228">other external</text>
+      <text x="111" y="252">sensors</text>
+      <text x="329" y="204">multiplexed I²C</text>
+      <text x="547" y="204">ARC firmware on</text>
+      <text x="547" y="228">ARSENAL board</text>
+    </g>
+  </g>
+</svg>
