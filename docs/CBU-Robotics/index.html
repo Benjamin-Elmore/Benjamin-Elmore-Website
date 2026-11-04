@@ -45,31 +45,45 @@
       </figure>
 
       <h2 id="role-title" class="section__title">Roles</h2>
-      <div class="role-section" id="software-engineer">
-        <h3>Software Engineer</h3>
-        <p class="meta">Since <time datetime="2025-09">September 2025</time></p>
-        <ul>
-          <li>I contribute to the ARC sensor firmware. See the <a href="../ARC/">ARC case study</a>.</li>
-          <li>Earlier, I wrote PROS/C++ drivetrain code: driver controls and baseline point navigation using odometry and robot-frame error.</li>
-          <li>I explored PID and Pure Pursuit control. My spline and odometry work was left unfinished.</li>
-        </ul>
-      </div>
+<div class="role-section" id="software-engineer">
+  <h3>Software Engineer</h3>
+  <p class="meta">Since <time datetime="2025-09">September 2025</time></p>
+  <p>I write C++ for the CBU1 VEX U team’s robots. My work has moved from robot control toward the interfaces between sensors, a custom board and the V5 Brain.</p>
+  <h4>Drivetrain and navigation, fall 2025</h4>
+  <ul>
+    <li>In September and October 2025 I wrote PROS/C++ drivetrain code: a driver-controls module with joystick-driven drive and centralized controller and motor-group configuration.</li>
+    <li>I added a PID function and a baseline point-navigation routine that reads odometry, rotates the target error into the robot frame, and computes proportional x, y and heading commands for the drive motors.</li>
+    <li>I explored Pure Pursuit, including a temporary linear spline search. My spline and odometry work was left unfinished, and I haven’t recorded hardware validation for this code.</li>
+  </ul>
+  <h4>ARC sensor firmware, from August 2026</h4>
+  <ul>
+    <li>I work with electrical and computer engineers on ARC, the C++ firmware for ARSENAL, a custom ESP32-S3 board that connects external sensors to the V5 Brain. The team’s hardware and some existing sensor code are theirs; my part is firmware contributions. See the <a href="../ARC/">ARC case study</a>.</li>
+    <li>I prototyped the sensor abstraction, moving from a sensor base class toward configurable setup and read callbacks.</li>
+    <li>I moved I²C communication from Arduino <code>Wire</code> toward the ESP-IDF master API, and added a mutex-protected bus with a noncopyable lock guard so mux channel selection and the sensor transaction stay under one lock.</li>
+    <li>I added optical sensor register reads and writes, position decoding and offset handling, and worked on UART and RS-485 diagnostics.</li>
+    <li>On October 28, 2026 a commit of mine recorded successful RS-485 protocol checks across several packet formats. Optical I²C bring-up and a sensor-to-V5 hardware test are still open.</li>
+  </ul>
+  <p><strong>Tools:</strong> C++, PROS, ESP-IDF, FreeRTOS, PlatformIO, ESP32-S3, I²C, UART, RS-485, Git.</p>
+</div>
 
-      <div class="role-section" id="vice-president">
-        <h3>Vice President</h3>
-        <p class="meta">Since <time datetime="2026-10">October 2026</time></p>
-        <ul>
-          <li>I coordinate milestones across disciplines on the team.</li>
-          <li>I help plan events and competition preparation.</li>
-        </ul>
-      </div>
+<div class="role-section" id="vice-president">
+  <h3>Vice President</h3>
+  <p class="meta">Since <time datetime="2026-10">October 2026</time></p>
+  <p>I took on the Vice President role in October 2026, alongside my software work. My job is to keep the team’s disciplines moving toward the same goals.</p>
+  <ul>
+    <li>I coordinate engineering milestones across the software, electrical and mechanical sides, so work like the ARC firmware and the ARSENAL board lines up.</li>
+    <li>I help plan events and competition preparation for the 2026-27 VEX U season.</li>
+    <li>I check in on members’ progress and look for where I can support their work, because I think leadership means helping others contribute.</li>
+    <li>I wrote a planning framework for the 2026-27 Override season, with Build, Electronics and Software roles and typed task, report and decision formats. It’s a planning document; it contains no robot or field-trial evidence.</li>
+  </ul>
+  <p><strong>Tools:</strong> Git and GitHub for review, Markdown planning documents, Node.js for the framework’s validation scripts.</p>
+</div>
     </section>
 
   </main>
 
   <footer class="site-footer">
-    <p>Benjamin Elmore <span aria-hidden="true">/</span> California Baptist University</p>
-    <p>2026</p>
+    <p>Benjamin Elmore <span aria-hidden="true">/</span> CBU Robotics <span aria-hidden="true">/</span> California Baptist University</p>
   </footer>
 </body>
 </html>
