@@ -52,6 +52,15 @@ INDEX_HTML = """<!doctype html>
 <ul class="link-list intro__links"><li><a href="https://github.com/Benjamin-Elmore" rel="noopener">GitHub</a></li>
 <li><a href="https://www.linkedin.com/in/benjamin-n-elmore/" rel="noopener">LinkedIn</a></li></ul>
 </section>
+<section id="work" aria-labelledby="work-title"><h2 id="work-title">Selected work</h2></section>
+<section id="experience" class="section" aria-labelledby="experience-title">
+<h2 id="experience-title" class="section__title">Experience</h2>
+<p class="role__title">Software Engineer, <time datetime="2025-09">September 2025</time>; Vice President, <time datetime="2026-10">October 2026</time></p>
+</section>
+<section id="skills" class="section" aria-labelledby="skills-title">
+<h2 id="skills-title" class="section__title">Skills</h2>
+<ul class="tag-list"><li class="tag">C/C++</li></ul>
+</section>
 <section id="arc" class="section case-study" aria-labelledby="arc-title">
 <h2 id="arc-title" class="section__title">ARC sensor firmware</h2>
 <!-- ARC case study -->
@@ -76,20 +85,12 @@ INDEX_HTML = """<!doctype html>
 </div>
 <p class="case-study__repo"><a href="https://github.com/Benjamin-Elmore/ARC" rel="noopener">ARC on GitHub</a></p>
 </section>
-<section id="experience" class="section" aria-labelledby="experience-title">
-<h2 id="experience-title" class="section__title">Experience</h2>
-<p class="role__title">Software Engineer, <time datetime="2025-09">September 2025</time>; Vice President, <time datetime="2026-10">October 2026</time></p>
-</section>
 <section id="projects" class="section" aria-labelledby="projects-title">
 <h2 id="projects-title" class="section__title">Projects</h2>
 <article class="card"><h3 class="card__title">FSW-UAV-SIM</h3>
 <p class="card__body">A staged prototype; AI-assisted implementation.</p></article>
 <article class="card"><h3 class="card__title">MarketTesting</h3>
 <p class="card__link"><a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener">MarketTesting on GitHub</a></p></article>
-</section>
-<section id="skills" class="section" aria-labelledby="skills-title">
-<h2 id="skills-title" class="section__title">Skills</h2>
-<ul class="tag-list"><li class="tag">C/C++</li></ul>
 </section>
 <section id="education" class="section" aria-labelledby="education-title">
 <h2 id="education-title" class="section__title">Education</h2>
@@ -237,9 +238,10 @@ class CheckerFixtureTest(unittest.TestCase):
     def test_c05_section_order(self):
         def swap(f):
             html = f["index.html"]
-            skills = html[html.index('<section id="skills"'):html.index('<section id="education"')]
-            edu = html[html.index('<section id="education"'):html.index('<section id="contact"')]
-            f["index.html"] = html.replace(skills + edu, edu + skills)
+            start = html.index('<section id="experience"')
+            middle = html.index('<section id="skills"')
+            end = html.index('<section id="arc"')
+            f["index.html"] = html[:start] + html[middle:end] + html[start:middle] + html[end:]
         detail = self.assert_only_fails("C05", swap)
         self.assertIn("order", detail)
 

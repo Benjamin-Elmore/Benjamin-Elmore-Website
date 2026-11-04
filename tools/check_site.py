@@ -108,7 +108,7 @@ REQUIRED_FACTS: tuple[str, ...] = (
 )
 
 SECTION_IDS: tuple[str, ...] = (
-    "top", "arc", "experience", "projects", "skills", "education", "contact",
+    "top", "work", "experience", "skills", "arc", "projects", "education", "contact",
 )
 
 SITE_URL = "https://benjamin-elmore.github.io/Benjamin-Elmore-Website/"
@@ -706,7 +706,7 @@ def c05(site: Site) -> str:
             if level > prev + 1:
                 problems.append(f"heading skip h{prev or '-'} -> {el.describe()}")
             prev = level
-    return fail_if(problems, "7 sections in order, one h1, no heading skips")
+    return fail_if(problems, f"{len(SECTION_IDS)} sections in order, one h1, no heading skips")
 
 
 FOCUSABLE_TAGS = {"button", "select", "textarea", "iframe", "summary"}

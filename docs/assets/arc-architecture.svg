@@ -3,19 +3,19 @@
   <desc id="arc-desc">Intended system architecture, left to right: optical and other external sensors connect over I²C to an I²C multiplexer; the multiplexed I²C bus connects over I²C to the ESP32-S3 running ARC firmware on the ARSENAL board, marked as the subject of this case study; the ESP32-S3 exchanges data with the VEX V5 Brain, the robot controller, over a bidirectional half-duplex RS-485 link.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#8fbcff"/>
+      <path d="M0,0 L10,5 L0,10 z" fill="#b4b4b4"/>
     </marker>
   </defs>
-  <rect x="1" y="1" width="958" height="358" rx="20" fill="#0b1f3a" stroke="#4a78b5" stroke-width="2"/>
+  <rect x="1" y="1" width="958" height="358" rx="20" fill="#1e1e1e" stroke="#717171" stroke-width="2"/>
   <text x="28" y="56" font-size="30" font-weight="700" fill="#ffffff">Intended system architecture</text>
 
   <!-- Links -->
-  <g stroke="#8fbcff" stroke-width="3" fill="none">
+  <g stroke="#b4b4b4" stroke-width="3" fill="none">
     <line x1="196" y1="228" x2="246" y2="228" marker-end="url(#arrow)"/>
     <line x1="386" y1="228" x2="436" y2="228" marker-end="url(#arrow)"/>
     <line x1="628" y1="228" x2="758" y2="228" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
   </g>
-  <g font-size="20" fill="#e8eef8" text-anchor="middle">
+  <g font-size="20" fill="#ededed" text-anchor="middle">
     <text x="221" y="206">I²C</text>
     <text x="411" y="206">I²C</text>
     <text x="693" y="206">half-duplex</text>
@@ -23,14 +23,14 @@
   </g>
 
   <!-- Blocks -->
-  <g stroke-width="3" fill="#13325e">
-    <rect x="12" y="138" width="181" height="180" rx="12" stroke="#8fbcff"/>
-    <rect x="249" y="138" width="134" height="180" rx="12" stroke="#8fbcff"/>
-    <rect x="439" y="138" width="186" height="180" rx="12" stroke="#ffc857"/>
-    <rect x="761" y="138" width="186" height="180" rx="12" stroke="#8fbcff"/>
+  <g stroke-width="3" fill="#333333">
+    <rect x="12" y="138" width="181" height="180" rx="12" stroke="#b4b4b4"/>
+    <rect x="249" y="138" width="134" height="180" rx="12" stroke="#b4b4b4"/>
+    <rect x="439" y="138" width="186" height="180" rx="12" stroke="#f2f0eb"/>
+    <rect x="761" y="138" width="186" height="180" rx="12" stroke="#b4b4b4"/>
   </g>
-  <rect x="460" y="90" width="144" height="36" rx="18" fill="#ffc857"/>
-  <text x="532" y="115.5" font-size="22" font-weight="700" fill="#0b1f3a" text-anchor="middle">case study</text>
+  <rect x="460" y="90" width="144" height="36" rx="18" fill="#f2f0eb"/>
+  <text x="532" y="115.5" font-size="22" font-weight="700" fill="#1e1e1e" text-anchor="middle">case study</text>
 
   <g text-anchor="middle">
     <g font-size="24" font-weight="700" fill="#ffffff">

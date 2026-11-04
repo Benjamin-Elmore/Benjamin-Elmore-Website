@@ -2,38 +2,25 @@
   Benjamin Elmore portfolio: site styles.
   Mobile-first (base = 360px), min-width media queries only. System fonts; no third-party requests.
 
-  WCAG 2.x contrast ratios (relative-luminance formula; AA needs 4.5:1 for text, 3:1 for focus/UI)
-  Token            vs bg    vs surface  vs code-bg
-  LIGHT  bg #f6f6f3, surface #ffffff, code-bg #ecedea
-    text   #1b1f24   15.29    16.56       14.09
-    muted  #525a63    6.46     7.00        5.95
-    accent #0a58a8    6.52     7.06        6.01
-    focus  #0a58a8    6.52     7.06        6.01   (needs 3:1)
-  DARK   bg #0f1215, surface #171b20, code-bg #1f252b
-    text   #e4e7ea   15.14    13.93       12.46
-    muted  #a2abb5    8.08     7.44        6.65
-    accent #6fb3f5    8.45     7.78        6.95
-    focus  #6fb3f5    8.45     7.78        6.95   (needs 3:1)
-  --color-border is decorative (dividers and card edges) and carries no information.
-  The theme toggle's edge uses --color-muted (6.46:1 light, 8.08:1 dark) so the control is visible.
+  Color contrast for both themes is checked by tools/check_site.py.
 */
 
 :root {
-  --color-bg: #f6f6f3;
+  --color-bg: #faf9f6;
   --color-surface: #ffffff;
-  --color-text: #1b1f24;
-  --color-muted: #525a63;
-  --color-accent: #0a58a8;
-  --color-border: #d3d6da;
-  --color-focus: #0a58a8;
-  --color-code-bg: #ecedea;
+  --color-text: #151515;
+  --color-muted: #484848;
+  --color-accent: #151515;
+  --color-border: #b9b6b1;
+  --color-focus: #151515;
+  --color-code-bg: #efede8;
 
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
 
   /* In rem, not ch, so an element's own font (e.g. the mono footer) can't change the column width. */
   --measure: 36.5rem;
-  --page-max: 72rem; /* reserved for a future wide layout; unused today */
+  --page-max: 72rem;
   --tap: 44px; /* minimum tap-target height (rubric item 8, WCAG 2.5.5) */
   --gutter: 16px;
   --space-1: 0.25rem;
@@ -44,34 +31,34 @@
   --space-6: 2rem;
   --space-7: 3rem;
   --space-8: 4.5rem;
-  --radius: 6px;
+  --radius: 0;
 
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-bg: #0f1215;
-    --color-surface: #171b20;
-    --color-text: #e4e7ea;
-    --color-muted: #a2abb5;
-    --color-accent: #6fb3f5;
-    --color-border: #2d343c;
-    --color-focus: #6fb3f5;
-    --color-code-bg: #1f252b;
+    --color-bg: #171717;
+    --color-surface: #202020;
+    --color-text: #f1efeb;
+    --color-muted: #bdb9b1;
+    --color-accent: #f1efeb;
+    --color-border: #575550;
+    --color-focus: #f1efeb;
+    --color-code-bg: #2b2a27;
     color-scheme: dark;
   }
 }
 
 :root[data-theme="dark"] {
-  --color-bg: #0f1215;
-  --color-surface: #171b20;
-  --color-text: #e4e7ea;
-  --color-muted: #a2abb5;
-  --color-accent: #6fb3f5;
-  --color-border: #2d343c;
-  --color-focus: #6fb3f5;
-  --color-code-bg: #1f252b;
+  --color-bg: #171717;
+  --color-surface: #202020;
+  --color-text: #f1efeb;
+  --color-muted: #bdb9b1;
+  --color-accent: #f1efeb;
+  --color-border: #575550;
+  --color-focus: #f1efeb;
+  --color-code-bg: #2b2a27;
   color-scheme: dark;
 }
 
@@ -205,51 +192,47 @@ time {
 
 /* ---------- Header ---------- */
 
-/*
-  Row 1: name (left) and theme toggle (right). Row 2: the nav.
-  Edges line up with the content column at every width. Static on phones; from 45em (720px) the whole
-  header sticks at top: 0. Its geometry never changes with focus or hover, so a mouse press cannot
-  move a link out from under the pointer (CR3-1) and focusing a header control never scrolls (CR3-3).
-*/
+.site-header,
+main,
+.site-footer {
+  width: min(calc(100% - 2 * var(--gutter)), var(--page-max));
+  margin-inline: auto;
+}
+
 .site-header {
-  position: static;
-  z-index: 50;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  justify-content: space-between;
   gap: 0 var(--space-4);
-  padding: var(--space-2) max(var(--gutter), calc((100% - var(--measure)) / 2));
-  /* Bottom rule drawn at the section-divider width (column + gutters), not full-bleed, so the header,
-     section and footer rules all share one edge at every width. The first line is the fallback. */
-  background: var(--color-bg);
-  background: linear-gradient(var(--color-border), var(--color-border)) center bottom /
-    min(100%, calc(var(--measure) + 2 * var(--gutter))) 1px no-repeat var(--color-bg);
+  padding-block: var(--space-2);
+  border-bottom: 2px solid var(--color-text);
 }
 
 .site-header__name {
   display: inline-flex;
   align-items: center;
+  justify-self: start;
   min-height: var(--tap);
   color: var(--color-text);
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-size: clamp(1rem, 2.1vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
   text-decoration: none;
+  text-transform: uppercase;
 }
 
-/* No overflow container: it clipped the focus ring (CR1-3). Phones get a 3 x 2 grid. */
 .site-nav {
-  order: 3;
-  flex: 1 0 100%;
+  grid-column: 1 / -1;
+  grid-row: 2;
   min-width: 0;
 }
 
 .site-nav__list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   gap: 0 var(--space-3);
   list-style: none;
-  margin: 0;
   padding: 0;
 }
 
@@ -257,22 +240,22 @@ time {
   display: inline-flex;
   align-items: center;
   min-height: var(--tap);
-  color: var(--color-muted);
+  color: var(--color-text);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  letter-spacing: 0.02em;
   text-decoration: none;
-  white-space: nowrap;
+  text-transform: uppercase;
 }
 
-.site-nav__list a:hover {
-  color: var(--color-accent);
+.site-nav__list a:hover,
+.site-header__name:hover {
   text-decoration: underline;
 }
 
 .theme-toggle {
+  justify-self: end;
   min-height: var(--tap);
-  padding: 0 var(--space-4);
+  padding: 0 var(--space-2);
   font: inherit;
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -303,37 +286,19 @@ time {
 /* ---------- Sections ---------- */
 
 main {
-  display: block;
-}
-
-.section,
-.site-footer {
-  max-width: calc(var(--measure) + 2 * var(--gutter));
-  margin-inline: auto;
-  padding-inline: var(--gutter);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .section {
-  padding-block: var(--space-7);
+  grid-column: 1 / -1;
+  padding-block: var(--space-6);
   border-top: 1px solid var(--color-border);
-}
-
-.section--intro {
-  border-top: 0;
 }
 
 .section__title {
   margin-bottom: var(--space-5);
-  font-size: 1.5rem;
-}
-
-.section__title::before {
-  content: "";
-  display: block;
-  width: 2rem;
-  height: 3px;
-  margin-bottom: var(--space-3);
-  background: var(--color-accent);
+  font-size: clamp(1.5rem, 3.5vw, 2.125rem);
 }
 
 .section__lede {
@@ -351,31 +316,145 @@ main {
   font-size: 1rem;
 }
 
+.case-study > *,
+#projects > *,
+#education > *,
+#contact > * {
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
 /* ---------- Intro ---------- */
 
+.section--intro {
+  position: relative;
+  padding: var(--space-7) 0 var(--space-6) var(--space-3);
+  border-top: 0;
+}
+
+.section--intro::before {
+  position: absolute;
+  inset: var(--space-6) auto auto 0;
+  width: 1rem;
+  height: 1rem;
+  border-top: 1px solid;
+  border-left: 1px solid;
+  content: "";
+}
+
 .intro__name {
-  font-size: 2.25rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
+  max-width: 13ch;
+  margin-top: var(--space-4);
+  font-size: clamp(2.625rem, 8.25vw, 6.75rem);
+  line-height: 0.98;
+  font-weight: 800;
+  letter-spacing: -0.065em;
+  text-wrap: wrap;
+}
+
+.intro__role,
+.intro__lede {
+  font-family: var(--font-mono);
 }
 
 .intro__role {
-  margin-top: var(--space-2);
-  color: var(--color-muted);
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  letter-spacing: 0.01em;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.intro__role span {
+  margin-inline: 0.25em;
 }
 
 .intro__lede {
+  max-width: 58ch;
   margin-top: var(--space-5);
-  font-size: 1.125rem;
-  line-height: 1.65;
+  font-size: clamp(0.9375rem, 2vw, 1.1875rem);
+  line-height: 1.5;
   text-wrap: pretty;
 }
 
-.intro__links {
-  margin-top: var(--space-5);
+/* ---------- Selected work ---------- */
+
+.section--work,
+.section--experience,
+.section--skills {
+  border-top: 0;
+}
+
+.section--work .section__title,
+.section--experience .section__title,
+.section--skills .section__title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: clamp(0.875rem, 2vw, 1.125rem);
+  text-transform: uppercase;
+}
+
+.section--work .section__title::after,
+.section--experience .section__title::after,
+.section--skills .section__title::after {
+  flex: 1;
+  margin-left: var(--space-2);
+  border-top: 1px solid;
+  content: "";
+}
+
+.section--work .section__title {
+  margin-bottom: var(--space-2);
+}
+
+.work-list {
+  border-bottom: 1px solid var(--color-text);
+  list-style: none;
+  padding: 0;
+}
+
+.work-list li + li {
+  border-top: 1px solid var(--color-text);
+}
+
+.work-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  min-height: var(--tap);
+  padding: var(--space-4) var(--space-3);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.work-row:hover {
+  background: var(--color-code-bg);
+}
+
+.work-row:hover .work-row__name {
+  text-decoration: underline;
+}
+
+.work-row__name {
+  font-size: clamp(1.625rem, 3.7vw, 2.625rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.05em;
+}
+
+.work-row__description {
+  grid-row: 2;
+  max-width: 56ch;
+  font-family: var(--font-mono);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  line-height: 1.45;
+}
+
+.work-row__arrow {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  font-size: 2rem;
+  line-height: 1;
 }
 
 /* ---------- Lists ---------- */
@@ -640,9 +719,23 @@ main {
 }
 
 .role + .role {
-  margin-top: var(--space-6);
-  padding-top: var(--space-6);
-  border-top: 1px dashed var(--color-border);
+  margin-top: var(--space-5);
+}
+
+.section .role__org {
+  font-size: clamp(1.25rem, 2.5vw, 1.625rem);
+  font-weight: 750;
+  letter-spacing: -0.04em;
+}
+
+.role__details summary {
+  width: fit-content;
+  padding-block: var(--space-3);
+  min-height: var(--tap);
+  cursor: pointer;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 .role__title {
@@ -666,8 +759,6 @@ main {
 
 /* ---------- Projects ---------- */
 
-/* One column at every width: the reading column is ~36rem, too narrow for two cards side by side,
-   and stacked cards size to their own content (no stretched card with an empty gap). */
 .card-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -722,7 +813,22 @@ main {
 }
 
 .skill-group .tag-list {
+  gap: var(--space-1) var(--space-2);
   margin-top: var(--space-2);
+}
+
+.skill-group .tag {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.skill-group .tag + .tag {
+  padding-left: var(--space-2);
+  border-left: 1px solid var(--color-border);
+  border-radius: 0;
 }
 
 /* ---------- Education ---------- */
@@ -739,76 +845,66 @@ main {
 /* ---------- Footer ---------- */
 
 .site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
   padding-block: var(--space-6);
   border-top: 1px solid var(--color-border);
   color: var(--color-muted);
 }
 
 .site-footer p {
+  margin: 0;
+  text-transform: uppercase;
   font-family: var(--font-mono);
   font-size: 0.75rem;
 }
 
 /* ---------- Wider screens ---------- */
 
-@media (min-width: 45em) { /* 720px at a 16px default; em so a large default font gets the phone layout (CR4-1) */
+@media (min-width: 45em) {
   :root {
-    --gutter: 24px;
-  }
-
-  /*
-    The whole header sticks: two 44px rows plus padding. No negative top and no :focus-within
-    re-pinning, so nothing in it moves on mousedown or focus (CR3-1).
-    The offset lives on the scroll targets, not on html: an html scroll-padding band also covers the
-    stuck header, so focusing the toggle or a nav link made Chromium scroll the page (CR3-3). Every
-    element in main and the footer keeps the header height + 0.5rem (focus-ring room) clear above
-    it, for both anchor jumps and Tab/Shift+Tab focus scrolling.
-  */
-  html {
-    scroll-padding-top: 0;
+    --gutter: clamp(1.5rem, 4.4vw, 3.5rem);
   }
 
   .site-header {
-    position: sticky;
-    top: 0;
+    grid-template-columns: 1fr auto auto;
+    column-gap: var(--space-5);
   }
 
-  main,
-  main *,
-  .site-footer,
-  .site-footer * {
-    scroll-margin-top: calc(2 * var(--tap) + 3 * var(--space-2));
-  }
-
-  /* Sections land 1px under the header bottom so their divider tucks behind the header rule instead
-     of showing as a second line; the section padding keeps the heading well clear. */
-  main > section[id] {
-    scroll-margin-top: calc(2 * var(--tap) + 2 * var(--space-2) - 1px);
+  .site-nav {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   .site-nav__list {
-    display: flex;
+    gap: clamp(1rem, 3.5vw, 3.25rem);
+  }
+
+  .section--intro {
+    padding-left: var(--space-5);
+  }
+
+  .work-row {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) auto;
     gap: var(--space-5);
+    padding-inline: var(--space-5);
+  }
+
+  .work-row__description {
+    grid-row: auto;
+    padding-left: var(--space-5);
+    border-left: 1px solid var(--color-text);
+  }
+
+  .work-row__arrow {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   .figure--diagram img {
     max-width: 100%;
-  }
-
-  .section {
-    padding-block: var(--space-8);
-  }
-
-  .section--intro {
-    padding-top: 5.5rem;
-  }
-
-  .intro__name {
-    font-size: 3rem;
-  }
-
-  .section__title {
-    font-size: 1.75rem;
   }
 
   .decision {
@@ -828,9 +924,28 @@ main {
   .decision__text {
     margin: 0;
   }
+}
 
-  .skill-groups {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+@media (min-width: 54em) {
+  main {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .section--experience,
+  .section--skills {
+    grid-column: auto;
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-7);
+    padding-block: 0;
+  }
+
+  .section--experience {
+    padding-right: var(--space-6);
+  }
+
+  .section--skills {
+    padding-left: var(--space-6);
+    border-left: 1px solid var(--color-text);
   }
 }
 
@@ -870,11 +985,21 @@ main {
     font-size: 11pt;
   }
 
-  /* Backgrounds don't print by default, so the gradient rule becomes a real border (CR3-6). */
-  .site-header {
-    position: static;
-    background: none;
-    border-bottom: 1px solid var(--color-border);
+  .site-header,
+  main,
+  .site-footer {
+    width: 100%;
+  }
+
+  main {
+    display: block;
+  }
+
+  .section--experience,
+  .section--skills {
+    margin-block: 0;
+    padding-inline: 0;
+    border-left: 0;
   }
 
   .site-nav,

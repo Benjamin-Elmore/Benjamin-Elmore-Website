@@ -20,11 +20,9 @@
     <a class="site-header__name" href="#top">Benjamin Elmore</a>
     <nav class="site-nav" aria-label="Sections">
       <ul class="site-nav__list">
-        <li><a href="#arc">ARC firmware</a></li>
+        <li><a href="#work">Work</a></li>
         <li><a href="#experience">Experience</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#education">Education</a></li>
+        <li><a href="#education">About</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
@@ -34,14 +32,99 @@
   <main id="main">
 
     <section id="top" class="section section--intro" aria-labelledby="intro-title">
-      <h1 id="intro-title" class="intro__name">Benjamin Elmore</h1>
-      <p class="intro__role">Computer science student and robotics software engineer</p>
-      <p class="intro__lede">I’m developing embedded firmware that helps a VEX V5 robot work with external sensors, and I’m interested in applying that experience to defense and space manufacturing.</p>
-      <p class="section__lede">My work sits where sensors, a custom board and a robot controller meet. I care about component bring-up, clear ownership of interfaces, diagnostics and checks someone else can repeat. Sensor interfaces for test fixtures and manufacturing equipment are an area I want to grow into.</p>
-      <ul class="link-list intro__links">
-        <li><a href="https://github.com/Benjamin-Elmore" rel="noopener">GitHub</a></li>
-        <li><a href="https://www.linkedin.com/in/benjamin-n-elmore/" rel="noopener">LinkedIn</a></li>
+      <p class="intro__role">Robotics software engineer <span aria-hidden="true">/</span> Computer science student</p>
+      <h1 id="intro-title" class="intro__name">Software for physical systems.</h1>
+      <p class="intro__lede">I’m developing embedded firmware for robotics, with an interest in defense and space manufacturing.</p>
+    </section>
+
+    <section id="work" class="section section--work" aria-labelledby="work-title">
+      <h2 id="work-title" class="section__title"><span aria-hidden="true">01 / </span>Selected work</h2>
+      <ul class="work-list" role="list">
+        <li>
+          <a class="work-row" href="#arc">
+            <span class="work-row__name">ARC</span>
+            <span class="work-row__description">C++ sensor firmware for the CBU1 VEX U team’s custom ESP32-S3 board.</span>
+            <span class="work-row__arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="work-row" href="#markettesting">
+            <span class="work-row__name">MarketTesting</span>
+            <span class="work-row__description">A Python and TensorFlow learning project for financial time series.</span>
+            <span class="work-row__arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="work-row" href="#fsw-uav-sim">
+            <span class="work-row__name">FSW-UAV-SIM</span>
+            <span class="work-row__description">An AI-assisted flight software simulation prototype using C++ and Simulink.</span>
+            <span class="work-row__arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
       </ul>
+    </section>
+
+    <section id="experience" class="section section--experience" aria-labelledby="experience-title">
+      <h2 id="experience-title" class="section__title"><span aria-hidden="true">02 / </span>Experience</h2>
+      <ol class="timeline" role="list">
+        <li class="role">
+          <h3 class="role__org">CBU1 VEX U Robotics</h3>
+          <p class="role__title">Vice President, since <time datetime="2026-10">October 2026</time></p>
+          <p class="role__title">Software Engineer, since <time datetime="2025-09">September 2025</time></p>
+          <details class="role__details">
+            <summary>Responsibilities and projects</summary>
+            <ul class="role__points">
+            <li>Coordinate milestones across disciplines on the team.</li>
+            <li>Help plan events and competition preparation.</li>
+            <li>Contribute to the ARC sensor firmware.</li>
+            <li>Earlier PROS/C++ drivetrain work: driver controls and baseline point navigation using odometry and robot-frame error.</li>
+            <li>Explored PID and Pure Pursuit control. My spline and odometry work was left unfinished.</li>
+            </ul>
+          </details>
+        </li>
+        <li class="role role--compact">
+          <h3 class="role__org">In-N-Out Burger</h3>
+          <p class="role__title">Associate, since <time datetime="2024-05">May 2024</time>. Teamwork and keeping service quality up in a fast-paced environment.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section id="skills" class="section section--skills" aria-labelledby="skills-title">
+      <h2 id="skills-title" class="section__title"><span aria-hidden="true">03 / </span>Technical skills</h2>
+      <div class="skill-groups">
+        <div class="skill-group">
+          <h3 id="skills-embedded" class="skill-group__title">Embedded</h3>
+          <ul class="tag-list">
+            <li class="tag">C/C++</li>
+            <li class="tag">ESP-IDF</li>
+            <li class="tag">FreeRTOS</li>
+            <li class="tag">ESP32-S3</li>
+            <li class="tag">PlatformIO</li>
+            <li class="tag">I²C</li>
+            <li class="tag">UART</li>
+            <li class="tag">RS-485</li>
+            <li class="tag">VEX V5/PROS</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h3 id="skills-software" class="skill-group__title">Software</h3>
+          <ul class="tag-list">
+            <li class="tag">Python</li>
+            <li class="tag">Java</li>
+            <li class="tag">TensorFlow</li>
+            <li class="tag">pandas/NumPy</li>
+            <li class="tag">MATLAB/Simulink</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <h3 id="skills-tools" class="skill-group__title">Tools</h3>
+          <ul class="tag-list">
+            <li class="tag">Git</li>
+            <li class="tag">Linux</li>
+            <li class="tag">Arduino</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section id="arc" class="section case-study" aria-labelledby="arc-title">
@@ -146,42 +229,10 @@
       <p class="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/ARC" rel="noopener">Benjamin-Elmore/ARC on GitHub</a>. The build checked above is the public <code>CPPDev</code> branch at <code>3eb3ed6</code>. The default <code>main</code> branch is a different revision.</p>
     </section>
 
-    <section id="experience" class="section" aria-labelledby="experience-title">
-      <h2 id="experience-title" class="section__title">Experience</h2>
-      <ol class="timeline" role="list">
-        <li class="role">
-          <h3 class="role__org">CBU1 VEX U Robotics</h3>
-          <p class="role__title">Vice President, since <time datetime="2026-10">October 2026</time></p>
-          <p class="role__title">Software Engineer, since <time datetime="2025-09">September 2025</time></p>
-          <ul class="role__points">
-            <li>Coordinate milestones across disciplines on the team.</li>
-            <li>Help plan events and competition preparation.</li>
-            <li>Contribute to the ARC sensor firmware described above.</li>
-            <li>Earlier PROS/C++ drivetrain work: driver controls and baseline point navigation using odometry and robot-frame error.</li>
-            <li>Explored PID and Pure Pursuit control. My spline and odometry work was left unfinished.</li>
-          </ul>
-        </li>
-        <li class="role role--compact">
-          <h3 class="role__org">In-N-Out Burger</h3>
-          <p class="role__title">Associate, since <time datetime="2024-05">May 2024</time>. Teamwork and keeping service quality up in a fast-paced environment.</p>
-        </li>
-      </ol>
-    </section>
-
     <section id="projects" class="section" aria-labelledby="projects-title">
       <h2 id="projects-title" class="section__title">Other projects</h2>
       <div class="card-grid">
-        <article class="card">
-          <h3 class="card__title">FSW-UAV-SIM</h3>
-          <p class="card__meta">Staged engineering prototype. AI-assisted implementation. Repository not public.</p>
-          <p class="card__body">I coordinate this AI-assisted UAV simulation effort and own its C++/simulation integration decisions. I work with a mechanical engineer, and AI agents did substantial implementation and review. The architecture separates C++ flight-software logic from a Simulink plant behind a Level-2 S-function. Generated interface contracts, JSON parameter files, and replay fixtures and tests keep the interfaces explicit. An October 15, 2026 review of commit <code>f4f6229</code> found all 13 generator tests passing, along with the interface and rule checks. The checker’s self-test failed on Windows, and the native C++ tests and the MEX file were not built. GNC (guidance, navigation and control) is stubbed and the aerodynamic data is a draft.</p>
-          <ul class="tag-list">
-            <li class="tag">C++</li>
-            <li class="tag">MATLAB/Simulink</li>
-            <li class="tag">S-function</li>
-          </ul>
-        </article>
-        <article class="card">
+        <article class="card" id="markettesting">
           <h3 class="card__title">MarketTesting</h3>
           <p class="card__meta">Independent Python learning project, October 2025 to June 2026</p>
           <p class="card__body">A data pipeline I built on my own: CSV and yfinance ingestion, pandas and NumPy preprocessing, per-ticker scaling, 100-day input windows, TensorFlow LSTM training and a prediction-table output. It’s a learning project, so I don’t report forecast results.</p>
@@ -192,49 +243,22 @@
           </ul>
           <p class="card__link"><a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener">MarketTesting on GitHub</a></p>
         </article>
-      </div>
-    </section>
-
-    <section id="skills" class="section" aria-labelledby="skills-title">
-      <h2 id="skills-title" class="section__title">Skills</h2>
-      <div class="skill-groups">
-        <div class="skill-group">
-          <h3 id="skills-embedded" class="skill-group__title">Embedded</h3>
+        <article class="card" id="fsw-uav-sim">
+          <h3 class="card__title">FSW-UAV-SIM</h3>
+          <p class="card__meta">Staged engineering prototype. AI-assisted implementation. Repository not public.</p>
+          <p class="card__body">I coordinate this AI-assisted UAV simulation effort and own its C++/simulation integration decisions. I work with a mechanical engineer, and AI agents did substantial implementation and review. The architecture separates C++ flight-software logic from a Simulink plant behind a Level-2 S-function. Generated interface contracts, JSON parameter files, and replay fixtures and tests keep the interfaces explicit. An October 15, 2026 review of commit <code>f4f6229</code> found all 13 generator tests passing, along with the interface and rule checks. The checker’s self-test failed on Windows, and the native C++ tests and the MEX file were not built. GNC (guidance, navigation and control) is stubbed and the aerodynamic data is a draft.</p>
           <ul class="tag-list">
-            <li class="tag">C/C++</li>
-            <li class="tag">ESP-IDF</li>
-            <li class="tag">FreeRTOS</li>
-            <li class="tag">ESP32-S3</li>
-            <li class="tag">PlatformIO</li>
-            <li class="tag">I²C</li>
-            <li class="tag">UART</li>
-            <li class="tag">RS-485</li>
-            <li class="tag">VEX V5/PROS</li>
-          </ul>
-        </div>
-        <div class="skill-group">
-          <h3 id="skills-software" class="skill-group__title">Software</h3>
-          <ul class="tag-list">
-            <li class="tag">Python</li>
-            <li class="tag">Java</li>
-            <li class="tag">TensorFlow</li>
-            <li class="tag">pandas/NumPy</li>
+            <li class="tag">C++</li>
             <li class="tag">MATLAB/Simulink</li>
+            <li class="tag">S-function</li>
           </ul>
-        </div>
-        <div class="skill-group">
-          <h3 id="skills-tools" class="skill-group__title">Tools</h3>
-          <ul class="tag-list">
-            <li class="tag">Git</li>
-            <li class="tag">Linux</li>
-            <li class="tag">Arduino</li>
-          </ul>
-        </div>
+        </article>
       </div>
     </section>
 
     <section id="education" class="section" aria-labelledby="education-title">
-      <h2 id="education-title" class="section__title">Education</h2>
+      <h2 id="education-title" class="section__title">About</h2>
+      <p class="section__lede">My work sits where sensors, a custom board and a robot controller meet. I care about component bring-up, clear ownership of interfaces, diagnostics and checks someone else can repeat. Sensor interfaces for test fixtures and manufacturing equipment are an area I want to grow into.</p>
       <div class="edu">
         <h3 class="edu__school">California Baptist University</h3>
         <p class="edu__degree">B.S. Computer Science, Machine Learning and Artificial Intelligence concentration</p>
@@ -254,7 +278,8 @@
   </main>
 
   <footer class="site-footer">
-    <p>Benjamin Elmore, 2026</p>
+    <p>Benjamin Elmore <span aria-hidden="true">/</span> California Baptist University</p>
+    <p>2026</p>
   </footer>
 </body>
 </html>
