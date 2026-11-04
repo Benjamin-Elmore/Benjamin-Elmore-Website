@@ -11,83 +11,12 @@
   <meta property="og:url" content="https://benjamin-elmore.github.io/Benjamin-Elmore-Website/MarketTesting/">
   <link rel="canonical" href="https://benjamin-elmore.github.io/Benjamin-Elmore-Website/MarketTesting/">
   <meta name="color-scheme" content="light dark">
-  <link rel="stylesheet" href="../assets/site.css">
-  <script src="../assets/site.js"></script>
+  <link rel="stylesheet" href="/Benjamin-Elmore-Website/assets/site.css">
+  <link rel="stylesheet" href="/Benjamin-Elmore-Website/assets/arc.css" data-arc media="not all">
+  <script src="/Benjamin-Elmore-Website/assets/theme.js"></script>
+  <script type="module" crossorigin src="/Benjamin-Elmore-Website/assets/app-D0UDiWHu.js"></script>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
-    <a class="site-header__name" href="../">Benjamin Elmore</a>
-    <nav class="site-nav" aria-label="Sections">
-      <ul class="site-nav__list">
-        <li><a href="../#work">Work</a></li>
-        <li><a href="../#experience">Experience</a></li>
-        <li><a href="../#about">About</a></li>
-        <li><a href="../#contact">Contact</a></li>
-      </ul>
-    </nav>
-    <button class="theme-toggle" type="button" hidden aria-pressed="false">Dark theme</button>
-  </header>
-
-  <main id="main">
-    <div class="page-header">
-      <p><a class="back-link" href="../#work">← All work</a></p>
-      <h1>MarketTesting</h1>
-      <p class="page-header__meta">Independent Python learning project, October 2025 to June 2026</p>
-      <p class="page-header__summary">A data pipeline I built on my own for financial time series, from market data ingestion to a prediction table.</p>
-    </div>
-
-    <section class="section case-study" aria-labelledby="mt-title">
-      <figure class="photo-slot photo-slot--16x9" id="markettesting-table">
-        <!-- Photo slot "markettesting-table": replace the .photo-slot__box div with <img src="../assets/photos/markettesting-table.jpg" alt="..." width="..." height="..."> (file: docs/assets/photos/markettesting-table.jpg). Keep the caption. -->
-        <div class="photo-slot__box">Screenshot: prediction table</div>
-        <figcaption class="figure__caption">Prediction table output from a run. Screenshot to be added.</figcaption>
-      </figure>
-
-      <h2 id="mt-title" class="section__title">Project</h2>
-      <div class="case-study__block" id="mt-what">
-        <h3>What it is</h3>
-        <p>MarketTesting is a Python project that ingests historical market data from CSV or yfinance, turns it into 100-day windows for LSTM training, and produces prediction tables.</p>
-      </div>
-
-      <div class="case-study__block" id="mt-built">
-        <h3>What I built</h3>
-        <ul>
-          <li>The entry point, and the model and training structure around a <code>StockModel</code>.</li>
-          <li>CSV and yfinance data pull paths. On the <span class="nowrap"><code>LSTM-feature-implement</code></span> branch, I extended them with general CSV ingestion and VIX retrieval.</li>
-          <li>pandas and NumPy preprocessing, feature scaling with a scikit-learn <code>RobustScaler</code>, and 100-day input windows.</li>
-          <li>TensorFlow LSTM training with early stopping on validation loss, and a check that skips tickers whose scaled data is out of range.</li>
-          <li>Data logging and the prediction-table output.</li>
-          <li>A reorganization into a <code>src</code> package.</li>
-        </ul>
-        <ul class="tag-list">
-          <li class="tag">Python</li>
-          <li class="tag">pandas/NumPy</li>
-          <li class="tag">TensorFlow</li>
-          <li class="tag">yfinance</li>
-        </ul>
-      </div>
-
-      <!-- Pipeline diagram: replace with the render of Ben's PUML (assets/markettesting-pipeline.svg, from his .puml) when it arrives. -->
-      <figure class="figure figure--diagram figure--narrow" id="markettesting-pipeline">
-        <img src="../assets/markettesting-pipeline.svg" width="360" height="620" alt="Pipeline diagram, top to bottom: CSV or yfinance data, pandas and NumPy preprocessing, RobustScaler feature scaling, 100-day windows, LSTM, prediction table." loading="lazy" decoding="async">
-        <figcaption class="figure__caption">The MarketTesting pipeline, from data source to prediction table.</figcaption>
-      </figure>
-
-      <figure class="photo-slot photo-slot--16x9" id="markettesting-terminal">
-        <!-- Photo slot "markettesting-terminal": replace the .photo-slot__box div with <img src="../assets/photos/markettesting-terminal.jpg" alt="..." width="..." height="..."> (file: docs/assets/photos/markettesting-terminal.jpg). Keep the caption. -->
-        <div class="photo-slot__box">Screenshot: terminal run</div>
-        <figcaption class="figure__caption">A terminal run of the pipeline. Screenshot to be added.</figcaption>
-      </figure>
-
-      <p class="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener">Benjamin-Elmore/MarketTesting on GitHub</a>. The pipeline above is the default <code>main</code> branch at <code>79f6e12</code>. The VIX and general CSV work is on the <span class="nowrap"><code>LSTM-feature-implement</code></span> branch.</p>
-    </section>
-
-  </main>
-
-  <footer class="site-footer">
-    <p>BENJAMIN ELMORE <span aria-hidden="true">/</span> CBU ROBOTICS <span aria-hidden="true">/</span> CALIFORNIA BAPTIST UNIVERSITY</p>
-    <p>2026</p>
-  </footer>
+  <div id="root"><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><a class="site-header__name" href="/Benjamin-Elmore-Website/" data-discover="true">Benjamin Elmore</a><nav class="site-nav" aria-label="Sections"><ul class="site-nav__list"><li><a href="/Benjamin-Elmore-Website/#work" data-discover="true">Work</a></li><li><a href="/Benjamin-Elmore-Website/#experience" data-discover="true">Experience</a></li><li><a href="/Benjamin-Elmore-Website/#about" data-discover="true">About</a></li><li><a href="/Benjamin-Elmore-Website/#contact" data-discover="true">Contact</a></li></ul></nav><button class="theme-toggle" type="button" hidden="" aria-pressed="false">Dark theme</button></header><main id="main"><div class="page-header"><p><a class="back-link" href="/Benjamin-Elmore-Website/#work" data-discover="true">← All work</a></p><h1>MarketTesting</h1><p class="page-header__meta">Independent Python learning project, October 2025 to June 2026</p><p class="page-header__summary">A data pipeline I built on my own for financial time series, from market data ingestion to a prediction table.</p></div><section class="section case-study" aria-labelledby="mt-title"><figure class="photo-slot photo-slot--16x9" id="markettesting-table"><div class="photo-slot__box">Screenshot: prediction table</div><figcaption class="figure__caption">Prediction table output from a run. Screenshot to be added.</figcaption></figure><h2 id="mt-title" class="section__title">Project</h2><div class="case-study__block" id="mt-what"><h3>What it is</h3><p>MarketTesting is a Python project that ingests historical market data from CSV or yfinance, turns it into 100-day windows for LSTM training, and produces prediction tables.</p></div><div class="case-study__block" id="mt-built"><h3>What I built</h3><ul><li>The entry point, and the model and training structure around a<!-- --> <code>StockModel</code>.</li><li>CSV and yfinance data pull paths. On the<!-- --> <span class="nowrap"><code>LSTM-feature-implement</code></span> <!-- -->branch, I extended them with general CSV ingestion and VIX retrieval.</li><li>pandas and NumPy preprocessing, feature scaling with a scikit-learn<!-- --> <code>RobustScaler</code>, and 100-day input windows.</li><li>TensorFlow LSTM training with early stopping on validation loss, and a check that skips tickers whose scaled data is out of range.</li><li>Data logging and the prediction-table output.</li><li>A reorganization into a<!-- --> <code>src</code> <!-- -->package.</li></ul><ul class="tag-list"><li class="tag">Python</li><li class="tag">pandas/NumPy</li><li class="tag">TensorFlow</li><li class="tag">yfinance</li></ul></div><figure class="figure figure--diagram figure--narrow" id="markettesting-pipeline"><img src="/Benjamin-Elmore-Website/assets/markettesting-pipeline.svg" width="360" height="620" alt="Pipeline diagram, top to bottom: CSV or yfinance data, pandas and NumPy preprocessing, RobustScaler feature scaling, 100-day windows, LSTM, prediction table." loading="lazy" decoding="async"/><figcaption class="figure__caption">The MarketTesting pipeline, from data source to prediction table.</figcaption></figure><figure class="photo-slot photo-slot--16x9" id="markettesting-terminal"><div class="photo-slot__box">Screenshot: terminal run</div><figcaption class="figure__caption">A terminal run of the pipeline. Screenshot to be added.</figcaption></figure><p class="case-study__repo">Code:<!-- --> <a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener">Benjamin-Elmore/MarketTesting on GitHub</a>. The pipeline above is the default<!-- --> <code>main</code> <!-- -->branch at<!-- --> <code>79f6e12</code>. The VIX and general CSV work is on the<!-- --> <span class="nowrap"><code>LSTM-feature-implement</code></span> <!-- -->branch.</p></section></main><footer class="site-footer"><p>BENJAMIN ELMORE <span aria-hidden="true">/</span> CBU ROBOTICS <span aria-hidden="true">/</span> CALIFORNIA BAPTIST UNIVERSITY</p><p>2026</p></footer></div>
 </body>
 </html>
