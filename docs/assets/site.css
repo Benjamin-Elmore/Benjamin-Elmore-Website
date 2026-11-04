@@ -202,8 +202,9 @@ time {
 
 /*
   Row 1: name (left) and theme toggle (right). Row 2: the nav.
-  Edges line up with the content column at every width. Static on phones; from 720px the header
-  sticks with a negative top so row 1 scrolls away and only the nav row stays on screen.
+  Edges line up with the content column at every width. Static on phones; from 720px the whole
+  header sticks at top: 0. Its geometry never changes with focus or hover, so a mouse press cannot
+  move a link out from under the pointer (CR3-1) and focusing a header control never scrolls (CR3-3).
 */
 .site-header {
   position: static;
@@ -471,7 +472,9 @@ main {
 /*
   The repo link sits in a sentence (WCAG 2.5.8 inline exception), but it is the box's lead link, so an
   invisible ::before stretches its hit area to 44px: 18px up into the box padding, 6px down into the
-  line gap. Line spacing and the focus ring (which stays on the text) are unchanged.
+  line gap. Line spacing and the focus ring (which stays on the text) are unchanged. This only holds
+  while the link sits on one line; if it wraps (320px, large default fonts) the ::before shrinks to a
+  thin strip and the inline exception alone covers it (CR3-7, accepted).
 */
 .case-study__repo a {
   position: relative;
@@ -746,19 +749,34 @@ main {
     --gutter: 24px;
   }
 
+  /*
+    The whole header sticks: two 44px rows plus padding. No negative top and no :focus-within
+    re-pinning, so nothing in it moves on mousedown or focus (CR3-1).
+    The offset lives on the scroll targets, not on html: an html scroll-padding band also covers the
+    stuck header, so focusing the toggle or a nav link made Chromium scroll the page (CR3-3). Every
+    element in main and the footer keeps the header height + 0.5rem (focus-ring room) clear above
+    it, for both anchor jumps and Tab/Shift+Tab focus scrolling.
+  */
   html {
-    scroll-padding-top: 4.5rem;
+    scroll-padding-top: 0;
   }
 
-  /* top = -(padding-top + row 1), so only the nav row stays pinned. */
   .site-header {
     position: sticky;
-    top: calc(-1 * (var(--space-2) + var(--tap)));
+    top: 0;
   }
 
-  /* Keyboard focus anywhere in the header brings row 1 back, so the name, toggle and nav rings show (CR2-1). */
-  .site-header:focus-within {
-    top: 0;
+  main,
+  main *,
+  .site-footer,
+  .site-footer * {
+    scroll-margin-top: calc(2 * var(--tap) + 3 * var(--space-2));
+  }
+
+  /* Sections land 1px under the header bottom so their divider tucks behind the header rule instead
+     of showing as a second line; the section padding keeps the heading well clear. */
+  main > section[id] {
+    scroll-margin-top: calc(2 * var(--tap) + 2 * var(--space-2) - 1px);
   }
 
   .site-nav__list {
@@ -845,8 +863,11 @@ main {
     font-size: 11pt;
   }
 
+  /* Backgrounds don't print by default, so the gradient rule becomes a real border (CR3-6). */
   .site-header {
     position: static;
+    background: none;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .site-nav,

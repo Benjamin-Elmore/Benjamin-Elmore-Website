@@ -712,6 +712,69 @@ class CheckerFixtureTest(unittest.TestCase):
             with self.subTest(label):
                 self.assert_only_fails("C08", mutate)
 
+    # -- fix round 3: C10 CV plus digits (CR3-2) ---------------------------
+    def test_c10_cv_with_digits(self):
+        for name in ("assets/Benjamin-Elmore-CV2026.pdf", "assets/elmore-cv2026.pdf",
+                     "assets/ben_cv1.pdf", "assets/cv.pdf", "assets/cv22.png"):
+            with self.subTest(name):
+                detail = self.assert_only_fails("C10", lambda f: f.update({name: b"%PDF-1.4\n"}))
+                self.assertIn("resume/CV", detail)
+
+    def test_c10_opencv_names_pass(self):
+        for name in ("assets/arc-cv2.png", "assets/opencv.svg", "assets/opencv2.png",
+                     "assets/CV2-pipeline.png"):
+            with self.subTest(name):
+                self.assertIsNone(check_site.RESUME_NAME_RE.search(Path(name).name), name)
+
+    # -- fix round 3: C08 CSS strings need a host (CR3-4) ------------------
+    def test_c08_round3_css_string_vectors(self):
+        cases = {
+            "image-set https host": lambda f: edit(
+                f, "assets/site.css", "body { background: var(--color-bg);",
+                "body { background-image: image-set('https://evil.example/x.png' 1x);"
+                " background: var(--color-bg);"),
+            "inline <style> image-set //host": lambda f: edit(
+                f, "index.html", "</head>",
+                '<style>body { background-image: image-set("//evil.example/x.png" 1x); }'
+                "</style>\n</head>"),
+            "content: with an explicit http URL": lambda f: edit(
+                f, "assets/site.css", "a:focus-visible {",
+                '.x::after { content: "http://evil.example/"; }\na:focus-visible {'),
+        }
+        for label, mutate in cases.items():
+            with self.subTest(label):
+                self.assert_only_fails("C08", mutate)
+
+    def test_c08_decorative_content_strings_pass(self):
+        rules = ('.section__title::before { content: "// "; }',
+                 ".section__title::before { content: '//'; }",
+                 '.crumb::before { content: "\\\\"; }',
+                 '.x::after { content: "//" attr(data-x) " //"; }')
+        for rule in rules:
+            for where in ("css", "style"):
+                with self.subTest(rule=rule, where=where):
+                    if where == "css":
+                        self.assert_all_pass(lambda f: edit(
+                            f, "assets/site.css", "a:focus-visible {", f"{rule}\na:focus-visible {{"))
+                    else:
+                        self.assert_all_pass(lambda f: edit(
+                            f, "index.html", "</head>", f"<style>{rule}</style>\n</head>"))
+
+    # -- fix round 3: C13 ARC-Testing needs the hyphen (CR3-5) -------------
+    def test_c13_arc_testing_repo_name(self):
+        for phrase in ("ARC-Testing", "arc-testing repo", "ARC-TESTING", "ARC‑Testing"):
+            with self.subTest(phrase):
+                detail = self.assert_only_fails("C13", lambda f: edit(
+                    f, "index.html", "Optical bring-up.", f"Optical bring-up, {phrase}."))
+                self.assertIn("ARC-Testing", detail)
+
+    def test_c13_arc_testing_prose_passes(self):
+        for phrase in ("ARC testing so far is a host build", "arc testing",
+                       "ARC  testing", "ARC-Testingham"):
+            with self.subTest(phrase):
+                self.assert_all_pass(lambda f: edit(
+                    f, "index.html", "Optical bring-up.", f"Optical bring-up, {phrase}."))
+
     # -- false-positive guards (all must still pass) ----------------------
     def test_no_false_positives(self):
         def mutate(f):

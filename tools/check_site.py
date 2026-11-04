@@ -25,6 +25,7 @@ from html import unescape
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Callable
+from urllib.parse import urlsplit
 from urllib.parse import unquote
 
 # ---------------------------------------------------------------------------
@@ -77,7 +78,8 @@ FORBIDDEN_PHRASES: tuple[str, ...] = (
     "CFD",
     r"re:race[-\s]free(?:dom)?\b",        # race-free, race freedom
     r"re:sole[-\s]author\w*",             # sole author, sole authorship
-    "ARC-Testing",                        # T3: the public branch is CPPDev
+    r"re:ARC-Testing\b",                  # T3 repo name (public branch is CPPDev);
+                                          # hyphen required: "ARC testing" passes (CR3-5)
     "separate snapshot",
     r"re:r[eé]sum[eé]\b",                # whole word, so "resumed" passes
 )
@@ -156,7 +158,9 @@ URL_ATTRS = frozenset({
 })
 SRCSET_ATTRS = frozenset({"srcset", "imagesrcset"})
 #: C10 (CR1-20). File names that look like a resume/CV.
-RESUME_NAME_RE = re.compile(r"r[eé]sum[eé]|(?<![a-z])cv(?![a-z0-9])", re.I)
+#: "cv" plus digits is a CV (cv2026.pdf, ben_cv1.pdf); only the exact OpenCV
+#: module name "cv2" (arc-cv2.png) is let through (CR2-7, CR3-2).
+RESUME_NAME_RE = re.compile(r"r[eé]sum[eé]|(?<![a-z])cv(?![a-z])(?!2(?![0-9]))", re.I)
 
 BINARY_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif", ".ico",
                      ".pdf", ".woff", ".woff2", ".ttf", ".otf", ".zip", ".bin"}
@@ -896,9 +900,20 @@ def c08(site: Site) -> str:
         for target in css_targets(css):
             judge_value(target, f"{where} url()/@import")
         # Any quoted CSS string that is a URL, e.g. inside image-set() or a
-        # CSS-escaped u\72l(...) (CR2-8).
-        for a, b in CSS_STRING_RE.findall(strip_css_comments(css)):
-            judge_value(a or b, f"{where} CSS string")
+        # CSS-escaped u\72l(...) (CR2-8). A string is judged only when it names
+        # a host, and a protocol-relative string inside a content: declaration
+        # is text, not a URL, so a decorative content: "//" passes (CR3-4).
+        css = strip_css_comments(css)
+        content_spans = [m.span(1) for m in CSS_CONTENT_RE.finditer(css)]
+        for m in CSS_STRING_RE.finditer(css):
+            value = m.group(1) if m.group(1) is not None else m.group(2)
+            url = canonical_external(value)
+            if url is None or not urlsplit(url).netloc.strip():
+                continue
+            in_content = any(lo <= m.start() < hi for lo, hi in content_spans)
+            if in_content and browser_url(value).startswith("//"):
+                continue
+            judge(url, f"{where} CSS string", False)
 
     def judge_raw(text: str, where: str) -> None:
         # The site URL is policed in attributes (step 1), so raw text skips it.
