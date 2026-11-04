@@ -12,8 +12,8 @@ Ben asked: "go ahead and build it. Let's start with the initial framework like y
 | 1 | Plan | Architect plan, `work/PLAN.md` | **Done**, no Gate A blockers | — |
 | 2 | Build | content, style, diagram, test engineers (parallel) | in progress | — |
 | 3 | Verify / Review / Fix | Checks, code and content review | pending | — |
-| 4 | Validate changes | DEV-VAL-n | pending | — |
-| 5 | Validate codebase | Validation Council | pending | — |
+| 4 | Validate changes | DEV-VAL-n + visual appeal check | pending | — |
+| 5 | Validate codebase | Validation Council + visual analyst | pending | — |
 | 6 | Complete PR | CI green, description; Ben merges | pending | — |
 
 ## Needs Ben (after merge)
