@@ -7,7 +7,7 @@ export default function Legoland() {
         <p><Link className="back-link" to="/#experience">← All experience</Link></p>
         <h1>LEGOLAND California Resort</h1>
         <p className="page-header__meta">Seasonal Lifeguard · April to August 2026</p>
-        <p className="page-header__summary">Seasonal lifeguard at LEGOLAND California Resort, April to August 2026.</p>
+        <p className="page-header__summary">[LEGO-1] Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
       </div>
     </>
   );

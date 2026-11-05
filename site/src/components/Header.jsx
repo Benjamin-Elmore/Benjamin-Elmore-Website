@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router';
-import ThemeToggle from './ThemeToggle.jsx';
+import ResumeLink, { HAS_RESUME } from './ResumeLink.jsx';
 
 const LABELS = { work: 'Work', experience: 'Experience', about: 'About', contact: 'Contact' };
 
@@ -19,9 +19,9 @@ export default function Header() {
           <li>{frag('experience')}</li>
           <li>{aboutPage ? <Link to="/About/" aria-current="page">About</Link> : frag('about')}</li>
           <li>{frag('contact')}</li>
+          {HAS_RESUME && <li><ResumeLink /></li>}
         </ul>
       </nav>
-      <ThemeToggle />
     </header>
   );
 }

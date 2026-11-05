@@ -2,6 +2,7 @@ import { Outlet } from 'react-router';
 import Header from './Header.jsx';
 import Footer from './Footer.jsx';
 import RouteEffects from './RouteEffects.jsx';
+import Lightbox from './Lightbox.jsx';
 
 export default function Layout() {
   return (
@@ -11,6 +12,7 @@ export default function Layout() {
       <main id="main"><Outlet /></main>
       <Footer />
       <RouteEffects />
+      <Lightbox />
     </>
   );
 }

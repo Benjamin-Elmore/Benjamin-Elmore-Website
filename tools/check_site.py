@@ -19,7 +19,7 @@ NOT_FOUND = "404.html"
 PAGES = ["index.html", "ARC/index.html", "MarketTesting/index.html",
          "CBU-Robotics/index.html", "In-N-Out/index.html", "LEGOLAND/index.html",
          "About/index.html"]
-FONTS = ["assets/fonts/B612Mono-Regular.woff2", "assets/fonts/B612Mono-Bold.woff2", "assets/fonts/OFL.txt"]
+FONTS = ["assets/fonts/IBMPlexSans-400.woff2", "assets/fonts/IBMPlexSans-600.woff2", "assets/fonts/IBMPlexMono-400.woff2", "assets/fonts/IBMPlexMono-600.woff2", "assets/fonts/OFL-IBM-Plex.txt"]
 EMAIL = "benelmore6@gmail.com"
 REQUIRED = {  # fact -> (page, text that must appear)
     "email text": ("index.html", EMAIL),
@@ -134,7 +134,7 @@ def check_structure(errors, parsed):
             errors.append(f"chunk file shipped: {r}")
     if "assets/site.js" in rels:
         errors.append("assets/site.js should not exist (the bundle replaces it)")
-    for need in ("assets/theme.js", "assets/route-case.js", "assets/site.css", "assets/arc.css", ".nojekyll"):
+    for need in ("assets/route-case.js", "assets/site.css", "assets/arc.css", ".nojekyll"):
         if need not in rels:
             errors.append(f"missing {need}")
 
@@ -189,8 +189,6 @@ def check_page_rules(errors, parsed, raw):
             errors.append(f"{p}: main#main has {pg.h1} h1 elements, expected 1")
         elif len(" ".join(" ".join(pg.main_text).split())) < 40:
             errors.append(f"{p}: main#main has too little text in the HTML")
-        if pg.toggle_hidden is not True:
-            errors.append(f"{p}: theme toggle must be in the HTML and hidden until JS runs")
         if p == NOT_FOUND:
             if pg.canonical or 'property="og:' in raw[p]:
                 errors.append(f"{p}: the 404 page must not carry canonical or og tags")

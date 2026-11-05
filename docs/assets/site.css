@@ -1,37 +1,86 @@
 @font-face {
-  font-family: "B612 Mono";
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("fonts/B612Mono-Regular.woff2") format("woff2");
+  src: url("fonts/IBMPlexSans-400.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "B612 Mono";
+  font-family: "IBM Plex Sans";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/IBMPlexSans-400-italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/IBMPlexSans-500.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/IBMPlexSans-600.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("fonts/B612Mono-Bold.woff2") format("woff2");
+  src: url("fonts/IBMPlexSans-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/IBMPlexMono-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/IBMPlexMono-600.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/IBMPlexMono-700.woff2") format("woff2");
 }
 
 /*
   Benjamin Elmore portfolio: site styles.
-  Mobile-first (base = 360px), min-width media queries only. System fonts plus self-hosted B612 Mono (assets/fonts, OFL); no third-party requests.
+  Mobile-first (base = 360px), min-width media queries only. Self-hosted IBM Plex Sans (basic text) and IBM Plex Mono (technical text), assets/fonts, OFL; no third-party requests.
 */
 
 :root {
-  --color-bg: #faf9f6;
-  --color-surface: #ffffff;
-  --color-text: #151515;
-  --color-muted: #484848;
-  --color-accent: #151515;
-  --color-border: #b9b6b1;
-  --color-focus: #151515;
-  --color-code-bg: #efede8;
+  /* Always dark: pure black background, pure white text, no light theme. */
+  --color-bg: #000000;
+  --color-surface: #0d0d0d;
+  --color-text: #ffffff;
+  --color-muted: #bdb9b1;
+  --color-accent: #ffffff;
+  --color-border: #575550;
+  --color-focus: #ffffff;
+  --color-code-bg: #161616;
 
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-num: "B612 Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
-  --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-num: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
 
   /* In rem, not ch, so an element's own font (e.g. the mono footer) can't change the column width. */
   --measure: 36.5rem;
@@ -48,32 +97,6 @@
   --space-8: 4.5rem;
   --radius: 0;
 
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --color-bg: #171717;
-    --color-surface: #202020;
-    --color-text: #f1efeb;
-    --color-muted: #bdb9b1;
-    --color-accent: #f1efeb;
-    --color-border: #575550;
-    --color-focus: #f1efeb;
-    --color-code-bg: #2b2a27;
-    color-scheme: dark;
-  }
-}
-
-:root[data-theme="dark"] {
-  --color-bg: #171717;
-  --color-surface: #202020;
-  --color-text: #f1efeb;
-  --color-muted: #bdb9b1;
-  --color-accent: #f1efeb;
-  --color-border: #575550;
-  --color-focus: #f1efeb;
-  --color-code-bg: #2b2a27;
   color-scheme: dark;
 }
 
@@ -115,7 +138,7 @@ h3,
 h4 {
   margin: 0;
   line-height: 1.25;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: -0.01em;
   text-wrap: balance;
 }
@@ -264,7 +287,7 @@ main,
   min-height: var(--tap);
   color: var(--color-text);
   font-size: clamp(1rem, 2.1vw, 1.5rem);
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.04em;
   text-decoration: none;
   text-transform: uppercase;
@@ -296,37 +319,6 @@ main,
   font-size: 0.8125rem;
   text-decoration: none;
   text-transform: uppercase;
-}
-
-.theme-toggle {
-  justify-self: end;
-  min-height: var(--tap);
-  padding: 0 var(--space-2);
-  font: inherit;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
-  color: var(--color-text);
-  background: var(--color-surface);
-  border: 1px solid var(--color-muted);
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
-}
-
-.theme-toggle:hover {
-  border-color: var(--color-accent);
-}
-
-/* Fixed label "Dark theme"; aria-pressed="true" means dark is on, shown by an accent edge and fill. */
-.theme-toggle[aria-pressed="true"] {
-  color: var(--color-accent);
-  background: var(--color-code-bg);
-  border-color: var(--color-accent);
-}
-
-.theme-toggle[hidden] {
-  display: none;
 }
 
 /* ---------- Sections ---------- */
@@ -395,7 +387,7 @@ main {
   margin-top: var(--space-4);
   font-size: clamp(2.5rem, 8.25vw, 6.75rem);
   line-height: 0.98;
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.045em;
   text-wrap: wrap;
 }
@@ -438,9 +430,18 @@ main {
   display: flex;
   align-items: baseline;
   gap: var(--space-2);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: clamp(0.875rem, 2vw, 1.125rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+/* "0X /" index: technical text (Plex Mono); the title beside it is basic text (Plex Sans). */
+.section__title > span[aria-hidden="true"] {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 .section--work .section__title::after,
@@ -515,7 +516,7 @@ main {
 .work-row__name {
   font-family: var(--font-num);
   font-size: clamp(1.5rem, 3.2vw, 2.25rem);
-  font-weight: 750;
+  font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.035em;
 }
@@ -802,7 +803,7 @@ main {
 
 .section .role__org {
   font-size: clamp(1.25rem, 2.5vw, 1.625rem);
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.04em;
 }
 
@@ -841,7 +842,7 @@ main {
 
 .exp-row__role {
   font-size: clamp(1.25rem, 2.5vw, 1.625rem);
-  font-weight: 750;
+  font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.035em;
 }
@@ -1065,7 +1066,7 @@ main {
   }
 
   .site-header {
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: 1fr auto;
     column-gap: var(--space-5);
   }
 
@@ -1199,7 +1200,6 @@ main {
   }
 
   .site-nav,
-  .theme-toggle,
   .skip-link {
     display: none !important;
   }
@@ -1340,7 +1340,7 @@ main {
 .section--page ul:not([class]) { margin-top: var(--space-3); padding-left: 1.25rem; }
 .section--page ul:not([class]) li + li { margin-top: var(--space-2); }
 
-/* ---------- Numerals in B612 Mono ---------- */
+/* ---------- Numerals in IBM Plex Mono ---------- */
 
 .section__title > span[aria-hidden="true"],
 .meta,
@@ -1389,4 +1389,68 @@ time {
 
 .case-study__block ol + p {
   margin-top: var(--space-4);
+}
+
+/* Profile photo on the home intro (replaces the hero line). */
+.intro__photo { margin: var(--space-5) 0 0; max-width: 16rem; }
+.intro__photo .photo-slot__box { aspect-ratio: 1 / 1; }
+
+/* ---------- Résumé, lightbox, typed intro ---------- */
+
+.zoomable { cursor: zoom-in; }
+.zoomable:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 4px; }
+
+.lightbox {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: var(--gutter);
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: zoom-out;
+}
+.lightbox[open] { display: flex; align-items: center; justify-content: center; }
+.lightbox::backdrop { background: rgb(0 0 0 / 0.92); }
+.lightbox__img {
+  max-width: 100%;
+  max-height: calc(100dvh - 2 * var(--gutter) - var(--tap) - 1rem);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  background: var(--color-surface);
+}
+.lightbox__close {
+  position: fixed;
+  top: var(--gutter);
+  right: var(--gutter);
+  min-height: var(--tap);
+  padding: 0 1rem;
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+}
+.lightbox__close:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+.typeline { position: relative; }
+.typeline.is-typing .typeline__full { color: transparent; }
+.typeline__live { position: absolute; inset: 0; }
+.typeline__caret {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.1em;
+  margin-left: 0.1em;
+  vertical-align: text-bottom;
+  background: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typeline__live { display: none; }
+  .typeline .typeline__full { color: inherit; }
 }

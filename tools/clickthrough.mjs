@@ -336,33 +336,16 @@ async function main() {
     check((await tab.eval("document.querySelector('meta[name=robots]')?.content")) === 'noindex', 'no noindex');
   });
 
-  // K10 theme
-  await step('K10 theme toggle, persistence, navigation, reload', async () => {
-    await tab.goto(url(''), SETTLE);
-    await tab.until("document.querySelector('.theme-toggle') && !document.querySelector('.theme-toggle').hidden", 'toggle visible');
-    const before = await tab.eval("document.documentElement.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')");
-    const want = before === 'dark' ? 'light' : 'dark';
-    await tab.eval("document.querySelector('.theme-toggle').click()");
-    check(await tab.eval("document.documentElement.getAttribute('data-theme')") === want, 'data-theme not ' + want);
-    check(await tab.eval("localStorage.getItem('theme')") === want, 'localStorage theme not saved');
-    await tab.eval(q.click(BASE + 'ARC/'));
-    await tab.until(`location.pathname===${JSON.stringify(BASE + 'ARC/')}`, 'ARC');
-    check(await tab.eval("document.documentElement.getAttribute('data-theme')") === want, 'theme lost on navigation');
-    await tab.goto(url('ARC/'), SETTLE);
-    check(await tab.eval('window.__dclTheme') === want, 'data-theme not set by DOMContentLoaded: ' + await tab.eval('window.__dclTheme'));
-    await tab.eval("localStorage.removeItem('theme')");
-  });
-
   // K11 JavaScript off
-  await step('K11 JavaScript off: content, anchors, toggle hidden on every route', async () => {
+  await step('K11 JavaScript off: content, anchors on every route', async () => {
     await tab.send('Emulation.setScriptExecutionDisabled', { value: true });
     try {
       for (const p of [...PAGES, 'nope']) {
         await tab.goto(url(p), "document.readyState==='complete'");
         const r = await tab.send('Runtime.evaluate', { returnByValue: true, expression:
-          "JSON.stringify({h1:document.querySelector('main h1')?.textContent.trim()||'',len:document.querySelector('main').innerText.length,anchors:document.querySelectorAll('main a[href]').length,toggleHidden:getComputedStyle(document.querySelector('.theme-toggle')).display==='none'})" });
+          "JSON.stringify({h1:document.querySelector('main h1')?.textContent.trim()||'',len:document.querySelector('main').innerText.length,anchors:document.querySelectorAll('main a[href]').length})" });
         const v = JSON.parse(r.result.value);
-        check(v.h1 && v.len > 20 && v.anchors > 0 && v.toggleHidden, `${p || '/'}: ${JSON.stringify(v)}`);
+        check(v.h1 && v.len > 20 && v.anchors > 0, `${p || '/'}: ${JSON.stringify(v)}`);
       }
     } finally { await tab.send('Emulation.setScriptExecutionDisabled', { value: false }); }
   });
@@ -393,7 +376,7 @@ async function shots() {
     'details-open': async () => { await tab.eval("(()=>{const d=document.querySelector('.exp-details');d.open=true;d.scrollIntoView({block:'start',behavior:'instant'})})()"); await tab.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 1, y: 1 }); },
   };
   const { writeFileSync } = await import('node:fs');
-  for (const w of [360, 1280]) for (const theme of ['light', 'dark']) for (const [name, act] of Object.entries(states)) {
+  for (const w of [360, 1280]) for (const theme of ['dark']) for (const [name, act] of Object.entries(states)) {
     const pngs = {};
     for (const [build, srv] of Object.entries(servers)) {
       await tab.send('Emulation.setDeviceMetricsOverride', { width: w, height: 900, deviceScaleFactor: 1, mobile: false });
