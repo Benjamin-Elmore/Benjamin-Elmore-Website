@@ -39,27 +39,43 @@
 }
 
 @font-face {
-  font-family: "IBM Plex Mono";
+  font-family: "Red Hat Mono";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("fonts/IBMPlexMono-400.woff2") format("woff2");
+  src: url("fonts/RedHatMono-400.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "IBM Plex Mono";
+  font-family: "Red Hat Mono";
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url("fonts/IBMPlexMono-600.woff2") format("woff2");
+  src: url("fonts/RedHatMono-600.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "IBM Plex Mono";
+  font-family: "Red Hat Mono";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("fonts/IBMPlexMono-700.woff2") format("woff2");
+  src: url("fonts/RedHatMono-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/BarlowCondensed-600.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/BarlowCondensed-700.woff2") format("woff2");
 }
 
 /*
@@ -79,8 +95,8 @@
   --color-code-bg: #161616;
 
   --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-num: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
-  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-num: "Red Hat Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-mono: "Red Hat Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
 
   /* In rem, not ch, so an element's own font (e.g. the mono footer) can't change the column width. */
   --measure: 36.5rem;
@@ -437,7 +453,7 @@ main {
   text-transform: uppercase;
 }
 
-/* "0X /" index: technical text (Plex Mono); the title beside it is basic text (Plex Sans). */
+/* "0X /" index: technical text (Red Hat Mono); the title beside it is display text (Barlow Condensed). */
 .section__title > span[aria-hidden="true"] {
   font-family: var(--font-mono);
   font-weight: 400;
@@ -1340,7 +1356,7 @@ main {
 .section--page ul:not([class]) { margin-top: var(--space-3); padding-left: 1.25rem; }
 .section--page ul:not([class]) li + li { margin-top: var(--space-2); }
 
-/* ---------- Numerals in IBM Plex Mono ---------- */
+/* ---------- Numerals in Red Hat Mono (slashed zero) ---------- */
 
 .section__title > span[aria-hidden="true"],
 .meta,
@@ -1453,4 +1469,143 @@ time {
 @media (prefers-reduced-motion: reduce) {
   .typeline__live { display: none; }
   .typeline .typeline__full { color: inherit; }
+}
+
+/* ---------- Heading system ----------
+   Three typefaces, one job each:
+   Barlow Condensed (display): page titles (h1) and section titles (h2), uppercase.
+   IBM Plex Sans (body): sub-headings (h3) and running text.
+   Red Hat Mono (technical, slashed zero): numbers, labels, h4, dates and meta.
+   Section numbers come from the page: h2 "01 /", then h3 "1.1", h4 "1.1.1". */
+
+:root {
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", var(--font-sans);
+}
+
+#main { counter-reset: h2; }
+#main .section__title { counter-increment: h2; counter-reset: h3; }
+#main h3 { counter-increment: h3; counter-reset: h4; }
+#main h4 { counter-increment: h4; }
+
+.eyebrow {
+  margin-top: var(--space-4);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  margin-right: 0.6em;
+  vertical-align: 0.08em;
+  background: var(--color-text);
+  content: "";
+}
+
+#main .page-header h1 {
+  margin-top: var(--space-2);
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+#main .section__title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+#main .section__title::after {
+  flex: 1;
+  align-self: center;
+  margin-left: var(--space-2);
+  border-top: 1px solid;
+  content: "";
+}
+
+#main .section__title > span[aria-hidden="true"] {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.62em;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+#main h3 {
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: clamp(1.1875rem, 2.4vw, 1.375rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  text-transform: none;
+}
+
+#main h3::before {
+  display: inline-block;
+  min-width: 2.6em;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68em;
+  font-weight: 400;
+  letter-spacing: 0;
+  vertical-align: 0.12em;
+  content: counter(h2) "." counter(h3);
+  content: counter(h2) "." counter(h3) / "";
+}
+
+#main .role-section > h3,
+#main .case-study__block > h3 {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+#main h4 {
+  margin-top: var(--space-5);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#main h4::before {
+  margin-right: 0.75em;
+  color: var(--color-muted);
+  font-weight: 400;
+  content: counter(h2) "." counter(h3) "." counter(h4);
+  content: counter(h2) "." counter(h3) "." counter(h4) / "";
+}
+
+/* Typed intro caret: solid while typing, blinks while paused. */
+.typeline__caret.is-idle { animation: caret-blink 1s steps(1) infinite; }
+@keyframes caret-blink { 50% { opacity: 0; } }
+
+/* The first block under a section title already has the title's rule beside it. */
+#main .section__title + .role-section > h3,
+#main .section__title + .case-study__block > h3 {
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* Project names on home use the display face, like the page titles they open. */
+#main .work-row__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }

@@ -6,6 +6,7 @@ export default function MarketTesting() {
     <>
       <div className="page-header">
         <p><Link className="back-link" to="/#work">← All work</Link></p>
+        <p className="eyebrow">Project 02</p>
         <h1>MarketTesting</h1>
         <p className="page-header__meta">Independent Python learning project, October 2025 to June 2026</p>
         <p className="page-header__summary">[MT-1] Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
@@ -16,7 +17,7 @@ export default function MarketTesting() {
           <div className="photo-slot__box">Screenshot: prediction table</div>
           <figcaption className="figure__caption">[MT-2] Caption.</figcaption>
         </figure>
-        <h2 id="mt-title" className="section__title">Project</h2>
+        <h2 id="mt-title" className="section__title"><span aria-hidden="true">01 / </span>Project</h2>
         <div className="case-study__block" id="mt-what">
           <h3>What it is</h3>
           <p>[MT-3] Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
