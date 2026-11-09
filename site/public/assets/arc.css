@@ -1,0 +1,28 @@
+/* ARC page only. Monochrome code blocks using site.css tokens. */
+.case-study__block pre.code-block {
+  margin: var(--space-4, 1rem) 0;
+  padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+  background: var(--color-code-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  overflow-x: auto;
+  max-width: 100%;
+  white-space: pre;
+  tab-size: 4;
+}
+.case-study__block pre.code-block code {
+  font: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+}
+.case-study__block pre.code-block:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+.case-study__block { min-width: 0; }

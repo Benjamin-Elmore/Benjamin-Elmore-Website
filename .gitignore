@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+
+# Private notes: separate repo (Benjamin-Elmore-Website-notes)
+work/
+
+# Loads work/CLAUDE.md; not part of the public site
+CLAUDE.md
+tools/private-names.txt
+
+# React site build
+site/node_modules/
+site/.ssr/

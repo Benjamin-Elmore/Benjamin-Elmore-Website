@@ -1,0 +1,1611 @@
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/IBMPlexSans-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/IBMPlexSans-400-italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/IBMPlexSans-500.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/IBMPlexSans-600.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/IBMPlexSans-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Red Hat Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/RedHatMono-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Red Hat Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/RedHatMono-600.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Red Hat Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/RedHatMono-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/BarlowCondensed-600.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/BarlowCondensed-700.woff2") format("woff2");
+}
+
+/*
+  Benjamin Elmore portfolio: site styles.
+  Mobile-first (base = 360px), min-width media queries only. Self-hosted IBM Plex Sans (basic text) and IBM Plex Mono (technical text), assets/fonts, OFL; no third-party requests.
+*/
+
+:root {
+  /* Always dark: pure black background, pure white text, no light theme. */
+  --color-bg: #000000;
+  --color-surface: #0d0d0d;
+  --color-text: #ffffff;
+  --color-muted: #bdb9b1;
+  --color-accent: #ffffff;
+  --color-border: #575550;
+  --color-focus: #ffffff;
+  --color-code-bg: #161616;
+
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-num: "Red Hat Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --font-mono: "Red Hat Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
+
+  /* In rem, not ch, so an element's own font (e.g. the mono footer) can't change the column width. */
+  --measure: 36.5rem;
+  --page-max: 72rem;
+  --tap: 44px; /* minimum tap-target height (WCAG 2.5.5) */
+  --gutter: 16px;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --radius: 0;
+
+  color-scheme: dark;
+}
+
+/* ---------- Base ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 1rem;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+p,
+ul,
+ol,
+dl,
+figure {
+  margin: 0;
+}
+
+p + p {
+  margin-top: var(--space-3);
+}
+
+/* Sliding underline on every link: a resting 1px line plus a 2px line that slides in from the left
+   on hover and keyboard focus. Works on wrapped links (clone) and in both themes (currentColor). */
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor), linear-gradient(var(--color-muted), var(--color-muted));
+  background-repeat: no-repeat;
+  background-position: 0 calc(100% - 0.02em), 0 calc(100% - 0.02em);
+  background-size: 0 2px, 100% 1px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 0.28s ease;
+}
+
+a:hover,
+a:focus-visible {
+  background-size: 100% 2px, 100% 1px;
+}
+
+/* Navigation, name, skip link and the work/experience rows have no resting line; they only slide one in. */
+.site-nav__list a,
+.site-header__name,
+.skip-link,
+.work-row,
+.exp-row__link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-size: 0 2px;
+}
+
+.site-nav__list a:hover,
+.site-nav__list a:focus-visible,
+.site-header__name:hover,
+.site-header__name:focus-visible,
+.skip-link:hover,
+.skip-link:focus-visible,
+.work-row:hover,
+.work-row:focus-visible,
+.exp-row__link:hover,
+.exp-row__link:focus-visible,
+.site-nav__list a[aria-current="page"] {
+  background-size: 100% 2px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+code,
+kbd,
+samp {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-code-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  overflow-wrap: anywhere;
+}
+
+time {
+  font-variant-numeric: tabular-nums;
+}
+
+.meta {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: var(--space-2);
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-surface);
+  color: var(--color-accent);
+  border: 2px solid var(--color-focus);
+  border-radius: var(--radius);
+  font-weight: 600;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* Hyphenated technical terms in prose (ESP-IDF, RS-485) stay on one line. */
+.nowrap {
+  white-space: nowrap;
+}
+
+/* ---------- Header ---------- */
+
+.site-header,
+main,
+.site-footer {
+  width: min(calc(100% - 2 * var(--gutter)), var(--page-max));
+  margin-inline: auto;
+}
+
+.site-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0 var(--space-4);
+  padding-block: var(--space-2);
+  border-bottom: 2px solid var(--color-text);
+}
+
+.site-header__name {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  min-height: var(--tap);
+  color: var(--color-text);
+  font-size: clamp(1rem, 2.1vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.site-nav {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  min-width: 0;
+}
+
+.site-nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 var(--space-3);
+  list-style: none;
+  padding: 0;
+}
+
+.site-nav__list a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap);
+  min-height: var(--tap);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+/* ---------- Sections ---------- */
+
+main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.section {
+  grid-column: 1 / -1;
+  padding-block: var(--space-6);
+  border-top: 1px solid var(--color-border);
+}
+
+.section__title {
+  margin-bottom: var(--space-5);
+  font-size: clamp(1.5rem, 3.5vw, 2.125rem);
+}
+
+.section__lede {
+  margin-bottom: var(--space-5);
+  color: var(--color-muted);
+  font-size: 1.0625rem;
+  text-wrap: pretty;
+}
+
+.section h3 {
+  font-size: 1.125rem;
+}
+
+.section h4 {
+  font-size: 1rem;
+}
+
+.case-study > *,
+#projects > * {
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+#contact > *:not(.section__title) {
+  max-width: var(--measure);
+}
+
+/* ---------- Intro ---------- */
+
+.section--intro {
+  position: relative;
+  padding: var(--space-7) 0 var(--space-6) var(--space-3);
+  border-top: 0;
+}
+
+.section--intro::before {
+  position: absolute;
+  inset: var(--space-6) auto auto 0;
+  width: 1rem;
+  height: 1rem;
+  border-top: 1px solid;
+  border-left: 1px solid;
+  content: "";
+}
+
+.intro__name {
+  max-width: 13ch;
+  margin-top: var(--space-4);
+  font-size: clamp(2.5rem, 8.25vw, 6.75rem);
+  line-height: 0.98;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  text-wrap: wrap;
+}
+
+.intro__role,
+.intro__lede {
+  font-family: var(--font-mono);
+}
+
+.intro__role {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.intro__role span {
+  margin-inline: 0.25em;
+}
+
+.intro__lede {
+  max-width: 58ch;
+  margin-top: var(--space-5);
+  font-size: clamp(0.9375rem, 2vw, 1.1875rem);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* ---------- Selected work ---------- */
+
+.section--work,
+.section--experience,
+.section--skills,
+.section--num {
+  border-top: 0;
+}
+
+.section--work .section__title,
+.section--experience .section__title,
+.section--skills .section__title,
+.section--num .section__title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-size: clamp(0.875rem, 2vw, 1.125rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* "0X /" index: technical text (Red Hat Mono); the title beside it is display text (Barlow Condensed). */
+.section__title > span[aria-hidden="true"] {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.section--work .section__title::after,
+.section--experience .section__title::after,
+.section--skills .section__title::after,
+.section--num .section__title::after {
+  flex: 1;
+  margin-left: var(--space-2);
+  border-top: 1px solid;
+  content: "";
+}
+
+.section--work .section__title {
+  margin-bottom: var(--space-2);
+}
+
+.work-list {
+  border-bottom: 1px solid var(--color-text);
+  list-style: none;
+  padding: 0;
+}
+
+.work-list li + li {
+  border-top: 1px solid var(--color-text);
+}
+
+.work-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  min-height: var(--tap);
+  padding: var(--space-4) var(--space-3);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.work-row:hover,
+.work-row:focus-visible,
+.exp-row__link:hover,
+.exp-row__link:focus-visible {
+  background-color: var(--color-code-bg);
+}
+
+/* Shared indicator (site.js): one line slides between rows. Without JS each row draws its own. */
+.slide-list {
+  position: relative;
+}
+
+.slide-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 2px;
+  width: 0;
+  background: var(--color-text);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.28s ease, width 0.28s ease, opacity 0.15s ease;
+}
+
+.slide-list > .slide-indicator {
+  border-top: 0;
+  list-style: none;
+}
+
+.slide-list.has-indicator .work-row,
+.slide-list.has-indicator .exp-row__link {
+  background-size: 0 2px;
+}
+
+.work-row__name {
+  font-family: var(--font-num);
+  font-size: clamp(1.5rem, 3.2vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.work-row__description {
+  grid-row: 2;
+  max-width: 56ch;
+  font-family: var(--font-mono);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  line-height: 1.45;
+}
+
+.work-row__arrow {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+/* ---------- Lists ---------- */
+
+.link-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-5);
+  list-style: none;
+  padding: 0;
+}
+
+.link-list a,
+.card__link a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  font-weight: 600;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  margin-top: var(--space-3);
+  padding: 0;
+}
+
+.tag {
+  padding: 0.15em 0.65em;
+  white-space: nowrap; /* "S-function", "RS-485" never split at the hyphen */
+  color: var(--color-muted);
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+/* ---------- ARC case study (centerpiece) ---------- */
+
+.case-study__summary {
+  padding-left: var(--space-4);
+  border-left: 3px solid var(--color-accent);
+  font-size: 1.125rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.case-study__block {
+  margin-top: var(--space-7);
+}
+
+.section .case-study__block > h3 {
+  margin-bottom: var(--space-4);
+  font-size: 1.25rem;
+}
+
+.section .case-study__block > h4 {
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-3);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.case-study__block ul:not([class]),
+.case-study__block ol:not([class]),
+.open-work,
+.role__points {
+  padding-left: 1.25rem;
+}
+
+.case-study__block p + ul,
+.case-study__block p + ol {
+  margin-top: var(--space-3);
+}
+
+.case-study__block ul:not([class]) li + li,
+.case-study__block ol:not([class]) li + li,
+.open-work li + li,
+.role__points li + li {
+  margin-top: var(--space-2);
+}
+
+.case-study__repo {
+  margin-top: var(--space-6);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 0.9375rem;
+}
+
+/*
+  The repo link sits in a sentence (WCAG 2.5.8 inline exception), but it is the box's lead link, so an
+  invisible ::before stretches its hit area to 44px: 18px up into the box padding, 6px down into the
+  line gap. Line spacing and the focus ring (which stays on the text) are unchanged. This only holds
+  while the link sits on one line; if it wraps (320px, large default fonts) the ::before shrinks to a
+  thin strip and the inline exception alone covers it.
+*/
+.case-study__repo a {
+  position: relative;
+}
+
+.case-study__repo a::before {
+  content: "";
+  position: absolute;
+  inset: -18px -4px -6px;
+}
+
+/* Figure */
+
+.figure {
+  margin-top: var(--space-7);
+}
+
+/* <picture>: stacked SVG below 45em (720px), wide SVG above. Capped at 26rem so the tall version mostly stays in view on phones;
+   with a large default font (24px) at 720-1079px it can exceed a short window, which is accepted. */
+.figure--diagram picture {
+  display: block;
+}
+
+.figure--diagram picture,
+.figure--diagram img {
+  width: 100%;
+  height: auto;
+}
+
+.figure--diagram img {
+  max-width: 26rem;
+  margin-inline: auto;
+  border-radius: var(--radius);
+}
+
+.figure__caption {
+  margin-top: var(--space-3);
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.figure__steps {
+  margin-top: var(--space-3);
+  padding-left: 1.5rem;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.figure__steps li + li {
+  margin-top: var(--space-1);
+}
+
+.figure__steps li::marker {
+  font-family: var(--font-mono);
+}
+
+/* Decisions: numbered cards with labelled failure mode / design response */
+
+.decision-list {
+  list-style: none;
+  padding: 0;
+  counter-reset: decision;
+}
+
+.decision {
+  counter-increment: decision;
+  padding: var(--space-5) var(--space-4) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-accent);
+  border-radius: var(--radius);
+}
+
+.decision + .decision {
+  margin-top: var(--space-4);
+}
+
+.section .decision__title {
+  font-size: 1.0625rem;
+}
+
+.decision__title::before {
+  content: counter(decision, decimal-leading-zero);
+  display: block;
+  margin-bottom: var(--space-1);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.decision__body {
+  margin-top: var(--space-3);
+}
+
+.decision__label {
+  margin-top: var(--space-3);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.decision__text {
+  margin: var(--space-1) 0 0;
+}
+
+/* Evidence: dated log entries on a rail */
+
+.evidence-list {
+  list-style: none;
+  padding: 0;
+  border-left: 2px solid var(--color-border);
+}
+
+.evidence {
+  position: relative;
+  padding-left: var(--space-5);
+}
+
+.evidence + .evidence {
+  margin-top: var(--space-5);
+}
+
+.evidence::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 0.45em;
+  width: 10px;
+  height: 10px;
+  background: var(--color-bg);
+  border: 2px solid var(--color-accent);
+  border-radius: 50%;
+}
+
+.evidence__date {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.evidence__text {
+  margin-top: var(--space-1);
+}
+
+/* ---------- Experience ---------- */
+
+.timeline {
+  list-style: none;
+  padding: 0;
+}
+
+.role + .role {
+  margin-top: var(--space-5);
+}
+
+.section .role__org {
+  font-size: clamp(1.25rem, 2.5vw, 1.625rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.role__details summary {
+  width: fit-content;
+  padding-block: var(--space-3);
+  min-height: var(--tap);
+  cursor: pointer;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+/* ---------- Experience rows ---------- */
+
+.exp-list {
+  border-bottom: 1px solid var(--color-text);
+  list-style: none;
+  padding: 0;
+}
+
+.exp-list > li + li {
+  border-top: 1px solid var(--color-text);
+}
+
+.exp-row__link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-4);
+  min-height: var(--tap);
+  padding: var(--space-4) var(--space-3);
+  color: var(--color-text);
+  background-repeat: no-repeat;
+}
+
+.exp-row__role {
+  font-size: clamp(1.25rem, 2.5vw, 1.625rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.exp-row__arrow {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.exp-row__org,
+.exp-row__dates {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.exp-row__dates,
+.exp-row__dates time {
+  font-family: var(--font-num);
+  font-size: 0.8125rem;
+}
+
+.exp-row__org {
+  grid-column: 1 / -1;
+}
+
+.exp-row__dates {
+  grid-column: 1 / -1;
+}
+
+.exp-details {
+  padding: 0 var(--space-3) var(--space-3);
+}
+
+.exp-details summary {
+  width: fit-content;
+  min-height: var(--tap);
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 calc(100% - 0.6rem);
+  background-size: 0 2px;
+  transition: background-size 0.28s ease;
+}
+
+.exp-details summary:hover,
+.exp-details summary:focus-visible {
+  background-size: 100% 2px;
+}
+
+.exp-details[open] summary {
+  background-size: 100% 1px;
+}
+
+.exp-details summary {
+  text-decoration: none;
+  list-style: none;
+}
+
+.exp-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.exp-details summary::after {
+  content: "+";
+  margin-left: var(--space-2);
+  font-family: var(--font-num);
+}
+
+.exp-details[open] summary::after {
+  content: "\2212";
+}
+
+.exp-details .role__points {
+  margin-top: var(--space-2);
+}
+
+.role__title {
+  margin-top: var(--space-1);
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+}
+
+.role__title + .role__title {
+  margin-top: 0;
+}
+
+.role__title time {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+.role__points {
+  margin-top: var(--space-3);
+}
+
+/* ---------- Projects ---------- */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: var(--space-5) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.card__meta {
+  margin-top: var(--space-1);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.card__body {
+  margin-top: var(--space-3);
+}
+
+.card .tag-list {
+  margin-top: var(--space-4);
+}
+
+.card__link {
+  margin-top: 0;
+  padding-top: var(--space-3);
+  font-weight: 600;
+}
+
+/* ---------- Skills ---------- */
+
+.skill-groups {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.section .skill-group__title {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.skill-group .tag-list {
+  gap: var(--space-1) var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.skill-group .tag {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.skill-group {
+  overflow: hidden;
+}
+
+.skill-group .tag-list {
+  margin-left: calc(-1 * var(--space-2) - 1px);
+}
+
+.skill-group .tag {
+  padding: 0 0 0 var(--space-2);
+  border-left: 1px solid var(--color-border);
+  border-radius: 0;
+}
+
+/* ---------- Education ---------- */
+
+.edu__degree,
+.edu .meta {
+  margin-top: var(--space-1);
+}
+
+.edu .meta {
+  font-family: var(--font-num);
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  padding-block: var(--space-6);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-muted);
+}
+
+.site-footer p {
+  margin: 0;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+/* ---------- Wider screens ---------- */
+
+@media (min-width: 45em) {
+  :root {
+    --gutter: clamp(1.5rem, 4.4vw, 3.5rem);
+  }
+
+  .site-header {
+    grid-template-columns: 1fr auto;
+    column-gap: var(--space-5);
+  }
+
+  .site-nav {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .site-nav__list {
+    gap: clamp(1rem, 3.5vw, 3.25rem);
+  }
+
+  .section--intro {
+    padding-left: var(--space-5);
+  }
+
+  .work-row {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) auto;
+    gap: var(--space-5);
+    padding-inline: var(--space-5);
+  }
+
+  .work-row__description {
+    grid-row: auto;
+    padding-left: var(--space-5);
+    border-left: 1px solid var(--color-text);
+  }
+
+  .work-row__arrow {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .figure--diagram img {
+    max-width: 100%;
+  }
+
+  .decision {
+    padding: var(--space-5);
+  }
+
+  .decision__body {
+    display: grid;
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+    gap: var(--space-3) var(--space-4);
+  }
+
+  .decision__label {
+    margin-top: 0.2em;
+  }
+
+  .decision__text {
+    margin: 0;
+  }
+}
+
+@media (min-width: 54em) {
+  main {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .section--experience,
+  .section--skills {
+    grid-column: auto;
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-7);
+    padding-block: 0;
+  }
+
+  .section--experience {
+    padding-right: var(--space-6);
+  }
+
+  .section--skills {
+    padding-left: var(--space-6);
+    border-left: 1px solid var(--color-text);
+  }
+}
+
+/* ---------- Motion ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Print ---------- */
+
+@media print {
+  /* Set on body (not :root) so print overrides every theme without touching the theme blocks. */
+  body {
+    --color-bg: #ffffff;
+    --color-surface: #ffffff;
+    --color-text: #000000;
+    --color-muted: #333333;
+    --color-accent: #000000;
+    --color-border: #999999;
+    --color-focus: #000000;
+    --color-code-bg: #f2f2f2;
+    color-scheme: light;
+    background: #ffffff;
+    font-size: 11pt;
+  }
+
+  .site-header,
+  main,
+  .site-footer {
+    width: 100%;
+  }
+
+  main {
+    display: block;
+  }
+
+  .section--experience,
+  .section--skills {
+    margin-block: 0;
+    padding-inline: 0;
+    border-left: 0;
+  }
+
+  .site-nav,
+  .skip-link {
+    display: none !important;
+  }
+
+  .section {
+    max-width: none;
+    padding-block: 1.25rem;
+  }
+
+  .decision,
+  .evidence,
+  .card,
+  .figure,
+  .role {
+    break-inside: avoid;
+  }
+
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ---------- Subpages: back link, page header, photo slots ---------- */
+
+.page-header {
+  grid-column: 1 / -1;
+  padding-block: var(--space-5) var(--space-6);
+}
+
+.page-header > * {
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.page-header h1 {
+  margin-top: var(--space-3);
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
+}
+
+.page-header__meta {
+  margin-top: var(--space-3);
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+}
+
+.page-header .page-header__summary {
+  margin-top: var(--space-4);
+  color: var(--color-muted);
+  font-size: 1.0625rem;
+  text-wrap: pretty;
+}
+
+.section--page h2 {
+  margin-bottom: var(--space-4);
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+}
+
+.section--page .tag-list {
+  margin-top: var(--space-4);
+}
+
+.role-section + .role-section {
+  margin-top: var(--space-7);
+}
+
+/* Placeholder a photo or screenshot replaces. Swap .photo-slot__box for an <img> at the path in the comment. */
+.photo-slot {
+  margin-top: var(--space-6);
+}
+
+.photo-slot__box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  padding: var(--space-4);
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.photo-slot--16x9 .photo-slot__box {
+  aspect-ratio: 16 / 9;
+}
+
+.photo-slot--21x9 .photo-slot__box {
+  aspect-ratio: 21 / 9;
+}
+
+.photo-slot img {
+  width: 100%;
+  height: auto;
+}
+
+.photo-slot--text pre {
+  margin: 0;
+  padding: var(--space-4);
+  overflow-x: auto;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+
+.section > .photo-slot:first-child { margin-top: 0; }
+.photo-slot + .section__title { margin-top: var(--space-6); }
+.section__title + .case-study__block { margin-top: 0; }
+
+.figure--narrow img { max-width: 22.5rem; margin-inline: auto; }
+
+.case-study > .photo-slot--21x9 { max-width: none; }
+
+.section--page ul:not([class]) { margin-top: var(--space-3); padding-left: 1.25rem; }
+.section--page ul:not([class]) li + li { margin-top: var(--space-2); }
+
+/* ---------- Numerals in Red Hat Mono (slashed zero) ---------- */
+
+.section__title > span[aria-hidden="true"],
+.meta,
+.page-header__meta,
+.card__meta,
+time {
+  font-family: var(--font-num);
+}
+
+@media print {
+  a {
+    background: none;
+    text-decoration: underline;
+  }
+
+  .slide-indicator {
+    display: none;
+  }
+}
+
+.about__link {
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+}
+
+#about .section__lede,
+.about__link,
+.edu {
+  max-width: var(--measure);
+}
+
+/* Tall tap targets: keep the underline close to the text, not the bottom of the 44px box. */
+.back-link,
+.link-list a,
+.card__link a {
+  background-position: 0 calc(100% - 0.55rem), 0 calc(100% - 0.55rem);
+}
+
+.role-section h4 {
+  margin-top: var(--space-5);
+}
+
+.role-section > p:not(.meta) {
+  margin-top: var(--space-3);
+}
+
+.case-study__block ol + p {
+  margin-top: var(--space-4);
+}
+
+/* Profile photo on the home intro (replaces the hero line). */
+.intro__photo { margin: var(--space-5) 0 0; max-width: 16rem; }
+.intro__photo .photo-slot__box { aspect-ratio: 1 / 1; }
+
+/* ---------- Résumé, lightbox, typed intro ---------- */
+
+.zoomable { cursor: zoom-in; }
+.zoomable:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 4px; }
+
+.lightbox {
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: var(--gutter);
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: zoom-out;
+}
+.lightbox[open] { display: flex; align-items: center; justify-content: center; }
+.lightbox::backdrop { background: rgb(0 0 0 / 0.92); }
+.lightbox__img {
+  max-width: 100%;
+  max-height: calc(100dvh - 2 * var(--gutter) - var(--tap) - 1rem);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  background: var(--color-surface);
+}
+.lightbox__close {
+  position: fixed;
+  top: var(--gutter);
+  right: var(--gutter);
+  min-height: var(--tap);
+  padding: 0 1rem;
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+}
+.lightbox__close:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+.typeline { position: relative; }
+.typeline.is-typing .typeline__full { color: transparent; }
+.typeline__live { position: absolute; inset: 0; }
+.typeline__caret {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.1em;
+  margin-left: 0.1em;
+  vertical-align: text-bottom;
+  background: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typeline__live { display: none; }
+  .typeline .typeline__full { color: inherit; }
+}
+
+/* ---------- Heading system ----------
+   Three typefaces, one job each:
+   Barlow Condensed (display): page titles (h1) and section titles (h2), uppercase.
+   IBM Plex Sans (body): sub-headings (h3) and running text.
+   Red Hat Mono (technical, slashed zero): numbers, labels, h4, dates and meta.
+   Section numbers come from the page: h2 "01 /", then h3 "1.1", h4 "1.1.1". */
+
+:root {
+  --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", var(--font-sans);
+}
+
+#main { counter-reset: h2; }
+#main .section__title { counter-increment: h2; counter-reset: h3; }
+#main h3 { counter-increment: h3; counter-reset: h4; }
+#main h4 { counter-increment: h4; }
+
+.eyebrow {
+  margin-top: var(--space-4);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  margin-right: 0.6em;
+  vertical-align: 0.08em;
+  background: var(--color-text);
+  content: "";
+}
+
+#main .page-header h1 {
+  margin-top: var(--space-2);
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+#main .section__title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+#main .section__title::after {
+  flex: 1;
+  align-self: center;
+  margin-left: var(--space-2);
+  border-top: 1px solid;
+  content: "";
+}
+
+#main .section__title > span[aria-hidden="true"] {
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.62em;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+#main h3 {
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: clamp(1.1875rem, 2.4vw, 1.375rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  text-transform: none;
+}
+
+#main h3::before {
+  display: inline-block;
+  min-width: 2.6em;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68em;
+  font-weight: 400;
+  letter-spacing: 0;
+  vertical-align: 0.12em;
+  content: counter(h2) "." counter(h3);
+  content: counter(h2) "." counter(h3) / "";
+}
+
+#main .role-section > h3,
+#main .case-study__block > h3 {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+#main h4 {
+  margin-top: var(--space-5);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#main h4::before {
+  margin-right: 0.75em;
+  color: var(--color-muted);
+  font-weight: 400;
+  content: counter(h2) "." counter(h3) "." counter(h4);
+  content: counter(h2) "." counter(h3) "." counter(h4) / "";
+}
+
+/* Typed intro caret: solid while typing, blinks while paused. */
+.typeline__caret.is-idle { animation: caret-blink 1s steps(1) infinite; }
+@keyframes caret-blink { 50% { opacity: 0; } }
+
+/* The first block under a section title already has the title's rule beside it. */
+#main .section__title + .role-section > h3,
+#main .section__title + .case-study__block > h3 {
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* Project names on home use the display face, like the page titles they open. */
+#main .work-row__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
