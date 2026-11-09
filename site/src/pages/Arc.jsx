@@ -6,6 +6,7 @@ export default function Arc() {
     <>
       <div className="page-header">
         <p><Link className="back-link" to="/#work">← All work</Link></p>
+        <p className="eyebrow">Project 01</p>
         <h1>ARC firmware for ARSENAL</h1>
         <p className="page-header__meta">CBU1 VEX U Robotics · C++ · ESP32-S3 · ESP-IDF</p>
         <p className="page-header__summary">[ARC-1] Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
@@ -26,7 +27,7 @@ export default function Arc() {
           <pre>{`No capture yet.`}</pre>
           <figcaption className="figure__caption">[ARC-4] Caption.</figcaption>
         </figure>
-        <h2 id="arc-title" className="section__title">Case study</h2>
+        <h2 id="arc-title" className="section__title"><span aria-hidden="true">01 / </span>Case study</h2>
         <div className="case-study__block" id="role">
           <h3>My role</h3>
           <p>[ARC-5] Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>

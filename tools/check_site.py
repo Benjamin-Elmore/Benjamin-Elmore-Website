@@ -19,7 +19,7 @@ NOT_FOUND = "404.html"
 PAGES = ["index.html", "ARC/index.html", "MarketTesting/index.html",
          "CBU-Robotics/index.html", "In-N-Out/index.html", "LEGOLAND/index.html",
          "About/index.html"]
-FONTS = ["assets/fonts/IBMPlexSans-400.woff2", "assets/fonts/IBMPlexSans-600.woff2", "assets/fonts/IBMPlexMono-400.woff2", "assets/fonts/IBMPlexMono-600.woff2", "assets/fonts/OFL-IBM-Plex.txt"]
+FONTS = ["assets/fonts/IBMPlexSans-400.woff2", "assets/fonts/IBMPlexSans-600.woff2", "assets/fonts/RedHatMono-400.woff2", "assets/fonts/RedHatMono-600.woff2", "assets/fonts/BarlowCondensed-600.woff2", "assets/fonts/BarlowCondensed-700.woff2", "assets/fonts/OFL-IBM-Plex.txt", "assets/fonts/OFL-Red-Hat-Mono.txt", "assets/fonts/OFL-Barlow.txt"]
 EMAIL = "benelmore6@gmail.com"
 REQUIRED = {  # fact -> (page, text that must appear)
     "email text": ("index.html", EMAIL),
