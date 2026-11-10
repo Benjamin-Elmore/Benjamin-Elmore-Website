@@ -16,7 +16,7 @@ const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'T
 const ARC_PREVIEW = { src: 'assets/photos/arc-i2cbus-code.jpg', label: 'ARC lib/i2cComm/I2CBus.h · CPPDev 49d54a0', veil: 0.12 };
 const MT_PREVIEW = { src: 'assets/photos/markettesting-lstm.jpg', label: 'MarketTesting LSTM layers · stock_model.py · main 79f6e12', veil: 0.3 };
 const CODE_PREVIEW = { src: 'assets/photos/arc-lockguard-code.jpg', label: 'ARC lib/LockGuard.h · CPPDev 49d54a0', veil: 0.1 };
-const TEAM_PREVIEW = { src: 'assets/photos/cbu-team.jpg', label: 'CBU1 team · VEX Robotics World Championship', veil: 0.4 };
+const TEAM_PREVIEW = { src: 'assets/photos/cbu-club-2026.jpg', label: 'CBU Robotics · November 2026', veil: 0.4 };
 const INNOUT_PREVIEW = { src: 'assets/photos/innout-las-vegas.jpg', label: 'Photo: Wendy Berry · CC BY 2.0', veil: 0.73 }; // credited in Footer.jsx too
 const LEGO_PREVIEW = { src: 'assets/photos/legoland-entrance.jpg', label: 'Photo: Simon_sees · CC BY 2.0', veil: 0.64 }; // credited in Footer.jsx too
 const Preview = ({ src, label, veil }) => <span className="hover-preview" data-label={label} style={{ '--veil': veil }} aria-hidden="true"><img src={BASE + src} alt="" loading="lazy" decoding="async" /></span>;

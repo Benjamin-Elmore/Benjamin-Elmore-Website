@@ -1363,6 +1363,10 @@ main {
 .figure--narrow img { max-width: 22.5rem; margin-inline: auto; }
 
 .case-study > .photo-slot--21x9 { max-width: none; }
+.role-section .photo-slot--21x9 { margin-top: var(--space-5); }
+.case-study > .photo-pair { max-width: none; }
+.photo-pair__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
+@media (min-width: 45em) { .photo-pair__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 .section--page ul:not([class]) { margin-top: var(--space-3); padding-left: 1.25rem; }
 .section--page ul:not([class]) li + li { margin-top: var(--space-2); }
