@@ -1707,14 +1707,6 @@ time {
 }
 .page-header__meta { text-wrap: balance; }
 
-/* Hover previews (Home rows): see the Markings block at the end (blurred row backgrounds). */
-
-.site-footer .site-footer__credit {
-  flex-basis: 100%;
-  text-transform: none;
-  font-size: 0.75rem;
-}
-
 /* Readability pass: the ARC diagram breaks out of the text column like the code windows. */
 .case-study .photo-slot--diagram img {
   position: relative;
@@ -1875,66 +1867,6 @@ figcaption.figure__caption::before {
   text-transform: none;
 }
 .site-footer__stamp span { margin-inline: 0.2em; color: var(--color-border); }
-
-/* M9 + hover backgrounds (Home rows, pointer devices only). On hover/focus the row's own image fills the row
-   behind its text, blurred and dimmed (75% black overlay keeps muted text above 4.5:1), with a small credit
-   line bottom-right. Nothing floats outside the row. The CC BY-ND In-N-Out photo (.hover-preview--nd) is
-   shown unaltered: no blur, filter, scaling or crop (object-fit: contain), only the overlay on top. */
-.hover-preview { display: none; }
-@media (hover: hover) and (pointer: fine) {
-  .work-row, .exp-row__link { position: relative; isolation: isolate; }
-  .hover-preview {
-    display: block;
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    overflow: hidden;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-  }
-  .hover-preview img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: blur(6px);
-    transform: scale(1.12);
-  }
-  .hover-preview--nd img {
-    object-fit: contain;
-    object-position: right center;
-    filter: none;
-    transform: none;
-  }
-  .hover-preview::after {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.75);
-    content: "";
-  }
-  .hover-preview::before {
-    position: absolute;
-    z-index: 1;
-    right: var(--space-3);
-    bottom: 0.3rem;
-    color: var(--color-muted);
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    line-height: 1;
-    letter-spacing: 0.06em;
-    content: attr(data-label);
-  }
-  .work-row:hover .hover-preview, .work-row:focus-visible .hover-preview,
-  .exp-row__link:hover .hover-preview, .exp-row__link:focus-visible .hover-preview { opacity: 1; }
-}
-@media (hover: hover) and (pointer: fine) and (min-width: 45em) {
-  .work-row .hover-preview::before { right: var(--space-5); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hover-preview { transition: none; }
-}
 
 /* Status table and figure notes (ARC status, MarketTesting run note). */
 .status-table { width: 100%; border-collapse: collapse; margin: var(--space-4) 0; font-size: 0.95em; }
