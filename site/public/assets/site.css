@@ -1959,3 +1959,39 @@ figcaption.figure__caption::before {
 /* Footer: source link, last-updated stamp and theme toggle. */
 .site-footer__links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); }
 .site-footer__links a { display: inline-flex; align-items: center; min-height: var(--tap); }
+
+/* Home thumbnails: a small static image and two key numbers under each Selected work description. */
+.work-row__facts {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  grid-column: 1;
+  grid-row: 3;
+  min-width: 0;
+}
+.work-row__thumb {
+  flex: none;
+  width: 6rem;
+  height: auto;
+  border: 1px solid var(--color-border);
+  background: #000;
+}
+.work-row__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--color-muted);
+}
+@media (min-width: 45em) {
+  .work-row__facts { grid-column: 2; grid-row: 2; padding-left: var(--space-5); }
+}
+
+/* Notes index. */
+.notes-list { margin: 0; padding: 0; list-style: none; }
+.notes-list li { padding: var(--space-4) 0; border-top: 1px solid var(--color-border); }
+.notes-list h3 { margin: 0 0 var(--space-1); }
+.notes-list p { margin: 0 0 var(--space-2); }

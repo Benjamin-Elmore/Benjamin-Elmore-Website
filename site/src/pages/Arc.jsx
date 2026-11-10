@@ -78,6 +78,20 @@ UART received: 37`}</CodeWindow>
             </tbody>
           </table>
         </div>
+        <div className="case-study__block" id="arc-numbers">
+          <h3>By the numbers</h3>
+          <table className="status-table">
+            <caption>Values from the code at <code>CPPDev</code> 49d54a0</caption>
+            <tbody>
+              <tr><th scope="row">RS-485 UART</th><td>115200 baud, 8 data bits, no parity, 1 stop bit (8N1)</td></tr>
+              <tr><th scope="row">Sensor IDs</th><td>1 to 15</td></tr>
+              <tr><th scope="row">Packet types</th><td>6</td></tr>
+              <tr><th scope="row">Receive buffer</th><td>128 bytes</td></tr>
+              <tr><th scope="row">Sensor task delay</th><td>10 ms between cycles</td></tr>
+              <tr><th scope="row">Bench read request</th><td>37 bytes (as in the serial capture above)</td></tr>
+            </tbody>
+          </table>
+        </div>
         <div className="case-study__block" id="sensor-instances">
           <h3>Adding a sensor</h3>
           <p>Adding a sensor requires no new class: a <code>{'Sensor<N>'}</code> is configured and supplied with one read function, where <code>N</code> is the number of multiplexers on its bus.</p>
