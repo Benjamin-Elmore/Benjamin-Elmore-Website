@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1250" width="2000" height="1250" role="img" aria-labelledby="t"><title id="t">ARC system architecture (CPPDev 49d54a0)</title><rect width="2000" height="1250" fill="#000000"/><g font-family="'IBM Plex Sans', system-ui, sans-serif" fill="#ffffff"><text x="1000.0" y="58" font-size="46" font-weight="700" text-anchor="middle">ARC | System Architecture</text>
+<text x="1000.0" y="98" font-size="27" font-weight="600" text-anchor="middle">Sensor acquisition and V5 communication</text>
+<path d="M14 175 V143 Q14 135 22 135 H340 L354 175" fill="none" stroke="#ffffff" stroke-width="2.6"/>
+<rect x="14" y="175" width="352" height="520" rx="8" fill="none" stroke="#ffffff" stroke-width="2.6"/>
+<text x="26" y="165" font-size="26" font-weight="700">01  SENSOR HARDWARE</text>
+<rect x="32" y="200" width="316" height="156" rx="9" fill="none" stroke="#ffffff" stroke-width="1.6"/>
+<rect x="308" y="212" width="26" height="17" fill="none" stroke="#ffffff" stroke-width="1.3"/><rect x="303" y="215" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/><rect x="303" y="222" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/>
+<text x="54" y="246" font-size="27">I²C Sensors</text>
+<text x="54" y="296" font-size="27">Direct or via mux</text>
+<text x="54" y="330" font-size="27">Sensor registers</text>
+<rect x="32" y="450" width="316" height="190" rx="9" fill="none" stroke="#ffffff" stroke-width="1.6"/>
+<rect x="308" y="462" width="26" height="17" fill="none" stroke="#ffffff" stroke-width="1.3"/><rect x="303" y="465" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/><rect x="303" y="472" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/>
+<text x="54" y="496" font-size="27">Optional I²C Muxes</text>
+<text x="54" y="546" font-size="27">Channel selection</text>
+<text x="54" y="580" font-size="27">Shared bus expansion</text>
+<text x="54" y="614" font-size="27">I²C: SDA / SCL</text>
+<polyline points="190,356 190,450" fill="none" stroke="#ffffff" stroke-width="2.4"/>
+<text x="202" y="412" font-size="26">I²C</text>
+<rect x="380" y="135" width="1250" height="1000" fill="none" stroke="#ffffff" stroke-width="2.6"/>
+<polyline points="380,135 396,119 1646,119 1646,1119 1630,1135" fill="none" stroke="#ffffff" stroke-width="2.6"/>
+<line x1="1630" y1="135" x2="1646" y2="119" stroke="#ffffff" stroke-width="2.6"/>
+<text x="1005.0" y="186" font-size="28" font-weight="700" text-anchor="middle">02  ARC CONTROLLER  •  Seeed XIAO ESP32-S3</text>
+<path d="M398 250 V218 Q398 210 406 210 H784 L798 250" fill="none" stroke="#ffffff" stroke-width="2.6"/>
+<rect x="398" y="250" width="1214" height="865" rx="8" fill="none" stroke="#ffffff" stroke-width="2.6"/>
+<text x="410" y="240" font-size="26" font-weight="700">ESP-IDF / FreeRTOS firmware</text>
+<rect x="418" y="280" width="354" height="258" rx="9" fill="none" stroke="#ffffff" stroke-width="1.6"/>
+<rect x="732" y="292" width="26" height="17" fill="none" stroke="#ffffff" stroke-width="1.3"/><rect x="727" y="295" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/><rect x="727" y="302" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/>
+<text x="440" y="326" font-size="27">I2CBus&lt;N&gt;</text>
+<text x="440" y="376" font-size="27">Device registry</text>
+<text x="440" y="410" font-size="27">Mux selection</text>
+<text x="440" y="444" font-size="27">readRegister() /</text>
+<text x="440" y="478" font-size="27">writeRegister()</text>
+<text x="440" y="512" font-size="27">Error log per op</text>
+<rect x="870" y="280" width="335" height="292" rx="9" fill="none" stroke="#ffffff" stroke-width="1.6"/>
+<rect x="1165" y="292" width="26" height="17" fill="none" stroke="#ffffff" stroke-width="1.3"/><rect x="1160" y="295" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/><rect x="1160" y="302" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/>
+<text x="892" y="326" font-size="27">Sensor&lt;N&gt;</text>
+<text x="892" y="376" font-size="27">Task per sensor</text>
+<text x="892" y="410" font-size="27">Read func + callbacks</text>
+<text x="892" y="444" font-size="27">Cached readings</text>
+<text x="892" y="478" font-size="27">setSensorType()</text>
+<text x="892" y="512" font-size="27">appendOffset()</text>
+<text x="892" y="546" font-size="27">SensorOffsetConfig</text>
+<rect x="1265" y="280" width="327" height="224" rx="9" fill="none" stroke="#ffffff" stroke-width="1.6"/>
+<rect x="1552" y="292" width="26" height="17" fill="none" stroke="#ffffff" stroke-width="1.3"/><rect x="1547" y="295" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/><rect x="1547" y="302" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/>
+<text x="1287" y="326" font-size="27">RS485Comm</text>
+<text x="1287" y="376" font-size="27">Sensor ID registry</text>
+<text x="1287" y="410" font-size="27">Receive state machine</text>
+<text x="1287" y="444" font-size="27">Header / checksum</text>
+<text x="1287" y="478" font-size="27">6 packet types</text>
+<rect x="418" y="662" width="354" height="224" rx="9" fill="none" stroke="#ffffff" stroke-width="1.6"/>
+<rect x="732" y="674" width="26" height="17" fill="none" stroke="#ffffff" stroke-width="1.3"/><rect x="727" y="677" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/><rect x="727" y="684" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/>
+<text x="440" y="708" font-size="27">LockGuard + Bus Mutex</text>
+<text x="440" y="758" font-size="27">Guards mux selection</text>
+<text x="440" y="792" font-size="27">and sensor transfer</text>
+<text x="440" y="826" font-size="27">Lock passed to</text>
+<text x="440" y="860" font-size="27">register reads / writes</text>
+<rect x="418" y="930" width="354" height="156" rx="9" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-dasharray="10 7"/>
+<rect x="732" y="942" width="26" height="17" fill="none" stroke="#ffffff" stroke-width="1.3"/><rect x="727" y="945" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/><rect x="727" y="952" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/>
+<text x="440" y="976" font-size="27">SdLogger (optional)</text>
+<text x="440" y="1026" font-size="27">Off by default</text>
+<text x="440" y="1060" font-size="27">runtime.csv every 5 s</text>
+<rect x="870" y="662" width="335" height="258" rx="9" fill="none" stroke="#ffffff" stroke-width="1.6"/>
+<rect x="1165" y="674" width="26" height="17" fill="none" stroke="#ffffff" stroke-width="1.3"/><rect x="1160" y="677" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/><rect x="1160" y="684" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/>
+<text x="892" y="708" font-size="27">RS485InterfaceSensor</text>
+<text x="892" y="758" font-size="27">getID() / getName()</text>
+<text x="892" y="792" font-size="27">registerSensor()</text>
+<text x="892" y="826" font-size="27">getReadings()</text>
+<text x="892" y="860" font-size="27">setSensorType()</text>
+<text x="892" y="894" font-size="27">setOffsets() / reboot()</text>
+<rect x="1265" y="662" width="327" height="156" rx="9" fill="none" stroke="#ffffff" stroke-width="1.6"/>
+<rect x="1552" y="674" width="26" height="17" fill="none" stroke="#ffffff" stroke-width="1.3"/><rect x="1547" y="677" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/><rect x="1547" y="684" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/>
+<text x="1287" y="708" font-size="27">RS485PacketComp</text>
+<text x="1287" y="758" font-size="27">sendPkt()</text>
+<text x="1287" y="792" font-size="27">compileReadData()</text>
+<rect x="1265" y="880" width="327" height="224" rx="9" fill="none" stroke="#ffffff" stroke-width="1.6"/>
+<rect x="1552" y="892" width="26" height="17" fill="none" stroke="#ffffff" stroke-width="1.3"/><rect x="1547" y="895" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/><rect x="1547" y="902" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/>
+<text x="1287" y="926" font-size="27">RS485CommParser</text>
+<text x="1287" y="976" font-size="27">parseRead()</text>
+<text x="1287" y="1010" font-size="27">parseResetStart /</text>
+<text x="1287" y="1044" font-size="27">  Continue / End()</text>
+<text x="1287" y="1078" font-size="27">parseReboot()</text>
+<polyline points="348,520 418,520" fill="none" stroke="#ffffff" stroke-width="2.4"/>
+<polyline points="772,440 870,440" fill="none" stroke="#ffffff" stroke-width="2.4"/>
+<text x="821.0" y="392" font-size="26" text-anchor="middle">I²C</text>
+<text x="821.0" y="424" font-size="26" text-anchor="middle">access</text>
+<polyline points="1205,440 1265,440" fill="none" stroke="#ffffff" stroke-width="2.4"/>
+<polyline points="600,662 600.0,542.0" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="9 7"/>
+<polyline points="609.0,554.0 600,538 591.0,554.0" fill="none" stroke="#ffffff" stroke-width="2.4"/>
+<text x="588" y="625" font-size="26" text-anchor="end">guards</text>
+<polyline points="915,572 763.4591557864403,659.991457930454" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="9 7"/>
+<polyline points="769.3174034892829,646.182731202325 760,662 778.35584280224,661.7489322413068" fill="none" stroke="#ffffff" stroke-width="2.4"/>
+<text x="815" y="602" font-size="26" text-anchor="end">acquires</text>
+<polyline points="1030,572 1030.0,642.0" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="9 7"/>
+<polygon points="1030,662 1018.0,642.0 1042.0,642.0" fill="#000" stroke="#ffffff" stroke-width="2"/>
+<text x="1042" y="625" font-size="26">implements</text>
+<polyline points="1310,504 1172.6527476851265,659.0061847553571" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="9 7"/>
+<polyline points="1173.87490644006,644.056056729894 1170,662 1187.3470750409524,655.9934213129634" fill="none" stroke="#ffffff" stroke-width="2.4"/>
+<text x="1258" y="606" font-size="26">uses</text>
+<polyline points="1440,504 1440.0,658.0" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="9 7"/>
+<polyline points="1431.0,646.0 1440,662 1449.0,646.0" fill="none" stroke="#ffffff" stroke-width="2.4"/>
+<text x="1452" y="625" font-size="26">sendPkt()</text>
+<polyline points="1440,818 1440.0,876.0" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-dasharray="9 7"/>
+<polyline points="1431.0,864.0 1440,880 1449.0,864.0" fill="none" stroke="#ffffff" stroke-width="2.4"/>
+<text x="1452" y="858" font-size="26">dispatch</text>
+<path d="M1650 175 V143 Q1650 135 1658 135 H1936 L1950 175" fill="none" stroke="#ffffff" stroke-width="2.6"/>
+<rect x="1650" y="175" width="335" height="685" rx="8" fill="none" stroke="#ffffff" stroke-width="2.6"/>
+<text x="1662" y="165" font-size="26" font-weight="700">03  ROBOT INTERFACE</text>
+<rect x="1668" y="300" width="299" height="156" rx="9" fill="none" stroke="#ffffff" stroke-width="1.6"/>
+<rect x="1927" y="312" width="26" height="17" fill="none" stroke="#ffffff" stroke-width="1.3"/><rect x="1922" y="315" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/><rect x="1922" y="322" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/>
+<text x="1690" y="346" font-size="27">RS-485 Transceiver</text>
+<text x="1690" y="396" font-size="27">UART1: TX / RX / RTS</text>
+<text x="1690" y="430" font-size="27">Physical interface</text>
+<rect x="1668" y="600" width="299" height="224" rx="9" fill="none" stroke="#ffffff" stroke-width="1.6"/>
+<rect x="1927" y="612" width="26" height="17" fill="none" stroke="#ffffff" stroke-width="1.3"/><rect x="1922" y="615" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/><rect x="1922" y="622" width="10" height="4" fill="#000" stroke="#ffffff" stroke-width="1.3"/>
+<text x="1690" y="646" font-size="27">V5 Brain</text>
+<text x="1690" y="696" font-size="27">Requests: read /</text>
+<text x="1690" y="730" font-size="27">configuration /</text>
+<text x="1690" y="764" font-size="27">reboot</text>
+<text x="1690" y="798" font-size="27">Receives sensor data</text>
+<polyline points="1592,400 1668,400" fill="none" stroke="#ffffff" stroke-width="2.4"/>
+<polyline points="1800,456 1800,600" fill="none" stroke="#ffffff" stroke-width="2.4"/>
+<text x="1812" y="520" font-size="26">RS-485</text>
+<text x="1812" y="552" font-size="26">half-duplex</text>
+<rect x="150" y="1148" width="1700" height="48" rx="8" fill="none" stroke="#ffffff" stroke-width="1.6"/>
+<text x="1000.0" y="1181" font-size="26" text-anchor="middle"><tspan font-weight="700">Connection key</tspan>      Solid line: communication path   •   Dashed arrow: software dependency   •   Hollow triangle: interface implementation</text>
+<text x="1000.0" y="1232" font-size="26" text-anchor="middle" fill="#bdb9b1">Design view • Based on ARC source @ CPPDev 49d54a0 • End-to-end sensor integration not yet verified on hardware</text></g></svg>

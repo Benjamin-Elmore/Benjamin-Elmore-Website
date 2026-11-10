@@ -4,8 +4,16 @@ import SlideList from '../components/SlideList.jsx';
 import TypeLine from '../components/TypeLine.jsx';
 import ResumeLink, { HAS_RESUME } from '../components/ResumeLink.jsx';
 
+// Hover previews on Selected work (pointer devices only, see .work-row__preview in site.css).
+const ARC_PREVIEW = 'assets/arc-software-cppdev.svg';
+const TEAM_PREVIEW = 'assets/photos/cbu-team.jpg';
+// Set these once the photos exist in site/public/assets/photos/ (null = no preview).
+const INNOUT_PREVIEW = 'assets/photos/innout-san-marcos.jpg'; // CC BY-ND 2.0: shown unaltered, credited in Footer.jsx
+const LEGO_PREVIEW = 'assets/photos/legoland-entrance.jpg'; // CC BY 2.0, credited in Footer.jsx
+const Preview = ({ src }) => (src ? <span className="hover-preview" aria-hidden="true"><img src={BASE + src} alt="" loading="lazy" decoding="async" /></span> : null);
+
 // HOME-1: the intro line under the profile photo. It types out once per visit.
-const INTRO = 'Embedded C++ firmware for robotic systems. Machine learning in Python.';
+const INTRO = 'Computer science student. Software Engineer and Vice President of CBU Robotics, building ARC: C++ firmware that connects I²C sensors to the VEX V5 Brain over RS-485.';
 
 export default function Home() {
   return (
@@ -22,15 +30,15 @@ export default function Home() {
       <section id="work" className="section section--work" aria-labelledby="work-title">
         <h2 id="work-title" className="section__title"><span aria-hidden="true">01 / </span>Selected work</h2>
         <SlideList className="work-list">
-          <li><Link className="work-row" to="/ARC/"><span className="work-row__name">ARC</span> <span className="work-row__description">Embedded C++ sensor firmware (ESP32-S3, FreeRTOS, RS-485) for the CBU1 robotics team's custom sensor board.</span> <span className="work-row__arrow" aria-hidden="true">→</span></Link></li>
-          <li><Link className="work-row" to="/MarketTesting/"><span className="work-row__name">MarketTesting</span> <span className="work-row__description">Independent machine learning project: LSTM forecasting on historical equity data.</span> <span className="work-row__arrow" aria-hidden="true">→</span></Link></li>
+          <li><Link className="work-row" to="/ARC/"><span className="work-row__name">ARC</span> <span className="work-row__description">Embedded C++ firmware for the CBU1 robotics team's custom ESP32-S3 sensor board: FreeRTOS sensor tasks, a mutex-protected shared I²C bus and a bench-verified RS-485 protocol.</span> <span className="work-row__arrow" aria-hidden="true">→</span> <span className="hover-preview" aria-hidden="true"><img src={BASE + ARC_PREVIEW} alt="" loading="lazy" decoding="async" /></span></Link></li>
+          <li><Link className="work-row" to="/MarketTesting/"><span className="work-row__name">MarketTesting</span> <span className="work-row__description">Independent Python project: a data pipeline and LSTM training loop, packaged as an installable Python package with lint checks in CI.</span> <span className="work-row__arrow" aria-hidden="true">→</span> <span className="hover-preview" aria-hidden="true"><img src={BASE + 'assets/photos/markettesting-table.jpg'} alt="" width="1600" height="900" loading="lazy" decoding="async" /></span></Link></li>
         </SlideList>
       </section>
       <section id="experience" className="section section--experience" aria-labelledby="experience-title">
         <h2 id="experience-title" className="section__title"><span aria-hidden="true">02 / </span>Experience</h2>
         <SlideList className="exp-list">
           <li>
-            <Link className="exp-row__link" to="/CBU-Robotics/#software-engineer"><span className="exp-row__role">Software Engineer</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U Robotics</span> <span className="exp-row__dates">Since <time dateTime="2025-09">September 2025</time></span></Link>
+            <Link className="exp-row__link" to="/CBU-Robotics/#software-engineer"><span className="exp-row__role">Software Engineer</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U Robotics</span> <span className="exp-row__dates">Since <time dateTime="2025-09">September 2025</time></span><Preview src={ARC_PREVIEW} /></Link>
             {/* home-responsibilities */}
             <details className="exp-details">
               <summary>Responsibilities and projects</summary>
@@ -44,7 +52,7 @@ export default function Home() {
             {/* /home-responsibilities */}
           </li>
           <li>
-            <Link className="exp-row__link" to="/CBU-Robotics/#vice-president"><span className="exp-row__role">Vice President</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U Robotics</span> <span className="exp-row__dates">Since <time dateTime="2026-10">October 2026</time></span></Link>
+            <Link className="exp-row__link" to="/CBU-Robotics/#vice-president"><span className="exp-row__role">Vice President</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U Robotics</span> <span className="exp-row__dates">Since <time dateTime="2026-10">October 2026</time></span><Preview src={TEAM_PREVIEW} /></Link>
             <details className="exp-details">
               <summary>Responsibilities</summary>
               <ul className="role__points">
@@ -53,8 +61,8 @@ export default function Home() {
               </ul>
             </details>
           </li>
-          <li><Link className="exp-row__link" to="/In-N-Out/"><span className="exp-row__role">Associate</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">In-N-Out Burger</span> <span className="exp-row__dates">Since <time dateTime="2024-05">May 2024</time></span></Link></li>
-          <li><Link className="exp-row__link" to="/LEGOLAND/"><span className="exp-row__role">Seasonal Lifeguard</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">LEGOLAND California Resort</span> <span className="exp-row__dates"><time dateTime="2026-04">April</time> to <time dateTime="2026-08">August 2026</time></span></Link></li>
+          <li><Link className="exp-row__link" to="/In-N-Out/"><span className="exp-row__role">Associate</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">In-N-Out Burger</span> <span className="exp-row__dates">Since <time dateTime="2024-05">May 2024</time></span><Preview src={INNOUT_PREVIEW} /></Link></li>
+          <li><Link className="exp-row__link" to="/LEGOLAND/"><span className="exp-row__role">Seasonal Lifeguard</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">LEGOLAND California Resort</span> <span className="exp-row__dates"><time dateTime="2026-04">April</time> to <time dateTime="2026-08">August 2026</time></span><Preview src={LEGO_PREVIEW} /></Link></li>
         </SlideList>
       </section>
       <section id="skills" className="section section--skills" aria-labelledby="skills-title">
@@ -87,8 +95,10 @@ export default function Home() {
           <div className="skill-group">
             <h3 id="skills-tools" className="skill-group__title">Tools</h3>
             <ul className="tag-list">
-              <li className="tag">Git</li>
-              <li className="tag">Linux</li>
+              <li className="tag">Git/GitHub</li>
+              <li className="tag">GitHub Actions (CI)</li>
+              <li className="tag">Linux (Ubuntu/Debian)</li>
+              <li className="tag">Jira</li>
               <li className="tag">Arduino</li>
             </ul>
           </div>

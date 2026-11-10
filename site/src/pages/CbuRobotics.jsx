@@ -21,12 +21,12 @@ export default function CbuRobotics() {
         <div className="role-section" id="vice-president">
           <h3>Vice President</h3>
           <p className="meta">Since <time dateTime="2026-10">October 2026</time></p>
-          <p>Responsible for coordinating milestones across the discipline teams, supporting the planning of events and competitions, and, more recently, supporting the team's weekly Responsible Engineer updates. The role is approached as one of service to the team, which keeps the engineering work moving.</p>
+          <p>Responsible for coordinating milestones across the discipline teams, supporting the planning of events and competitions, and, more recently, supporting the team's weekly Responsible Engineer updates.</p>
           <ul>
             <li>Coordinate engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
             <li>Support planning of team events, competitions and the team's participation in the VEX U World Championship.</li>
           </ul>
-          <p><strong>Tools:</strong> Milestone planning, deadline tracking, cross-team communication, event and competition planning, Responsible Engineer reporting</p>
+          <p><strong>Focus areas:</strong> Milestone planning, deadline tracking, cross-team communication, event and competition planning, Responsible Engineer reporting</p>
         </div>
         <div className="role-section" id="software-engineer">
           <h3>Software Engineer</h3>

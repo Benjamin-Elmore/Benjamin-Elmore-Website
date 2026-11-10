@@ -99,7 +99,7 @@
   --font-mono: "Red Hat Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, monospace;
 
   /* In rem, not ch, so an element's own font (e.g. the mono footer) can't change the column width. */
-  --measure: 36.5rem;
+  --measure: 44rem;
   --page-max: 72rem;
   --tap: 44px; /* minimum tap-target height (WCAG 2.5.5) */
   --gutter: 16px;
@@ -1645,8 +1645,6 @@ time {
   font-size: 0.75rem;
   color: var(--cw-dim);
 }
-.code-window__dots { display: inline-flex; gap: 6px; flex: none; }
-.code-window__dots span { width: 10px; height: 10px; border-radius: 50%; background: #4a4a4a; }
 .code-window__title { flex: 1; min-width: 0; color: var(--cw-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .code-window__lang {
   flex: none;
@@ -1683,7 +1681,7 @@ time {
   padding-left: var(--space-3);
   box-sizing: content-box;
   text-align: right;
-  color: #5f5d58;
+  color: #858279;
   user-select: none;
 }
 /* Monochrome theme to match the site: grays plus one steel-blue accent for keywords. */
@@ -1693,3 +1691,54 @@ time {
 .tok-func { color: #e8e4dc; }
 .tok-string { color: #c9c2b4; }
 .tok-number { color: #b8c7d6; }
+
+/* Code windows break out of the text column: up to 60rem, centered, never wider than the viewport. */
+.case-study .code-window {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(60rem, calc(100vw - 2 * var(--gutter)));
+  max-width: none;
+}
+.photo-slot--text:has(.code-window) { max-width: var(--measure); }
+@media (max-width: 30em) {
+  .code-window__title { white-space: normal; overflow-wrap: anywhere; }
+  .code-window__bar { align-items: flex-start; }
+}
+.page-header__meta { text-wrap: balance; }
+
+/* Hover previews (Home: Selected work and Experience rows): a floating card above the row. Pointer devices only. */
+.hover-preview { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .work-row, .exp-row__link { position: relative; }
+  .hover-preview {
+    display: block;
+    position: absolute;
+    z-index: 5;
+    right: 5.5rem;
+    bottom: calc(100% - 0.75rem);
+    width: min(26rem, 45vw);
+    padding: var(--space-2);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+  .exp-row__link .hover-preview { right: 3rem; width: min(22rem, 40vw); }
+  .hover-preview img { display: block; width: 100%; height: auto; border-radius: 3px; }
+  .work-row:hover .hover-preview, .work-row:focus-visible .hover-preview,
+  .exp-row__link:hover .hover-preview, .exp-row__link:focus-visible .hover-preview { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hover-preview { transition: none; transform: none; }
+}
+
+.site-footer .site-footer__credit {
+  flex-basis: 100%;
+  text-transform: none;
+  font-size: 0.6875rem;
+}

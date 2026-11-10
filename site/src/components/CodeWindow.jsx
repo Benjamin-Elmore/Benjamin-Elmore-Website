@@ -42,7 +42,6 @@ export default function CodeWindow({ title, language, children, label }) {
   return (
     <div className="code-window">
       <div className="code-window__bar">
-        <span className="code-window__dots" aria-hidden="true"><span /><span /><span /></span>
         <span className="code-window__title">{title}</span>
         <span className="code-window__lang">{language}</span>
       </div>
