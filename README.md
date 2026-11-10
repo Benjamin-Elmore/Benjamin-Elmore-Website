@@ -2,7 +2,7 @@
 
 React (Vite + React Router) pre-rendered to static HTML. Source is in `site/`; the build output is `docs/`, committed, and is what GitHub Pages serves (`main` `/docs`). Live at https://benjamin-elmore.github.io/Benjamin-Elmore-Website/.
 
-Pages (routes): `/`, `/ARC/`, `/MarketTesting/`, `/CBU-Robotics/`, `/In-N-Out/`, `/LEGOLAND/`, `/About/`, plus `404.html`. Page content is in `site/src/pages/`; shared styles and the theme script are in `site/public/assets/`.
+Pages (routes): `/`, `/ARC/`, `/MarketTesting/`, `/CBU-Robotics/`, `/In-N-Out/`, `/LEGOLAND/`, `/About/`, `/Notes/` (index plus three notes), plus `404.html`. Page content is in `site/src/pages/`; shared styles and the theme script are in `site/public/assets/`.
 
 Run it:
 - Dev server: `cd site && npm ci && npm run dev`

@@ -7,6 +7,7 @@ export default function Header() {
   const { pathname } = useLocation();
   const home = pathname === '/';
   const aboutPage = pathname === '/About/' || pathname === '/About';
+  const notesPage = /^\/Notes(\/|$)/.test(pathname);
   const frag = (id) => (home ? <a href={`#${id}`}>{LABELS[id]}</a> : <Link to={`/#${id}`}>{LABELS[id]}</Link>);
   return (
     <header className="site-header">
@@ -18,6 +19,7 @@ export default function Header() {
           <li>{frag('work')}</li>
           <li>{frag('experience')}</li>
           <li>{aboutPage ? <Link to="/About/" aria-current="page">About</Link> : frag('about')}</li>
+          <li><Link to="/Notes/" {...(notesPage ? { 'aria-current': 'page' } : {})}>Notes</Link></li>
           <li>{frag('contact')}</li>
           {HAS_RESUME && <li><ResumeLink /></li>}
         </ul>
