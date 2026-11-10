@@ -10,6 +10,17 @@ const INTRO = 'I write embedded C++ for robots. Now building ARC: FreeRTOS firmw
 // Subset of the Technical skills section below.
 const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'TensorFlow', 'Linux', 'Git'];
 
+// Hover backgrounds on the Selected work and Experience rows (pointer devices only, see "Hover backgrounds" in
+// site.css): the row image fills the row behind its text, blurred and dimmed. label = small credit line;
+// veil = overlay opacity, measured per image so muted text stays at 4.5:1 or better.
+const ARC_PREVIEW = { src: 'assets/photos/arc-i2cbus-code.jpg', label: 'ARC lib/i2cComm/I2CBus.h · CPPDev 49d54a0', veil: 0.1 };
+const MT_PREVIEW = { src: 'assets/photos/markettesting-code.jpg', label: 'MarketTesting stock_model.py · main 79f6e12', veil: 0.1 };
+const CODE_PREVIEW = { src: 'assets/photos/arc-lockguard-code.jpg', label: 'ARC lib/LockGuard.h · CPPDev 49d54a0', veil: 0.1 };
+const TEAM_PREVIEW = { src: 'assets/photos/cbu-team.jpg', label: 'CBU1 team · VEX Robotics World Championship', veil: 0.37 };
+const INNOUT_PREVIEW = { src: 'assets/photos/innout-las-vegas.jpg', label: 'Photo: Wendy Berry · CC BY 2.0', veil: 0.67 }; // credited in Footer.jsx too
+const LEGO_PREVIEW = { src: 'assets/photos/legoland-entrance.jpg', label: 'Photo: Simon_sees · CC BY 2.0', veil: 0.57 }; // credited in Footer.jsx too
+const Preview = ({ src, label, veil }) => <span className="hover-preview" data-label={label} style={{ '--veil': veil }} aria-hidden="true"><img src={BASE + src} alt="" loading="lazy" decoding="async" /></span>;
+
 export default function Home() {
   return (
     <>
@@ -28,15 +39,15 @@ export default function Home() {
       <section id="work" className="section section--work" aria-labelledby="work-title">
         <h2 id="work-title" className="section__title"><span aria-hidden="true">01 / </span>Selected work</h2>
         <SlideList className="work-list">
-          <li><Link className="work-row" to="/ARC/"><span className="work-row__name">ARC</span> <span className="work-row__description">Embedded C++ firmware for the custom ESP32-S3 sensor board of the CBU1 robotics team: FreeRTOS sensor tasks, a mutex-protected shared I²C bus and a bench-verified RS-485 protocol.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/arc-software-cppdev.svg'} width="96" height="60" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>115200 baud RS-485</span> <span>Up to 15 sensor IDs</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span></Link></li>
-          <li><Link className="work-row" to="/MarketTesting/"><span className="work-row__name">MarketTesting</span> <span className="work-row__description">Independent Python project: a data pipeline and LSTM training loop, packaged as an installable Python package with lint checks in CI.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/photos/markettesting-table.jpg'} width="96" height="54" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>100-day windows</span> <span>12-stock run, Nov 8, 2026</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span></Link></li>
+          <li><Link className="work-row" to="/ARC/"><span className="work-row__name">ARC</span> <span className="work-row__description">Embedded C++ firmware for the custom ESP32-S3 sensor board of the CBU1 robotics team: FreeRTOS sensor tasks, a mutex-protected shared I²C bus and a bench-verified RS-485 protocol.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/arc-software-cppdev.svg'} width="96" height="60" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>115200 baud RS-485</span> <span>Up to 15 sensor IDs</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span> <Preview {...ARC_PREVIEW} /></Link></li>
+          <li><Link className="work-row" to="/MarketTesting/"><span className="work-row__name">MarketTesting</span> <span className="work-row__description">Independent Python project: a data pipeline and LSTM training loop, packaged as an installable Python package with lint checks in CI.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/photos/markettesting-table.jpg'} width="96" height="54" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>100-day windows</span> <span>12-stock run, Nov 8, 2026</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span> <Preview {...MT_PREVIEW} /></Link></li>
         </SlideList>
       </section>
       <section id="experience" className="section section--experience" aria-labelledby="experience-title">
         <h2 id="experience-title" className="section__title"><span aria-hidden="true">02 / </span>Experience</h2>
         <SlideList className="exp-list">
           <li>
-            <Link className="exp-row__link" to="/CBU-Robotics/#software-engineer"><span className="exp-row__role">Software Engineer</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U Robotics</span> <span className="exp-row__dates">Since <time dateTime="2025-09">September 2025</time></span></Link>
+            <Link className="exp-row__link" to="/CBU-Robotics/#software-engineer"><span className="exp-row__role">Software Engineer</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U Robotics</span> <span className="exp-row__dates">Since <time dateTime="2025-09">September 2025</time></span> <Preview {...CODE_PREVIEW} /></Link>
             {/* home-responsibilities */}
             <details className="exp-details">
               <summary>Responsibilities and projects</summary>
@@ -50,7 +61,7 @@ export default function Home() {
             {/* /home-responsibilities */}
           </li>
           <li>
-            <Link className="exp-row__link" to="/CBU-Robotics/#vice-president"><span className="exp-row__role">Vice President</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U Robotics</span> <span className="exp-row__dates">Since <time dateTime="2026-10">October 2026</time></span></Link>
+            <Link className="exp-row__link" to="/CBU-Robotics/#vice-president"><span className="exp-row__role">Vice President</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U Robotics</span> <span className="exp-row__dates">Since <time dateTime="2026-10">October 2026</time></span> <Preview {...TEAM_PREVIEW} /></Link>
             <details className="exp-details">
               <summary>Responsibilities</summary>
               <ul className="role__points">
@@ -59,8 +70,8 @@ export default function Home() {
               </ul>
             </details>
           </li>
-          <li><Link className="exp-row__link" to="/In-N-Out/"><span className="exp-row__role">Associate</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">In-N-Out Burger</span> <span className="exp-row__dates">Since <time dateTime="2024-05">May 2024</time></span></Link></li>
-          <li><Link className="exp-row__link" to="/LEGOLAND/"><span className="exp-row__role">Seasonal Lifeguard</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">LEGOLAND California Resort</span> <span className="exp-row__dates"><time dateTime="2026-04">April</time> to <time dateTime="2026-08">August 2026</time></span></Link></li>
+          <li><Link className="exp-row__link" to="/In-N-Out/"><span className="exp-row__role">Associate</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">In-N-Out Burger</span> <span className="exp-row__dates">Since <time dateTime="2024-05">May 2024</time></span> <Preview {...INNOUT_PREVIEW} /></Link></li>
+          <li><Link className="exp-row__link" to="/LEGOLAND/"><span className="exp-row__role">Seasonal Lifeguard</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">LEGOLAND California Resort</span> <span className="exp-row__dates"><time dateTime="2026-04">April</time> to <time dateTime="2026-08">August 2026</time></span> <Preview {...LEGO_PREVIEW} /></Link></li>
         </SlideList>
       </section>
       <section id="skills" className="section section--skills" aria-labelledby="skills-title">
