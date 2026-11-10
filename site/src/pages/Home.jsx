@@ -5,13 +5,13 @@ import TypeLine from '../components/TypeLine.jsx';
 import ResumeLink, { HAS_RESUME } from '../components/ResumeLink.jsx';
 
 // HOME-1: the intro line under the profile photo. It types out once per visit.
-const INTRO = 'I write embedded C++ for robots and build machine learning models in Python.';
+const INTRO = 'Embedded C++ firmware for robotic systems. Machine learning in Python.';
 
 export default function Home() {
   return (
     <>
       <section id="top" className="section section--intro" aria-labelledby="intro-title">
-        <p className="intro__role">Software Engineer <span aria-hidden="true">/</span> Computer science student</p>
+        <p className="intro__role">Software Engineer <span aria-hidden="true">/</span> Computer Science Student</p>
         <h1 id="intro-title" className="visually-hidden">Benjamin Elmore</h1>
         <figure className="photo-slot intro__photo" id="profile">
           {/* Profile photo: an 800px square crop of Ben's Profile.jpg, metadata stripped. */}
@@ -22,8 +22,8 @@ export default function Home() {
       <section id="work" className="section section--work" aria-labelledby="work-title">
         <h2 id="work-title" className="section__title"><span aria-hidden="true">01 / </span>Selected work</h2>
         <SlideList className="work-list">
-          <li><Link className="work-row" to="/ARC/"><span className="work-row__name">ARC</span> <span className="work-row__description">Sensor firmware for my robotics team's custom ESP32-S3 board.</span> <span className="work-row__arrow" aria-hidden="true">→</span></Link></li>
-          <li><Link className="work-row" to="/MarketTesting/"><span className="work-row__name">MarketTesting</span> <span className="work-row__description">A solo machine learning project that trains an LSTM on real stock data.</span> <span className="work-row__arrow" aria-hidden="true">→</span></Link></li>
+          <li><Link className="work-row" to="/ARC/"><span className="work-row__name">ARC</span> <span className="work-row__description">Embedded C++ sensor firmware (ESP32-S3, FreeRTOS, RS-485) for the CBU1 robotics team's custom sensor board.</span> <span className="work-row__arrow" aria-hidden="true">→</span></Link></li>
+          <li><Link className="work-row" to="/MarketTesting/"><span className="work-row__name">MarketTesting</span> <span className="work-row__description">Independent machine learning project: LSTM forecasting on historical equity data.</span> <span className="work-row__arrow" aria-hidden="true">→</span></Link></li>
         </SlideList>
       </section>
       <section id="experience" className="section section--experience" aria-labelledby="experience-title">
@@ -35,10 +35,10 @@ export default function Home() {
             <details className="exp-details">
               <summary>Responsibilities and projects</summary>
               <ul className="role__points">
-                <li>Wrote drivetrain control and point-to-point navigation in C++ on PROS, using PID.</li>
-                <li>Develop ARC, the C++ sensor firmware for the team's custom ESP32-S3 board, with ESP-IDF and FreeRTOS.</li>
-                <li>Built the RS-485 protocol for sending sensor readings to the VEX V5 Brain.</li>
-                <li>More detail is on the <Link to="/CBU-Robotics/">CBU Robotics page</Link>.</li>
+                <li>Developed driver controls, a PID function and point-to-point navigation in C++ on PROS.</li>
+                <li>Develop ARC, the team's C++ sensor firmware for a custom ESP32-S3 board, built on ESP-IDF and FreeRTOS.</li>
+                <li>Implemented the RS-485 protocol designed to carry sensor readings to the VEX V5 Brain.</li>
+                <li>Full detail on the <Link to="/CBU-Robotics/">CBU Robotics page</Link>.</li>
               </ul>
             </details>
             {/* /home-responsibilities */}
@@ -48,8 +48,8 @@ export default function Home() {
             <details className="exp-details">
               <summary>Responsibilities</summary>
               <ul className="role__points">
-                <li>Coordinate engineering milestones across the build, electronics and software teams and help engineers meet deadlines.</li>
-                <li>Help plan team events, competitions and our participation in VEX U Worlds.</li>
+                <li>Coordinate engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
+                <li>Support planning of team events, competitions and the team's participation in the VEX U World Championship.</li>
               </ul>
             </details>
           </li>
@@ -96,8 +96,8 @@ export default function Home() {
       </section>
       <section id="about" className="section section--num" aria-labelledby="about-title">
         <h2 id="about-title" className="section__title"><span aria-hidden="true">04 / </span>About</h2>
-        <p className="section__lede">I'm a computer science student at California Baptist University, Class of 2029, who likes software that runs on real hardware.</p>
-        <p className="about__link"><Link to="/About/">Read my bio →</Link></p>
+        <p className="section__lede">I am a computer science student at California Baptist University (Class of 2029), focused on embedded systems and software that interfaces directly with physical hardware.</p>
+        <p className="about__link"><Link to="/About/">Read my full bio →</Link></p>
       </section>
       <section id="education" className="section section--num" aria-labelledby="education-title">
         <h2 id="education-title" className="section__title"><span aria-hidden="true">05 / </span>Education</h2>
@@ -109,7 +109,7 @@ export default function Home() {
       </section>
       <section id="contact" className="section section--num" aria-labelledby="contact-title">
         <h2 id="contact-title" className="section__title"><span aria-hidden="true">06 / </span>Contact</h2>
-        <p className="section__lede">The best way to reach me is email or LinkedIn.</p>
+        <p className="section__lede">For inquiries, email or LinkedIn is preferred.</p>
         <p className="contact__email">Email: <a href="mailto:benelmore6@gmail.com">benelmore6@gmail.com</a></p>
         <ul className="link-list contact__links">
           <li><a href="https://www.linkedin.com/in/benjamin-n-elmore/" rel="noopener">LinkedIn</a></li>

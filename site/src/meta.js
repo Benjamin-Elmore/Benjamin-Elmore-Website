@@ -1,16 +1,16 @@
 export const META = {
   home: {
-    title: 'Benjamin Elmore | Embedded software',
-    description: 'Benjamin Elmore, computer science student and software engineer, contributing C++ firmware for a board designed to link sensors to a VEX V5 robot.',
-    ogDescription: 'Computer science student and software engineer, contributing C++ firmware for a board designed to link sensors to a VEX V5 robot.',
+    title: 'Benjamin Elmore | Software Engineer',
+    description: 'Benjamin Elmore, software engineer and computer science student focused on embedded software. C++ firmware on ESP32-S3 and FreeRTOS, RS-485 communication, and machine learning in Python.',
+    ogDescription: 'Software engineer and computer science student focused on embedded software. C++ firmware on ESP32-S3 and FreeRTOS, RS-485 communication, and machine learning in Python.',
   },
   arc: {
     title: 'ARC firmware for ARSENAL | Benjamin Elmore',
-    description: 'Case study: ARC, C++ sensor firmware for a custom ESP32-S3 board designed to connect external sensors to a VEX V5 Brain. Role, data path and how to write a sensor instance.',
+    description: 'Case study: ARC, C++ sensor firmware for a custom ESP32-S3 board designed to connect external sensors to a VEX V5 Brain. Role, data path and sensor integration.',
   },
   marketTesting: {
     title: 'MarketTesting | Benjamin Elmore',
-    description: 'MarketTesting: an independent Python learning project that builds a data pipeline from CSV or yfinance data to a TensorFlow LSTM and a prediction table.',
+    description: 'MarketTesting: an independent machine learning project with a data pipeline from CSV or yfinance data to a TensorFlow LSTM and a prediction table.',
   },
   cbuRobotics: {
     title: 'CBU1 VEX U Robotics | Benjamin Elmore',
@@ -26,7 +26,7 @@ export const META = {
   },
   about: {
     title: 'About | Benjamin Elmore',
-    description: 'Benjamin Elmore is a computer science student at California Baptist University focused on embedded software for robots.',
+    description: 'Benjamin Elmore is a computer science student at California Baptist University focused on embedded systems and machine learning software.',
   },
   notFound: {
     title: 'Page not found | Benjamin Elmore',

@@ -1343,7 +1343,7 @@ main {
   font-size: 0.875rem;
 }
 
-.photo-slot--text pre {
+.photo-slot--text > pre {
   margin: 0;
   padding: var(--space-4);
   overflow-x: auto;
@@ -1620,3 +1620,76 @@ time {
   font-weight: 700;
   letter-spacing: 0.01em;
 }
+
+
+/* ---------- Code windows (CodeWindow.jsx) ---------- */
+.code-window {
+  --cw-bg: #0d0d0d;
+  --cw-bar: #161616;
+  --cw-text: #e6e6e6;
+  --cw-dim: #bdb9b1;
+  margin: var(--space-5) 0;
+  background: var(--cw-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.code-window__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--cw-bar);
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--cw-dim);
+}
+.code-window__dots { display: inline-flex; gap: 6px; flex: none; }
+.code-window__dots span { width: 10px; height: 10px; border-radius: 50%; background: #4a4a4a; }
+.code-window__title { flex: 1; min-width: 0; color: var(--cw-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.code-window__lang {
+  flex: none;
+  padding: 0.1em 0.6em;
+  border: 1px solid #4a4a4a;
+  border-radius: 999px;
+  color: var(--cw-text);
+}
+.code-window__body {
+  margin: 0;
+  padding: var(--space-3) 0;
+  overflow-x: auto;
+  background: transparent;
+  border: 0;
+  color: var(--cw-text);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+.code-window__body code {
+  display: block;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  font-size: inherit;
+  overflow-wrap: normal;
+  white-space: pre;
+}
+.code-line { display: block; padding-right: var(--space-4); }
+.code-line__no {
+  display: inline-block;
+  width: 3ch;
+  margin-right: var(--space-4);
+  padding-left: var(--space-3);
+  box-sizing: content-box;
+  text-align: right;
+  color: #5f5d58;
+  user-select: none;
+}
+/* Monochrome theme to match the site: grays plus one steel-blue accent for keywords. */
+.tok-comment { color: #8a8780; font-style: italic; }
+.tok-keyword { color: #9db8d4; }
+.tok-type { color: #ffffff; font-weight: 600; }
+.tok-func { color: #e8e4dc; }
+.tok-string { color: #c9c2b4; }
+.tok-number { color: #b8c7d6; }
