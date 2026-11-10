@@ -108,19 +108,11 @@ export default function Home() {
       </section>
       <section id="about" className="section section--num" aria-labelledby="about-title">
         <h2 id="about-title" className="section__title"><span aria-hidden="true">04 / </span>About</h2>
-        <p className="section__lede">I am a computer science student at California Baptist University (Class of 2029), focused on embedded systems and software that interfaces directly with physical hardware.</p>
-        <p className="about__link"><Link to="/About/">Read my full bio →</Link></p>
-      </section>
-      <section id="education" className="section section--num" aria-labelledby="education-title">
-        <h2 id="education-title" className="section__title"><span aria-hidden="true">05 / </span>Education</h2>
-        <div className="edu">
-          <h3 className="edu__school">California Baptist University</h3>
-          <p className="edu__degree">B.S. Computer Science, Machine Learning and Artificial Intelligence concentration</p>
-          <p className="meta">Expected <time dateTime="2029-05">May 2029</time></p>
-        </div>
+        <p className="section__lede">I am a computer science student at California Baptist University (B.S., Machine Learning and Artificial Intelligence concentration, expected May 2029), focused on embedded systems and software that interfaces directly with physical hardware.</p>
+        <p className="about__link"><Link to="/About/">Read my full bio and education →</Link></p>
       </section>
       <section id="contact" className="section section--num" aria-labelledby="contact-title">
-        <h2 id="contact-title" className="section__title"><span aria-hidden="true">06 / </span>Contact</h2>
+        <h2 id="contact-title" className="section__title"><span aria-hidden="true">05 / </span>Contact</h2>
         <p className="section__lede">For inquiries, email or LinkedIn is preferred.</p>
         <p className="contact__email">Email: <a href="mailto:benelmore6@gmail.com" data-umami-event="email-click">benelmore6@gmail.com</a></p>
         <ul className="link-list contact__links">
