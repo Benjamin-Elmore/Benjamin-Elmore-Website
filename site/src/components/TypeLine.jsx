@@ -5,10 +5,11 @@ import { useEffect, useState } from 'react';
 // The full text is in the served HTML and stays readable to screen readers: it is only made
 // transparent while the typed copy runs over it, so nothing shifts. Skipped for reduced motion.
 const KEY = 'typed-intro';
-const START_MS = 600; // caret blinks before the first letter
-const END_MS = 1800; // caret blinks after the last letter, then the overlay goes
+const START_MS = 400; // caret blinks before the first letter
+const END_MS = 1200; // caret blinks after the last letter, then the overlay goes
+const SPEED = 0.5; // scales every gap below: 0.5 types about twice as fast as the original timing
 
-const rand = (lo, hi) => lo + Math.random() * (hi - lo);
+const rand = (lo, hi) => SPEED * (lo + Math.random() * (hi - lo));
 
 function delayAfter(ch, next) {
   if (/[.!?]/.test(ch)) return rand(320, 520);
@@ -40,7 +41,7 @@ export default function TypeLine({ className, text }) {
       }
       const d = delayAfter(text[i - 1], text[i]);
       // The caret only blinks during real pauses; while letters flow it stays solid.
-      setIdle(d > 250);
+      setIdle(d > 250 * SPEED);
       timer = setTimeout(tick, d);
     };
     timer = setTimeout(() => { setIdle(false); tick(); }, START_MS);

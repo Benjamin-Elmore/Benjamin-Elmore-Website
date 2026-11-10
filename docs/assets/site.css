@@ -1332,6 +1332,17 @@ main {
   height: auto;
 }
 
+/* A white-background diagram on the black page: rounded like the other figures, with a link to the full-size file for phones. */
+.photo-slot--diagram img {
+  border-radius: var(--radius);
+}
+
+.photo-slot__link {
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
 .photo-slot--text pre {
   margin: 0;
   padding: var(--space-4);

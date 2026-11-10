@@ -4,7 +4,7 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 // The résumé link is built in only when the PDF is in site/public/assets/.
-const HAS_RESUME = existsSync(fileURLToPath(new URL('./public/assets/resume.pdf', import.meta.url)));
+const HAS_RESUME = existsSync(fileURLToPath(new URL('./public/assets/Benjamin_Elmore_Resume.pdf', import.meta.url)));
 
 export default defineConfig(({ isSsrBuild, isPreview }) => ({
   base: '/Benjamin-Elmore-Website/',

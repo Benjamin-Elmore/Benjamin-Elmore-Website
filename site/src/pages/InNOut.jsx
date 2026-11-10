@@ -8,7 +8,7 @@ export default function InNOut() {
         <p className="eyebrow">Experience</p>
         <h1>In-N-Out Burger</h1>
         <p className="page-header__meta">Associate · Since May 2024</p>
-        <p className="page-header__summary">[INO-1] Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p className="page-header__summary">I've worked at In-N-Out since May 2024, helping customers with their requests and working with coworkers to get store-wide tasks done during busy shifts.</p>
       </div>
     </>
   );
