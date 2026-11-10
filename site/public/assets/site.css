@@ -1955,3 +1955,7 @@ figcaption.figure__caption::before {
   border-top: 1px solid var(--color-border);
   font-family: var(--font-mono);
 }
+
+/* Footer: source link, last-updated stamp and theme toggle. */
+.site-footer__links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); }
+.site-footer__links a { display: inline-flex; align-items: center; min-height: var(--tap); }
