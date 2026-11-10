@@ -1740,5 +1740,18 @@ time {
 .site-footer .site-footer__credit {
   flex-basis: 100%;
   text-transform: none;
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
+}
+
+/* Readability pass: the ARC diagram breaks out of the text column like the code windows; smaller hover cards. */
+.case-study .photo-slot--diagram img {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(60rem, calc(100vw - 2 * var(--gutter)));
+  max-width: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .hover-preview { width: min(20rem, 34vw); }
+  .exp-row__link .hover-preview { width: min(16rem, 30vw); }
 }
