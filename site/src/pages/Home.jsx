@@ -122,10 +122,10 @@ export default function Home() {
       <section id="contact" className="section section--num" aria-labelledby="contact-title">
         <h2 id="contact-title" className="section__title"><span aria-hidden="true">06 / </span>Contact</h2>
         <p className="section__lede">For inquiries, email or LinkedIn is preferred.</p>
-        <p className="contact__email">Email: <a href="mailto:benelmore6@gmail.com">benelmore6@gmail.com</a></p>
+        <p className="contact__email">Email: <a href="mailto:benelmore6@gmail.com" data-umami-event="email-click">benelmore6@gmail.com</a></p>
         <ul className="link-list contact__links">
-          <li><a href="https://www.linkedin.com/in/benjamin-n-elmore/" rel="noopener">LinkedIn</a></li>
-          <li><a href="https://github.com/Benjamin-Elmore" rel="noopener">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/benjamin-n-elmore/" rel="noopener" data-umami-event="linkedin-click">LinkedIn</a></li>
+          <li><a href="https://github.com/Benjamin-Elmore" rel="noopener" data-umami-event="github-click">GitHub</a></li>
           {HAS_RESUME && <li><ResumeLink>Résumé (PDF)</ResumeLink></li>}
         </ul>
       </section>

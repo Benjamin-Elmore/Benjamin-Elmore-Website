@@ -45,7 +45,7 @@ export default function MarketTesting() {
           <img src={BASE + 'assets/photos/markettesting-terminal.jpg'} width="1600" height="900" alt="Terminal output from a MarketTesting training run, training one ticker at a time with per-epoch loss, early stopping for MSFT and NVDA skipped." loading="lazy" decoding="async" />
           <figcaption className="figure__caption">Per-ticker training. Early stopping terminates MSFT after four epochs once validation loss plateaus; NVDA is excluded because its scaled prices fall outside the model's range.</figcaption>
         </figure>
-        <p className="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener">Benjamin-Elmore/MarketTesting on GitHub</a>. Described at <code>main</code> 79f6e12.</p>
+        <p className="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener" data-umami-event="repo-markettesting">Benjamin-Elmore/MarketTesting on GitHub</a>. Described at <code>main</code> 79f6e12.</p>
       </section>
     </>
   );
