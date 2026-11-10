@@ -45,6 +45,24 @@ export default function CbuRobotics() {
           </ul>
           <p><strong>Tools:</strong> C++, PROS, ESP-IDF, FreeRTOS, PlatformIO, ESP32-S3, I²C, UART, RS-485, Git</p>
         </div>
+        <h2 id="drivetrain-title" className="section__title"><span aria-hidden="true">02 / </span>Drivetrain control and point-to-point navigation (fall 2025)</h2>
+        <div className="case-study__block" id="drivetrain">
+          <h3>Role</h3>
+          <p>Software engineer on CBU1 VEX U. I made 14 commits to the team's HamburgerTesting repository between September 16 and October 28, 2025, and 2 commits to a second drivetrain repository. Both repositories include imported PROS scaffolding, which is not my work.</p>
+          <h3>Problem</h3>
+          <p>Drive the robot base from a controller, and move it to a target point using odometry, by issuing left, right and strafe motor commands. Autonomous path following was unfinished.</p>
+          <h3>Approach</h3>
+          <ul>
+            <li>A driver-controls module and joystick drivetrain control, with the controller and motor groups configured in one header.</li>
+            <li>A PID function, added in one commit.</li>
+            <li>Point navigation using proportional control: it reads odometry, rotates the target error into the robot frame, computes proportional x, y and heading commands, and maps them to left, right and strafe motors. Later commits fixed a target-angle unit issue and a bug in a second spline.</li>
+            <li>An exploration of Pure Pursuit path following with a temporary linear spline search.</li>
+          </ul>
+          <h3>Results</h3>
+          <p>Implemented; no on-robot test recorded.</p>
+          <h3>What's next</h3>
+          <p>Spline generation and odometry integration were still open when the team's focus moved to ARC.</p>
+        </div>
         <p className="next-project"><Link to="/ARC/">Next project: ARC →</Link></p>
       </section>
     </>
