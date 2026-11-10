@@ -14,7 +14,7 @@ export const META = {
   },
   cbuRobotics: {
     title: 'CBU1 VEX U Robotics | Benjamin Elmore',
-    description: 'Benjamin Elmore’s roles on the CBU1 VEX U Robotics team at California Baptist University: Software Engineer since September 2025 and Vice President since October 2026.',
+    description: 'The roles of Benjamin Elmore on the CBU1 VEX U Robotics team at California Baptist University: Software Engineer since September 2025 and Vice President since October 2026.',
   },
   inNOut: {
     title: 'In-N-Out Burger | Benjamin Elmore',
@@ -38,14 +38,14 @@ export const META = {
   },
   noteRs485: {
     title: 'Bringing up a half-duplex RS-485 link on the ESP32-S3 | Benjamin Elmore',
-    description: 'Testing ARC’s RS-485 receiver on the bench with a PROS packet sender, and what the ESP32-S3 serial monitor showed. Isolated bench test only.',
+    description: 'Testing the ARC RS-485 receiver on the bench with a PROS packet sender, and what the ESP32-S3 serial monitor showed. Isolated bench test only.',
   },
   noteFalseFlag: {
     title: 'What a false status flag on the bench capture meant | Benjamin Elmore',
-    description: 'A bench capture where ARC’s _validPacket flag read false although the RS-485 packet parsed correctly, and why. Isolated bench test only.',
+    description: 'A bench capture where the ARC _validPacket flag read false although the RS-485 packet parsed correctly, and why. Isolated bench test only.',
   },
   notFound: {
     title: 'Page not found | Benjamin Elmore',
-    description: 'There’s no page at this address. Go to Benjamin Elmore’s portfolio home or one of the project pages.',
+    description: 'There’s no page at this address. Go to the portfolio home for Benjamin Elmore or one of the project pages.',
   },
 };

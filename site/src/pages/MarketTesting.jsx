@@ -20,7 +20,7 @@ export default function MarketTesting() {
         <h2 id="mt-title" className="section__title"><span aria-hidden="true">01 / </span>Project</h2>
         <div className="case-study__block" id="mt-what">
           <h3>What it is</h3>
-          <p>MarketTesting downloads daily price history for NASDAQ stocks with yfinance, or reads it from a CSV, segments it into 100-day windows, and trains a two-layer LSTM in TensorFlow to predict the next day's open, high, low, close and volume. As a learning project, it makes no claims of predictive accuracy.</p>
+          <p>MarketTesting downloads daily price history for NASDAQ stocks with yfinance, or reads it from a CSV, segments it into 100-day windows, and trains a two-layer LSTM in TensorFlow to predict the open, high, low, close and volume for the next day. As a learning project, it makes no claims of predictive accuracy.</p>
         </div>
         <div className="case-study__block" id="mt-built">
           <h3>Main pieces</h3>
@@ -43,7 +43,7 @@ export default function MarketTesting() {
         </figure>
         <figure className="photo-slot photo-slot--16x9" id="markettesting-terminal">
           <img src={BASE + 'assets/photos/markettesting-terminal.jpg'} width="1600" height="900" alt="Terminal output from a MarketTesting training run, training one ticker at a time with per-epoch loss, early stopping for MSFT and NVDA skipped." loading="lazy" decoding="async" />
-          <figcaption className="figure__caption">Per-ticker training. Early stopping terminates MSFT after four epochs once validation loss plateaus; NVDA is excluded because its scaled prices fall outside the model's range.</figcaption>
+          <figcaption className="figure__caption">Per-ticker training. Early stopping terminates MSFT after four epochs once validation loss plateaus; NVDA is excluded because its scaled prices fall outside the range of the model.</figcaption>
         </figure>
         <p className="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener" data-umami-event="repo-markettesting">Benjamin-Elmore/MarketTesting on GitHub</a>. Described at <code>main</code> 79f6e12.</p>
         <p className="next-project"><Link to="/CBU-Robotics/">Next project: CBU Robotics →</Link></p>

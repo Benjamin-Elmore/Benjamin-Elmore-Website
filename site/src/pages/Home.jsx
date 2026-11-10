@@ -5,7 +5,7 @@ import TypeLine from '../components/TypeLine.jsx';
 import ResumeLink, { HAS_RESUME } from '../components/ResumeLink.jsx';
 
 // HOME-1: the intro line under the profile photo. It types out once per visit.
-const INTRO = 'Computer science student. Software Engineer and Vice President of CBU Robotics, building ARC: C++ firmware that connects I²C sensors to the VEX V5 Brain over RS-485.';
+const INTRO = 'I write embedded C++ for robots. Now building ARC: FreeRTOS firmware on an ESP32-S3 that links I²C sensors to a VEX V5 Brain over RS-485.';
 
 // Subset of the Technical skills section below.
 const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'TensorFlow', 'Linux', 'Git'];
@@ -28,7 +28,7 @@ export default function Home() {
       <section id="work" className="section section--work" aria-labelledby="work-title">
         <h2 id="work-title" className="section__title"><span aria-hidden="true">01 / </span>Selected work</h2>
         <SlideList className="work-list">
-          <li><Link className="work-row" to="/ARC/"><span className="work-row__name">ARC</span> <span className="work-row__description">Embedded C++ firmware for the CBU1 robotics team's custom ESP32-S3 sensor board: FreeRTOS sensor tasks, a mutex-protected shared I²C bus and a bench-verified RS-485 protocol.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/arc-software-cppdev.svg'} width="96" height="60" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>115200 baud RS-485</span> <span>Up to 15 sensor IDs</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span></Link></li>
+          <li><Link className="work-row" to="/ARC/"><span className="work-row__name">ARC</span> <span className="work-row__description">Embedded C++ firmware for the custom ESP32-S3 sensor board of the CBU1 robotics team: FreeRTOS sensor tasks, a mutex-protected shared I²C bus and a bench-verified RS-485 protocol.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/arc-software-cppdev.svg'} width="96" height="60" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>115200 baud RS-485</span> <span>Up to 15 sensor IDs</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span></Link></li>
           <li><Link className="work-row" to="/MarketTesting/"><span className="work-row__name">MarketTesting</span> <span className="work-row__description">Independent Python project: a data pipeline and LSTM training loop, packaged as an installable Python package with lint checks in CI.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/photos/markettesting-table.jpg'} width="96" height="54" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>100-day windows</span> <span>12-stock run, Nov 8, 2026</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span></Link></li>
         </SlideList>
       </section>
@@ -42,7 +42,7 @@ export default function Home() {
               <summary>Responsibilities and projects</summary>
               <ul className="role__points">
                 <li>Developed driver controls, a PID function and point-to-point navigation in C++ on PROS.</li>
-                <li>Develop ARC, the team's C++ sensor firmware for a custom ESP32-S3 board, built on ESP-IDF and FreeRTOS.</li>
+                <li>Develop ARC, the C++ sensor firmware for the custom ESP32-S3 board, built on ESP-IDF and FreeRTOS.</li>
                 <li>Implemented the RS-485 protocol designed to carry sensor readings to the VEX V5 Brain.</li>
                 <li>Full detail on the <Link to="/CBU-Robotics/">CBU Robotics page</Link>.</li>
               </ul>
@@ -55,7 +55,7 @@ export default function Home() {
               <summary>Responsibilities</summary>
               <ul className="role__points">
                 <li>Coordinate engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
-                <li>Support planning of team events, competitions and the team's participation in the VEX U World Championship.</li>
+                <li>Support planning of team events, competitions and team participation in the VEX U World Championship.</li>
               </ul>
             </details>
           </li>
@@ -109,6 +109,7 @@ export default function Home() {
       </section>
       <section id="contact" className="section section--num" aria-labelledby="contact-title">
         <h2 id="contact-title" className="section__title"><span aria-hidden="true">05 / </span>Contact</h2>
+        <p className="section__lede contact__seeking">Looking for a Summer 2027 internship in embedded, autonomy or flight software, especially in defense and aerospace.</p>
         <p className="section__lede">For inquiries, email or LinkedIn is preferred.</p>
         <p className="contact__email">Email: <a href="mailto:benelmore6@gmail.com" data-umami-event="email-click">benelmore6@gmail.com</a></p>
         <ul className="link-list contact__links">
