@@ -1943,3 +1943,19 @@ figcaption.figure__caption::before {
 .status-table th { font-weight: 600; width: 40%; }
 .status-table td { font-family: var(--font-mono); font-size: 0.875rem; color: var(--color-muted); }
 .figure__note { margin-top: calc(-1 * var(--space-2)); }
+
+/* Keyword strip under the Home intro. */
+.keyword-strip { margin-top: var(--space-4); max-width: 58ch; }
+.keyword-strip .tag { font-size: 0.6875rem; }
+
+/* Next-project link at the bottom of each case study. */
+.next-project {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+}
+
+/* Footer: source link, last-updated stamp and theme toggle. */
+.site-footer__links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4); }
+.site-footer__links a { display: inline-flex; align-items: center; min-height: var(--tap); }
