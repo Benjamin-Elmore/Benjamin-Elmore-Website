@@ -14,6 +14,11 @@ function tagsFor(route) {
     { el: 'meta', key: 'property', id: 'og:description', value: m.ogDescription || m.description },
     { el: 'meta', key: 'property', id: 'og:type', value: 'website' },
     { el: 'meta', key: 'property', id: 'og:url', value: url },
+    { el: 'meta', key: 'property', id: 'og:image', value: SITE_URL + 'assets/og-card.png' },
+    { el: 'meta', key: 'property', id: 'og:image:width', value: '1200' },
+    { el: 'meta', key: 'property', id: 'og:image:height', value: '630' },
+    { el: 'meta', key: 'property', id: 'og:image:alt', value: 'Benjamin Elmore: embedded C++ for robots' },
+    { el: 'meta', key: 'name', id: 'twitter:card', value: 'summary_large_image' },
     { el: 'link', key: 'rel', id: 'canonical', value: url },
   ];
 }
@@ -41,7 +46,7 @@ export function scriptTag(route) {
 }
 
 const selector = (t) => (t.el === 'link' ? `link[rel="${t.id}"]` : `meta[${t.key}="${t.id}"]`);
-const MANAGED = ['meta[name="description"]', 'meta[name="robots"]', 'meta[property^="og:"]', 'link[rel="canonical"]'];
+const MANAGED = ['meta[name="description"]', 'meta[name="robots"]', 'meta[property^="og:"]', 'meta[name="twitter:card"]', 'link[rel="canonical"]'];
 
 export function applyHead(route) {
   const head = document.head;
