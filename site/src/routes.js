@@ -12,6 +12,7 @@ export const ROUTES = [
   { path: '/LEGOLAND/', file: 'LEGOLAND/index.html', meta: META.legoland },
   { path: '/About/', file: 'About/index.html', meta: META.about },
   { path: '/Notes/', file: 'Notes/index.html', meta: META.notes },
+  { path: '/Gallery/', file: 'Gallery/index.html', meta: META.gallery },
   { path: '/Notes/i2c-bus-sharing/', file: 'Notes/i2c-bus-sharing/index.html', meta: META.noteI2c },
   { path: '/Notes/rs485-bring-up/', file: 'Notes/rs485-bring-up/index.html', meta: META.noteRs485 },
   { path: '/Notes/false-status-flag/', file: 'Notes/false-status-flag/index.html', meta: META.noteFalseFlag },

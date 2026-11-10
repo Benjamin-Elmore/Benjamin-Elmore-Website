@@ -28,6 +28,10 @@ export const META = {
     title: 'About | Benjamin Elmore',
     description: 'Benjamin Elmore is a computer science student at California Baptist University focused on embedded systems and machine learning software.',
   },
+  gallery: {
+    title: 'Gallery | Benjamin Elmore',
+    description: 'Every diagram, output, code image and photo on the site of Benjamin Elmore, each with its source: the ARC and MarketTesting commits it came from, or the photo credit.',
+  },
   notes: {
     title: 'Notes | Benjamin Elmore',
     description: 'Short notes on design decisions and bench results from ARC, C++ sensor firmware for an ESP32-S3 board on a VEX U robotics team.',
