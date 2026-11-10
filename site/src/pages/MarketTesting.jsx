@@ -46,6 +46,7 @@ export default function MarketTesting() {
           <figcaption className="figure__caption">Per-ticker training. Early stopping terminates MSFT after four epochs once validation loss plateaus; NVDA is excluded because its scaled prices fall outside the model's range.</figcaption>
         </figure>
         <p className="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener" data-umami-event="repo-markettesting">Benjamin-Elmore/MarketTesting on GitHub</a>. Described at <code>main</code> 79f6e12.</p>
+        <p className="next-project"><Link to="/CBU-Robotics/">Next project: CBU Robotics →</Link></p>
       </section>
     </>
   );

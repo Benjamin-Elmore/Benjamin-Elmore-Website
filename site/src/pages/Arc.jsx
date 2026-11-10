@@ -110,6 +110,7 @@ private:
           <p>The lock is released automatically when the guard leaves scope, and only if this guard acquired it, so a failed acquisition can never release a lock held by another task.</p>
         </div>
         <p className="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/ARC/tree/CPPDev" rel="noopener" data-umami-event="repo-arc">Benjamin-Elmore/ARC on GitHub</a>. Described at the <code>CPPDev</code> development branch, commit 49d54a0 (November 9, 2026); the default <code>main</code> branch is an earlier revision. Earlier commits are in a private team repository.</p>
+        <p className="next-project"><Link to="/MarketTesting/">Next project: MarketTesting →</Link></p>
       </section>
     </>
   );

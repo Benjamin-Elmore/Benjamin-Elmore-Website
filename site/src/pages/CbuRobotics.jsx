@@ -45,6 +45,7 @@ export default function CbuRobotics() {
           </ul>
           <p><strong>Tools:</strong> C++, PROS, ESP-IDF, FreeRTOS, PlatformIO, ESP32-S3, I²C, UART, RS-485, Git</p>
         </div>
+        <p className="next-project"><Link to="/ARC/">Next project: ARC →</Link></p>
       </section>
     </>
   );
