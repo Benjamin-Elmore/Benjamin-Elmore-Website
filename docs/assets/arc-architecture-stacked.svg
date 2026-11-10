@@ -1,46 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 616" role="img" aria-labelledby="arcs-title arcs-desc" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
-  <title id="arcs-title">ARC intended system architecture</title>
-  <desc id="arcs-desc">Intended system architecture, top to bottom: optical and other external sensors connect over I²C to an I²C multiplexer; the multiplexed I²C bus connects over I²C to the ESP32-S3 running ARC firmware on the ARSENAL board, marked as the subject of this case study; the ESP32-S3 exchanges data with the VEX V5 Brain, the robot controller, over a bidirectional half-duplex RS-485 link.</desc>
-  <defs>
-    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="strokeWidth" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#b4b4b4"/>
-    </marker>
-  </defs>
-  <rect x="1" y="1" width="358" height="614" rx="20" fill="#1e1e1e" stroke="#717171" stroke-width="2"/>
-  <text x="24" y="44" font-size="20" font-weight="700" fill="#ffffff">Intended system architecture</text>
-
-  <!-- Links -->
-  <g stroke="#b4b4b4" stroke-width="3" fill="none">
-    <line x1="150" y1="162" x2="150" y2="213" marker-end="url(#arrow)"/>
-    <line x1="150" y1="306" x2="150" y2="357" marker-end="url(#arrow)"/>
-    <line x1="150" y1="453" x2="150" y2="501" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-  </g>
-  <g font-size="17" fill="#ededed">
-    <text x="170" y="194">I²C</text>
-    <text x="170" y="338">I²C</text>
-    <text x="170" y="482">half-duplex RS-485</text>
-  </g>
-
-  <!-- Blocks -->
-  <g stroke-width="3" fill="#333333">
-    <rect x="24" y="72" width="312" height="88" rx="12" stroke="#b4b4b4"/>
-    <rect x="24" y="216" width="312" height="88" rx="12" stroke="#b4b4b4"/>
-    <rect x="24" y="360" width="312" height="88" rx="12" stroke="#f2f0eb"/>
-    <rect x="24" y="504" width="312" height="88" rx="12" stroke="#b4b4b4"/>
-  </g>
-  <rect x="222" y="374" width="100" height="28" rx="14" fill="#f2f0eb"/>
-  <text x="272" y="394" font-size="17" font-weight="700" fill="#1e1e1e" text-anchor="middle">case study</text>
-
-  <g font-size="22" font-weight="700" fill="#ffffff">
-    <text x="42" y="108">Sensors</text>
-    <text x="42" y="252">I²C mux</text>
-    <text x="42" y="396">ESP32-S3</text>
-    <text x="42" y="540">VEX V5 Brain</text>
-  </g>
-  <g font-size="17" fill="#ededed">
-    <text x="42" y="138">optical and other external sensors</text>
-    <text x="42" y="282">multiplexed I²C</text>
-    <text x="42" y="426">ARC firmware on ARSENAL board</text>
-    <text x="42" y="570">robot controller</text>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 750" width="360" height="750" role="img" aria-labelledby="arcs-title arcs-desc"><title id="arcs-title">ARC data path</title><desc id="arcs-desc">Designed data path, top to bottom: I²C sensors (optical and other external sensors) connect over I²C to an I²C multiplexer for channel selection; the multiplexed bus connects over I²C to the ESP32-S3 running ARC firmware on the ARSENAL board with ESP-IDF and FreeRTOS, marked as the case study; the ESP32-S3 exchanges data with the V5 Brain, the robot controller, over a bidirectional half-duplex RS-485 link. Design intent; not yet verified end to end on hardware.</desc><rect width="360" height="750" fill="#000000"/><g font-family="'IBM Plex Sans', system-ui, sans-serif" fill="#ffffff">
+<text x="180" y="40" font-size="22" font-weight="700" text-anchor="middle">ARC | Data Path</text>
+<text x="180" y="64" font-size="14" font-weight="600" text-anchor="middle">Sensor acquisition to the V5 Brain</text>
+<rect x="24" y="96" width="312" height="100" rx="6" fill="none" stroke="#ffffff" stroke-width="1.4"/>
+<rect x="306" y="106" width="18" height="12" fill="none" stroke="#ffffff" stroke-width="1"/><rect x="302" y="108" width="8" height="3" fill="#000" stroke="#ffffff" stroke-width="1"/><rect x="302" y="113" width="8" height="3" fill="#000" stroke="#ffffff" stroke-width="1"/>
+<text x="38" y="126" font-size="17">I²C Sensors</text>
+<text x="38" y="160" font-size="14">Optical and other external sensors</text>
+<rect x="24" y="246" width="312" height="100" rx="6" fill="none" stroke="#ffffff" stroke-width="1.4"/>
+<rect x="306" y="256" width="18" height="12" fill="none" stroke="#ffffff" stroke-width="1"/><rect x="302" y="258" width="8" height="3" fill="#000" stroke="#ffffff" stroke-width="1"/><rect x="302" y="263" width="8" height="3" fill="#000" stroke="#ffffff" stroke-width="1"/>
+<text x="38" y="276" font-size="17">I²C Mux</text>
+<text x="38" y="310" font-size="14">Channel select, multiplexed I²C</text>
+<rect x="24" y="406" width="302" height="120" fill="none" stroke="#ffffff" stroke-width="2"/>
+<polyline points="24,406 34,396 336,396 336,516 326,526" fill="none" stroke="#ffffff" stroke-width="2"/>
+<line x1="326" y1="406" x2="336" y2="396" stroke="#ffffff" stroke-width="2"/>
+<text x="38" y="430" font-size="12" fill="#bdb9b1">«case study»</text>
+<text x="38" y="454" font-size="17" font-weight="700">ESP32-S3</text>
+<text x="38" y="482" font-size="14">ARC firmware on ARSENAL board</text>
+<text x="38" y="504" font-size="14">ESP-IDF / FreeRTOS</text>
+<rect x="24" y="586" width="312" height="100" rx="6" fill="none" stroke="#ffffff" stroke-width="1.4"/>
+<rect x="306" y="596" width="18" height="12" fill="none" stroke="#ffffff" stroke-width="1"/><rect x="302" y="598" width="8" height="3" fill="#000" stroke="#ffffff" stroke-width="1"/><rect x="302" y="603" width="8" height="3" fill="#000" stroke="#ffffff" stroke-width="1"/>
+<text x="38" y="616" font-size="17">V5 Brain</text>
+<text x="38" y="646" font-size="14">Robot controller: sends requests,</text>
+<text x="38" y="668" font-size="14">receives sensor data</text>
+<g fill="none" stroke="#ffffff" stroke-width="2">
+<polyline points="150,196 150,246"/><polyline points="143,234 150,246 157,234"/>
+<polyline points="150,346 150,396"/><polyline points="143,384 150,396 157,384"/>
+<polyline points="150,526 150,586"/><polyline points="143,574 150,586 157,574"/><polyline points="143,538 150,526 157,538"/>
+</g>
+<text x="164" y="226" font-size="14">I²C</text>
+<text x="164" y="376" font-size="14">I²C</text>
+<text x="164" y="561" font-size="14">RS-485 half-duplex</text>
+<text x="180" y="716" font-size="12" text-anchor="middle" fill="#bdb9b1">Design intent • Solid line: communication path</text>
+<text x="180" y="734" font-size="12" text-anchor="middle" fill="#bdb9b1">Not yet verified end to end on hardware</text></g></svg>

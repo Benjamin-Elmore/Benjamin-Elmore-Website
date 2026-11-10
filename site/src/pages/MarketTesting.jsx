@@ -36,9 +36,8 @@ export default function MarketTesting() {
             <li className="tag">yfinance</li>
           </ul>
         </div>
-        {/* Pipeline diagram: replace with the render of Ben's PUML (site/public/assets/markettesting-pipeline.svg, from his .puml) when it arrives, then rebuild. */}
         <figure className="figure figure--diagram figure--narrow" id="markettesting-pipeline">
-          <img src={BASE + 'assets/markettesting-pipeline.svg'} width="360" height="620" alt="Pipeline diagram, top to bottom: CSV or yfinance data, pandas and NumPy preprocessing, RobustScaler feature scaling, 100-day windows, LSTM, prediction table." loading="lazy" decoding="async" />
+          <img src={BASE + 'assets/markettesting-pipeline.svg'} width="360" height="664" alt="Pipeline diagram, top to bottom: CSV or yfinance data, pandas and NumPy preprocessing, RobustScaler feature scaling, 100-day windows, LSTM, prediction table." loading="lazy" decoding="async" />
           <figcaption className="figure__caption">End-to-end pipeline, from raw price data to the prediction table.</figcaption>
         </figure>
         <figure className="photo-slot photo-slot--16x9" id="markettesting-terminal">

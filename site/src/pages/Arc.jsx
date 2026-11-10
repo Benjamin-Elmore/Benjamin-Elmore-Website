@@ -56,8 +56,8 @@ UART received: 37`}</CodeWindow>
           <p>Sensor data follows a three-stage path from acquisition to the V5 Brain, and configuration follows the reverse path. This is the designed path; as of November 2026, the complete chain has not yet been verified end to end on the robot.</p>
           <figure className="figure figure--diagram" id="arc-architecture">
             <picture>
-              <source media="(max-width: 44.99875em)" srcSet={BASE + 'assets/arc-architecture-stacked.svg'} width="360" height="616" />
-              <img src={BASE + 'assets/arc-architecture.svg'} width="960" height="360" alt="Block diagram of the intended ARC system architecture: sensors to I²C multiplexer to ESP32-S3 to VEX V5 Brain over half-duplex RS-485." loading="lazy" decoding="async" />
+              <source media="(max-width: 44.99875em)" srcSet={BASE + 'assets/arc-architecture-stacked.svg'} width="360" height="750" />
+              <img src={BASE + 'assets/arc-architecture.svg'} width="1000" height="370" alt="Data path diagram: I²C sensors to an I²C multiplexer to the ESP32-S3 running ARC firmware, then half-duplex RS-485 to the V5 Brain." loading="lazy" decoding="async" />
             </picture>
             <figcaption className="figure__caption">Designed data path: sensors, I²C multiplexer, ESP32-S3, then RS-485 to the V5 Brain. Design intent; not yet verified end to end on hardware.</figcaption>
           </figure>
