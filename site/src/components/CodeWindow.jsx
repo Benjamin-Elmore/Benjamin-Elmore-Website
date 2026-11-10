@@ -43,6 +43,7 @@ export default function CodeWindow({ title, language, children, label }) {
     <div className="code-window">
       <div className="code-window__bar">
         <span className="code-window__title">{title}</span>
+        <span className="code-window__count" aria-hidden="true">{lines.length} LN</span>
         <span className="code-window__lang">{language}</span>
       </div>
       <pre className="code-window__body" tabIndex="0" role="region" aria-label={label || `${language} code: ${title}`}><code>{lines.map((line, i) => (

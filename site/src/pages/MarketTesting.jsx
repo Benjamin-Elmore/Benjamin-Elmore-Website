@@ -14,8 +14,9 @@ export default function MarketTesting() {
       <section className="section case-study" aria-labelledby="mt-title">
         <figure className="photo-slot photo-slot--16x9" id="markettesting-table">
           <img src={BASE + 'assets/photos/markettesting-table.jpg'} width="1600" height="900" alt="MarketTesting prediction table for AAPL: dated rows of predicted open, high, low, close and volume over a 90-day forecast." loading="lazy" decoding="async" />
-          <figcaption className="figure__caption">AAPL prediction table from a 12-stock training run on November 8, 2026: a 90-day forecast generated with a sliding window, with each prediction fed back as input. Model output only; not a validated trading result.</figcaption>
+          <figcaption className="figure__caption">AAPL prediction table, 90-day forecast, from the November 8, 2026 training run. Model output only; not a validated trading result.*</figcaption>
         </figure>
+        <p className="figure__caption figure__note" id="markettesting-table-note"><small>* Run conditions: 12-stock training run, November 8, 2026, code at <code>main</code> 79f6e12. The 90-day forecast uses a sliding window, with each prediction fed back as input. Values are model output only; no accuracy is claimed.</small></p>
         <h2 id="mt-title" className="section__title"><span aria-hidden="true">01 / </span>Project</h2>
         <div className="case-study__block" id="mt-what">
           <h3>What it is</h3>

@@ -18,7 +18,7 @@ export default function Arc() {
           {/* Diagram "arc-software": hand-drawn SVG of Ben's PlantUML layout, updated to CPPDev 49d54a0 with a black background. The original PNG (from photos/ARC_Architecture.pdf) is kept at assets/arc-software.png. */}
           <img src={BASE + 'assets/arc-software-cppdev.svg'} width="2000" height="1250" loading="lazy" decoding="async" alt="ARC system architecture at the CPPDev branch, in three packages. 01 Sensor hardware: I²C sensors, reached directly or through optional I²C multiplexers. 02 ARC controller, a Seeed XIAO ESP32-S3 running ESP-IDF and FreeRTOS firmware: I2CBus provides I²C access to Sensor, which runs one task per sensor, holds sensor types and appendable offsets, and implements the RS485InterfaceSensor interface. LockGuard guards the bus mutex and is passed to register reads and writes. RS485Comm hands packets to RS485PacketComp, which dispatches read, three-stage configuration and reboot packets to RS485CommParser. An SD logger is optional and off by default. 03 Robot interface: an RS-485 transceiver links over half-duplex RS-485 to the V5 Brain, which sends read, configuration and reboot requests and receives sensor data. End-to-end integration is not yet verified on hardware." />
           <p className="photo-slot__link"><a href={BASE + 'assets/arc-software-cppdev.svg'}>Open full-size diagram</a></p>
-          <figcaption className="figure__caption">ARC software architecture. Each sensor runs as an independent FreeRTOS task and accesses the shared I²C bus under mutex protection. A dedicated RS-485 task services V5 Brain requests with the most recent cached readings.</figcaption>
+          <figcaption className="figure__caption">ARC software architecture. Each sensor runs as an independent FreeRTOS task and accesses the shared I²C bus under mutex protection. A dedicated RS-485 task services V5 Brain requests with the most recent cached readings. Design view of <code>CPPDev</code> 49d54a0.</figcaption>
         </figure>
         <figure className="photo-slot photo-slot--text" id="arc-serial">
           {/* Real capture: Ben's ESP32 monitor output, vault chat "2026-10-28 Create PROS RS485 packet sender" (the UART received: 37 block). Only the identical _lastReadBytes copy and all-zero rows 048-112 are cut. */}
@@ -59,7 +59,7 @@ UART received: 37`}</CodeWindow>
               <source media="(max-width: 44.99875em)" srcSet={BASE + 'assets/arc-architecture-stacked.svg'} width="360" height="616" />
               <img src={BASE + 'assets/arc-architecture.svg'} width="960" height="360" alt="Block diagram of the intended ARC system architecture: sensors to I²C multiplexer to ESP32-S3 to VEX V5 Brain over half-duplex RS-485." loading="lazy" decoding="async" />
             </picture>
-            <figcaption className="figure__caption">Designed data path: sensors, I²C multiplexer, ESP32-S3, then RS-485 to the V5 Brain.</figcaption>
+            <figcaption className="figure__caption">Designed data path: sensors, I²C multiplexer, ESP32-S3, then RS-485 to the V5 Brain. Design intent; not yet verified end to end on hardware.</figcaption>
           </figure>
           <ol>
             <li>The sensor's read function retrieves its registers over I²C and stores the result as three 16-bit values.</li>
@@ -67,7 +67,16 @@ UART received: 37`}</CodeWindow>
             <li>On request from the V5 Brain, ARC responds with a single packet containing two timestamps, up to 15 sensor IDs and six bytes of data per sensor, terminated by frame markers and a checksum. A sensor without a valid reading is reported as 0xFFFF rather than as stale data.</li>
             <li>Configuration requests run in stages: the first sets each sensor's type, the following packets carry up to three offset vectors per sensor, and the final packet writes those offsets to the sensor's registers. A reboot request restores each sensor's default offsets and clears its readings.</li>
           </ol>
-          <p>Current status: an earlier, read-only version of the RS-485 protocol was verified on the bench in isolation in late October 2026. The protocol has since been extended to configuration and reboot requests, and the firmware entry point now registers one optical sensor with the RS-485 link in preparation for a combined hardware test. That combined test, and the full sensor-to-V5 pipeline, have not yet been run on hardware.</p>
+          <table className="status-table" id="arc-status">
+            <caption>Status as of <code>CPPDev</code> 49d54a0 (November 9, 2026)</caption>
+            <tbody>
+              <tr><th scope="row">RS-485 read protocol</th><td>Verified on the bench in isolation, late October 2026 (earlier, read-only version)</td></tr>
+              <tr><th scope="row">Configuration and reboot packets</th><td>Implemented; not yet tested on hardware</td></tr>
+              <tr><th scope="row">Sensors registered at entry point</th><td>One optical sensor, registered with the RS-485 link</td></tr>
+              <tr><th scope="row">Combined sensor and RS-485 test</th><td>Not yet run</td></tr>
+              <tr><th scope="row">Full sensor-to-V5 pipeline</th><td>Not yet verified on hardware</td></tr>
+            </tbody>
+          </table>
         </div>
         <div className="case-study__block" id="sensor-instances">
           <h3>Adding a sensor</h3>
