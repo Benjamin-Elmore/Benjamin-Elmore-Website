@@ -17,6 +17,9 @@ const Preview = ({ src, label, noDerivs }) => (src ? <span className={'hover-pre
 // HOME-1: the intro line under the profile photo. It types out once per visit.
 const INTRO = 'Computer science student. Software Engineer and Vice President of CBU Robotics, building ARC: C++ firmware that connects I²C sensors to the VEX V5 Brain over RS-485.';
 
+// Subset of the Technical skills section below.
+const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'TensorFlow', 'Linux', 'Git'];
+
 export default function Home() {
   return (
     <>
@@ -28,6 +31,9 @@ export default function Home() {
           <img src={BASE + 'assets/photos/profile-square.jpg'} alt="Benjamin Elmore" width="800" height="800" />
         </figure>
         <TypeLine className="intro__lede" text={INTRO} />
+        <ul className="tag-list keyword-strip" aria-label="Core technologies">
+          {KEYWORDS.map((k) => <li className="tag" key={k}>{k}</li>)}
+        </ul>
       </section>
       <section id="work" className="section section--work" aria-labelledby="work-title">
         <h2 id="work-title" className="section__title"><span aria-hidden="true">01 / </span>Selected work</h2>

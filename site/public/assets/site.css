@@ -1943,3 +1943,7 @@ figcaption.figure__caption::before {
 .status-table th { font-weight: 600; width: 40%; }
 .status-table td { font-family: var(--font-mono); font-size: 0.875rem; color: var(--color-muted); }
 .figure__note { margin-top: calc(-1 * var(--space-2)); }
+
+/* Keyword strip under the Home intro. */
+.keyword-strip { margin-top: var(--space-4); max-width: 58ch; }
+.keyword-strip .tag { font-size: 0.6875rem; }
