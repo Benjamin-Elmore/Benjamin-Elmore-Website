@@ -8,9 +8,10 @@ export default function CbuRobotics() {
       <div className="page-header">
         <p><Link className="back-link" to="/#experience">← All experience</Link></p>
         <p className="eyebrow">Experience</p>
-        <div className="cbu-hero-logo"><img src={BASE + 'assets/photos/cbu1-logo-white-lg.png'} width="1600" height="460" decoding="async" fetchPriority="high" alt="" /></div>
-        <h1>CBU1 VEX U Robotics</h1>
-        <p className="page-header__meta">California Baptist University · Vice President and Software Engineer</p>
+        <div className="cbu-hero-logo"><img src={BASE + 'assets/photos/cbu1-logo-white-lg.png'} width="1600" height="460" decoding="async" fetchPriority="high" alt="CBU1" /></div>
+        <h1>VEX U Robotics</h1>
+        <p className="page-header__meta">California Baptist University</p>
+        <p className="page-header__meta page-header__roles">Vice President, CBU Robotics{'\u00a0'}· Software Engineer, CBU1</p>
         <p className="page-header__summary">Vice President of CBU Robotics since October 2026 and software engineer for CBU1, the VEX U robotics team at California Baptist University: drivetrain and navigation software from fall 2025, then ARC sensor firmware from August 2026.</p>
       </div>
       <section className="section case-study section--page" aria-labelledby="role-title">
