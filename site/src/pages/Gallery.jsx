@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigationType } from 'react-router';
+import { hydration } from '../hydration.js';
 import CodeWindow from '../components/CodeWindow.jsx';
 import { SERIAL_CAPTURE, LOCKGUARD_CODE } from '../codeSamples.js';
 import { BASE } from '../routes.js';
@@ -90,15 +91,35 @@ const SETS = [
 
 const CODE = { serial: SERIAL_CAPTURE, lockguard: LOCKGUARD_CODE };
 
+const filterOf = (search) => {
+  const v = new URLSearchParams(search).get('set');
+  return SETS.some((s) => s.id === v) ? v : 'all';
+};
+// The filter lives in the URL (?set=teams) so Back restores the layout a scroll position was saved under.
+// The address is replaced in place, keeping the router history state, so no route change or scroll reset happens.
+const writeFilter = (id) => {
+  try {
+    const u = new URL(location.href);
+    if (id === 'all') u.searchParams.delete('set'); else u.searchParams.set('set', id);
+    history.replaceState(history.state, '', u.pathname + u.search + u.hash);
+  } catch (e) { /* the filter still works without the address */ }
+};
+
 const setOfId = (id) => SETS.find((s) => s.subsets.some((ss) => ss.items.some((it) => it.id === id)));
 
 export default function Gallery() {
-  const { hash } = useLocation();
-  const [filter, setFilter] = useState('all');
-  const [lastHash, setLastHash] = useState(hash);
+  const { hash, search } = useLocation();
+  const navType = useNavigationType();
+  // While hydrating, start from the prerendered layout (all sets); a client-side visit starts from the URL.
+  const [filter, setFilter] = useState(() => (hydration.active ? 'all' : filterOf(search)));
   const [ready, setReady] = useState(false);
-  // The filter bar needs JS, so it only appears after hydration; without JS every set shows.
-  useEffect(() => setReady(true), []);
+  const firstRun = useRef(true);
+  const deepLink = useRef(hydration.active);
+  // The filter bar is prerendered (hidden, so it already takes its space) and switched on after hydration.
+  useEffect(() => {
+    setReady(true);
+    if (hydration.active === false && deepLink.current) setFilter(filterOf(search));
+  }, []);
   // Highlight the linked item. :target does not update on client-side navigation, so track the hash here
   // (after hydration, so the prerendered markup still matches).
   const [targetId, setTargetId] = useState(null);
@@ -107,40 +128,43 @@ export default function Gallery() {
     try { id = decodeURIComponent(id); } catch (e) { /* keep raw */ }
     setTargetId(id || null);
   }, [hash]);
-  // Re-scroll to the linked item once the page has settled (the filter bar appears and heights change after hydration).
+  // A link to a tag clears any filter that would hide its target.
   useEffect(() => {
+    let id = hash.slice(1);
+    try { id = decodeURIComponent(id); } catch (e) { /* keep raw */ }
+    const target = setOfId(id);
+    if (target && filterOf(location.search) !== 'all' && filterOf(location.search) !== target.id) { setFilter('all'); writeFilter('all'); }
+  }, [hash]);
+  // Re-scroll to the linked item once the page has settled (images and fonts change heights after hydration).
+  // Not on Back or Forward, where RouteEffects has already put back the saved position; a deep link still lands.
+  useEffect(() => {
+    const first = firstRun.current;
+    firstRun.current = false;
     if (!targetId) return;
+    if (navType === 'POP' && !(first && deepLink.current)) return;
     const f = requestAnimationFrame(() => {
       const el = document.getElementById(targetId);
       if (!el) return;
       const root = document.documentElement, prev = root.style.scrollBehavior;
       root.style.scrollBehavior = 'auto';
+      getComputedStyle(root).scrollBehavior;
       el.scrollIntoView({ block: 'start' });
       root.style.scrollBehavior = prev;
     });
     return () => cancelAnimationFrame(f);
   }, [ready, targetId]);
-  // A link to a tag clears any filter that would hide its target.
-  if (hash !== lastHash) {
-    setLastHash(hash);
-    let id = hash.slice(1);
-    try { id = decodeURIComponent(id); } catch (e) { /* keep raw */ }
-    const target = setOfId(id);
-    if (target && filter !== 'all' && filter !== target.id) setFilter('all');
-  }
+  const pick = (id) => { setFilter(id); writeFilter(id); };
   return (
     <>
       <div className="page-header">
         <p className="eyebrow">Gallery</p>
         <h1>Gallery</h1>
         <p className="page-header__summary">Every diagram, output, code sample and photo on this site, in sets and subsets, each with a tag such as ARC-01 and its source. Code and outputs are pinned to the commit they came from. Select an image to view it full size.</p>
-        {ready && (
-          <div className="gallery-filter" role="group" aria-label="Filter the Gallery by set">
-            {[{ id: 'all', title: 'All' }, ...SETS].map((s) => (
-              <button key={s.id} type="button" className="gallery-filter__btn" aria-pressed={filter === s.id} onClick={() => setFilter(s.id)}>{s.title}</button>
-            ))}
-          </div>
-        )}
+        <div className="gallery-filter" role="group" aria-label="Filter the Gallery by set" style={{ visibility: ready ? 'visible' : 'hidden' }}>
+          {[{ id: 'all', title: 'All' }, ...SETS].map((s) => (
+            <button key={s.id} type="button" className="gallery-filter__btn" disabled={!ready} aria-pressed={filter === s.id} onClick={() => pick(s.id)}>{s.title}</button>
+          ))}
+        </div>
       </div>
       {SETS.map((set, si) => (
         <section key={set.id} id={`gallery-${set.id}`} className="section case-study" aria-labelledby={`gallery-${set.id}-title`} hidden={filter !== 'all' && filter !== set.id}>

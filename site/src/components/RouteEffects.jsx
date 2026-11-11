@@ -2,6 +2,7 @@ import { useLayoutEffect, useEffect, useRef } from 'react';
 import { useLocation, useNavigationType } from 'react-router';
 import { routeFor } from '../routes.js';
 import { applyHead } from '../head.js';
+import { hydration } from '../hydration.js';
 
 // site.css sets html{scroll-behavior:smooth}; route changes must land instantly, as a page load does.
 const instant = (fn) => {
@@ -38,7 +39,7 @@ export default function RouteEffects() {
     if (history.state && typeof history.state.idx === 'number') lastIdx.current = history.state.idx;
     keyRef.current = location.key;
     // Hydration: only the head sync runs, so deep links keep the browser fragment scroll.
-    if (first.current) { first.current = false; return; }
+    if (first.current) { first.current = false; hydration.active = false; return; }
     try { history.scrollRestoration = 'manual'; } catch (e) {}
     // Behave like a full page load. Without a hash, move the sequential-focus start to the top of the
     // document (focus and blur in one task, so no ring paints); with one, the browser starts from the target.

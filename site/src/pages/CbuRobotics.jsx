@@ -23,7 +23,7 @@ export default function CbuRobotics() {
         <div className="role-section" id="vice-president">
           <h3>Vice President</h3>
           <p className="meta">Since <time dateTime="2026-10">October 2026</time></p>
-          <p>Responsible for coordinating milestones across the discipline teams, supporting the planning of events and competitions, and, more recently, supporting the weekly team Responsible Engineer updates.</p>
+          <p>Coordinates milestones across the discipline teams and supports event and competition planning. More recently, also supports the weekly team Responsible Engineer updates.</p>
           <ul>
             <li>Coordinate engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
             <li>Support planning of team events, competitions and participation of the team in the VEX U World Championship.</li>
@@ -63,7 +63,7 @@ export default function CbuRobotics() {
         <h2 id="drivetrain-title" className="section__title"><span aria-hidden="true">02 / </span>Drivetrain control and point-to-point navigation (fall 2025)</h2>
         <div className="case-study__block" id="drivetrain">
           <h3>Role</h3>
-          <p>Software engineer on CBU1 VEX U. I made 14 commits to the team HamburgerTesting repository between September 16 and October 28, 2025, and 2 commits to a second drivetrain repository. Both repositories include imported PROS scaffolding, which is not my work.</p>
+          <p>Software engineer on CBU1 VEX U. Authored 14 commits to the team HamburgerTesting repository between September 16 and October 28, 2025, and 2 commits to a second drivetrain repository. Both repositories also contain imported PROS scaffolding, which is not part of this work.</p>
           <h3>Problem</h3>
           <p>Drive the robot base from a controller, and move it to a target point using odometry, by issuing left, right and strafe motor commands. Autonomous path following was unfinished.</p>
           <h3>Approach</h3>

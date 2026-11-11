@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 // The résumé link is built in only when the PDF is in site/public/assets/.
 const HAS_RESUME = existsSync(fileURLToPath(new URL('./public/assets/Benjamin_Elmore_Resume.pdf', import.meta.url)));
 
-// Footer build stamp: the commit the build was made from and that commit's date (never the clock),
+// Footer build stamp: the last commit that changed site/ and that commit's date (never the clock),
 // so rebuilding the same commit gives identical output. Empty strings if git is unavailable.
 function gitValue(cmd) {
   try {
@@ -16,9 +16,9 @@ function gitValue(cmd) {
     return '';
   }
 }
-const SHA = gitValue('git rev-parse --short HEAD');
+const SHA = gitValue('git log -1 --format=%h -- site');
 const BUILD_SHA = /^[0-9a-f]{7,12}$/.test(SHA) ? SHA : '';
-const DATE = BUILD_SHA ? gitValue('git log -1 --format=%cs HEAD') : '';
+const DATE = BUILD_SHA ? gitValue('git log -1 --format=%cs -- site') : '';
 const BUILD_DATE = /^\d{4}-\d{2}-\d{2}$/.test(DATE) ? DATE : '';
 
 export default defineConfig(({ isSsrBuild, isPreview }) => ({

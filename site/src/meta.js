@@ -30,7 +30,7 @@ export const META = {
   },
   gallery: {
     title: 'Gallery | Benjamin Elmore',
-    description: 'Every diagram, output, code image and photo on the site of Benjamin Elmore, each with its source: the ARC and MarketTesting commits it came from, or the photo credit.',
+    description: 'Every diagram, output, code sample and photo on the portfolio of Benjamin Elmore, each tagged and sourced, with code and outputs pinned to the ARC or MarketTesting commit they came from.',
   },
   notFound: {
     title: 'Page not found | Benjamin Elmore',

@@ -6,6 +6,7 @@ Set SITE_DOCS_DIR to check a build somewhere other than docs/.
 import json
 import os
 import re
+import subprocess
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -305,6 +306,23 @@ def site_text_files():
     return out
 
 
+def check_build_stamp(errors, raw):
+    """The footer names the last commit that changed site/, so a rebuild of docs/ never drifts."""
+    try:
+        want = subprocess.run(["git", "log", "-1", "--format=%h", "--", "site"], cwd=ROOT, capture_output=True,
+                              text=True, check=True).stdout.strip()
+    except Exception:
+        return
+    if not want:
+        return
+    for p, html in raw.items():
+        m = re.search(r"Built from <code>([0-9a-f]+)</code>", html)
+        if not m:
+            errors.append(f"{p}: footer build stamp missing")
+        elif not (want.startswith(m.group(1)) or m.group(1).startswith(want)):
+            errors.append(f"{p}: footer stamp {m.group(1)} is not the last commit that changed site/ ({want})")
+
+
 def main():
     errors, parsed, raw = [], {}, {}
     for fp in FONTS:
@@ -331,6 +349,7 @@ def main():
         check_bundle_strings(errors, bundles[0], (DOCS / bundles[0]).read_text(encoding="utf-8"), page_urls)
 
     check_gallery_tags(errors, raw)
+    check_build_stamp(errors, raw)
 
     for name, (p, text) in REQUIRED.items():
         if p in raw and text not in raw[p]:
