@@ -361,7 +361,13 @@ async function main() {
 
   for (const id of ['work', 'experience', 'contact']) {
     await step(`K13b fresh load of /#${id} lands on the section`, async () => {
+      // Leave the site first: a navigate that differs from the current URL only by
+      // fragment is a same-document navigation, not a fresh load of the prerendered page.
+      await tab.goto('about:blank', "location.href==='about:blank'");
+      const t0 = Date.now();
       await tab.goto(url('#' + id), SETTLE);
+      const origin = await tab.eval('performance.timeOrigin');
+      if (!(origin >= t0 - 50)) throw new Error(`/#${id} was not a fresh document load (timeOrigin ${origin} < ${t0})`);
       await tab.until(`(()=>{const e=document.getElementById(${JSON.stringify(id)});return !!e&&scrollY>100&&(e.getBoundingClientRect().top<150||scrollY+innerHeight>=document.documentElement.scrollHeight-2)})()`, `#${id} scrolled into place`, 3000);
     });
   }
