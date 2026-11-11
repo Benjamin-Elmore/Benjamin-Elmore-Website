@@ -9,7 +9,7 @@ export default function MarketTesting() {
         <p><Link className="back-link" to="/#work">← All work</Link></p>
         <p className="eyebrow">Project 02</p>
         <h1>MarketTesting</h1>
-        <p className="page-header__meta">Independent Python learning project, October 2025 to April 2026</p>
+        <p className="page-header__meta">Independent Python learning project, November 2025 to April 2026</p>
         <p className="page-header__summary">An independent machine learning project covering the workflow from data to predictions: acquiring historical equity data, cleaning and scaling it, training an LSTM and recording its predictions in a structured table.</p>
       </div>
       <section className="section case-study" aria-labelledby="mt-title">
