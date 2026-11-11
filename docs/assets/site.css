@@ -1543,7 +1543,29 @@ time {
 
 /* CBU1 logo on Home, under the typed intro: a link to the CBU Robotics page, image only (no underline). */
 /* Static line under the role line: degree, GPA, what is sought and eligibility. */
-.intro__status { max-width: 58ch; margin-top: var(--space-2); font-family: var(--font-mono); font-size: 0.8125rem; line-height: 1.6; text-wrap: pretty; }
+/* Home intro: the photo with the at-a-glance facts beside it, on the right. */
+.intro__head {
+  display: grid;
+  grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: center;
+  margin-top: var(--space-5);
+}
+.intro__head .intro__photo { margin: 0; }
+@media (min-width: 45em) {
+  .intro__head { grid-template-columns: minmax(0, 16rem) minmax(0, 1fr); gap: var(--space-6); }
+}
+.intro__status {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: 40ch;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+.intro__status li + li { margin-top: var(--space-2); }
 .intro__team { margin-top: var(--space-4); }
 
 .cbu-logo {
