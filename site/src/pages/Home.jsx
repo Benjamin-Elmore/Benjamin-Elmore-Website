@@ -17,8 +17,6 @@ const ARC_PREVIEW = { src: 'assets/photos/arc-i2cbus-code.jpg', label: 'ARC lib/
 const MT_PREVIEW = { src: 'assets/photos/markettesting-lstm.jpg', label: 'MarketTesting LSTM layers · stock_model.py · main 79f6e12', veil: 0.3 };
 const CODE_PREVIEW = { src: 'assets/photos/arc-lockguard-code.jpg', label: 'ARC lib/LockGuard.h · CPPDev 49d54a0', veil: 0.1 };
 const TEAM_PREVIEW = { src: 'assets/photos/cbu-club-2026.jpg', label: 'CBU Robotics full team · November 2026', veil: 0.49 };
-const INNOUT_PREVIEW = { src: 'assets/photos/innout-las-vegas.jpg', label: 'Photo: Wendy Berry · CC BY 2.0', veil: 0.73 }; // credited in Footer.jsx too
-const LEGO_PREVIEW = { src: 'assets/photos/legoland-entrance.jpg', label: 'Photo: Simon_sees · CC BY 2.0', veil: 0.64 }; // credited in Footer.jsx too
 const Preview = ({ src, label, veil }) => <span className="hover-preview" data-label={label} style={{ '--veil': veil }} aria-hidden="true"><img src={BASE + src} alt="" loading="lazy" decoding="async" /></span>;
 
 export default function Home() {
@@ -70,8 +68,8 @@ export default function Home() {
               </ul>
             </details>
           </li>
-          <li><Link className="exp-row__link" to="/In-N-Out/"><span className="exp-row__role">Associate</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">In-N-Out Burger</span> <span className="exp-row__dates">Since <time dateTime="2024-05">May 2024</time></span> <Preview {...INNOUT_PREVIEW} /></Link></li>
-          <li><Link className="exp-row__link" to="/LEGOLAND/"><span className="exp-row__role">Seasonal Lifeguard</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">LEGOLAND California Resort</span> <span className="exp-row__dates"><time dateTime="2026-04">April</time> to <time dateTime="2026-08">August 2026</time></span> <Preview {...LEGO_PREVIEW} /></Link></li>
+          <li><Link className="exp-row__link" to="/In-N-Out/"><span className="exp-row__role">Associate</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">In-N-Out Burger</span> <span className="exp-row__dates">Since <time dateTime="2024-05">May 2024</time></span></Link></li>
+          <li><Link className="exp-row__link" to="/LEGOLAND/"><span className="exp-row__role">Seasonal Lifeguard</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">LEGOLAND California Resort</span> <span className="exp-row__dates"><time dateTime="2026-04">April</time> to <time dateTime="2026-08">August 2026</time></span></Link></li>
         </SlideList>
       </section>
       <section id="skills" className="section section--skills" aria-labelledby="skills-title">

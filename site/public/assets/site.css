@@ -1933,11 +1933,6 @@ figcaption.figure__caption::before {
 }
 
 
-.site-footer .site-footer__credit {
-  flex-basis: 100%;
-  text-transform: none;
-  font-size: 0.75rem;
-}
 
 /* Status table and figure notes (ARC status, MarketTesting run note). */
 .status-table { width: 100%; border-collapse: collapse; margin: var(--space-4) 0; font-size: 0.95em; }

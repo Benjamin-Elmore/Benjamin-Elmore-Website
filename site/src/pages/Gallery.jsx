@@ -82,18 +82,6 @@ const GROUPS = [
         used: [['/CBU-Robotics/#cbu-members', 'CBU Robotics']] },
     ],
   },
-  {
-    id: 'photos', title: 'Other photos', items: [
-      { src: 'photos/innout-las-vegas.jpg', w: 1200, h: 900, title: 'In-N-Out Burger, Las Vegas',
-        alt: 'An In-N-Out Burger restaurant in Las Vegas.',
-        ref: <>Photo by <a href="https://www.flickr.com/photos/twodolla/6841001244/" rel="noopener">Wendy Berry</a>, <a href="https://creativecommons.org/licenses/by/2.0/" rel="noopener">CC BY 2.0</a>. Shown blurred and dimmed on Home.</>,
-        used: [['/', 'Home hover background']] },
-      { src: 'photos/legoland-entrance.jpg', w: 1600, h: 1200, title: 'LEGOLAND California entrance',
-        alt: 'The entrance of LEGOLAND California Resort.',
-        ref: <>Photo by <a href="https://commons.wikimedia.org/wiki/File:Legoland_California_entrance_%285712056741%29.jpg" rel="noopener">Simon_sees</a>, <a href="https://creativecommons.org/licenses/by/2.0/" rel="noopener">CC BY 2.0</a>. Shown blurred and dimmed on Home.</>,
-        used: [['/', 'Home hover background']] },
-    ],
-  },
 ];
 
 export default function Gallery() {
