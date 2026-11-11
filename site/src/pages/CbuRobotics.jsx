@@ -29,8 +29,8 @@ export default function CbuRobotics() {
           <p><strong>Focus areas:</strong> Milestone planning, deadline tracking, cross-team communication, event and competition planning, Responsible Engineer reporting</p>
           <figure className="photo-slot photo-slot--21x9" id="cbu-club">
             {/* Photo "cbu-club": 21:9 crop (2000x857) of IMG_0258.jpg (Canon, November 9, 2026); the original is in the private notes folder. */}
-            <img src={BASE + 'assets/photos/cbu-club-2026.jpg'} width="2000" height="857" loading="lazy" decoding="async" alt="Members of CBU Robotics in matching navy club shirts, standing in three rows in a university building lobby." />
-            <figcaption className="figure__caption">CBU Robotics, November 2026.</figcaption>
+            <img src={BASE + 'assets/photos/cbu-club-2026.jpg'} width="2000" height="857" loading="lazy" decoding="async" alt="The full CBU Robotics team in matching navy club shirts, standing in three rows in a university building lobby." />
+            <figcaption className="figure__caption">The full CBU Robotics team, November 2026.</figcaption>
           </figure>
         </div>
         <div className="role-section" id="software-engineer">
@@ -46,17 +46,17 @@ export default function CbuRobotics() {
           <ul>
             <li>Develop ARC, the C++ firmware for ARSENAL, the custom ESP32-S3 sensor board of the team. See the <Link to="/ARC/">ARC case study</Link>.</li>
             <li>Implemented its sensor abstraction, shared I²C bus management and RS-485 protocol.</li>
-            <li>Verified RS-485 parsing of V5 Brain test packets on the bench in October 2026; sensor reads and full-pipeline hardware verification are the next steps.</li>
+            <li>Verified RS-485 parsing of V5 Brain test packets on the bench in October 2026. In November 2026, ran the read path end to end on the bench: three temperature sensors on the ARSENAL-3 board, through ARC, to the V5 Brain with zero bad packets. Testing on the robot is the next step.</li>
           </ul>
           <p><strong>Tools:</strong> C++, PROS, ESP-IDF, FreeRTOS, PlatformIO, ESP32-S3, I²C, UART, RS-485, Git</p>
         </div>
         <figure className="photo-slot photo-pair" id="cbu-members">
           {/* Photos "cbu-members": IMG_0094.jpg and IMG_0146.jpg (Canon, November 9, 2026), resized to 1600x1067; originals in the private notes folder. */}
           <div className="photo-pair__grid">
-            <img src={BASE + 'assets/photos/cbu-members-sign.jpg'} width="1600" height="1067" loading="lazy" decoding="async" alt="Seven CBU Robotics members in navy club shirts sitting and standing along a wooden bench in front of a carved CBU wall sign." />
-            <img src={BASE + 'assets/photos/cbu-members-lineup.jpg'} width="1600" height="1067" loading="lazy" decoding="async" alt="Seven CBU Robotics members in navy club shirts standing in a staggered line with arms crossed, in front of a dotted world map wall." />
+            <img src={BASE + 'assets/photos/cbu-members-sign.jpg'} width="1600" height="1067" loading="lazy" decoding="async" alt="The seven CBU Robotics leads in navy club shirts, sitting and standing along a wooden bench in front of a carved CBU wall sign." />
+            <img src={BASE + 'assets/photos/cbu-members-lineup.jpg'} width="1600" height="1067" loading="lazy" decoding="async" alt="The seven CBU Robotics leads in navy club shirts, standing in a staggered line with arms crossed in front of a dotted world map wall." />
           </div>
-          <figcaption className="figure__caption">CBU Robotics members at California Baptist University, November 2026.</figcaption>
+          <figcaption className="figure__caption">CBU Robotics leads at California Baptist University, November 2026.</figcaption>
         </figure>
         <h2 id="drivetrain-title" className="section__title"><span aria-hidden="true">02 / </span>Drivetrain control and point-to-point navigation (fall 2025)</h2>
         <div className="case-study__block" id="drivetrain">

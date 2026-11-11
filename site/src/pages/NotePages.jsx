@@ -39,7 +39,7 @@ export function NoteRs485() {
       <p>ARC talks to the VEX V5 Brain over half-duplex RS-485: one wire pair, so only one side transmits at a time. The ESP-IDF UART driver has an RS-485 half-duplex mode that drives the direction pin of the transceiver from the UART RTS line, so the firmware does not toggle it by hand.</p>
       <p>To test the receiver without the real robot, I wrote a PROS program that sends a 37-byte read request at 115200 baud once per second. When nothing arrived, the first check was the receiver-output wiring of the transceiver to the ESP32 RX pin, ideally with a scope or logic analyzer.</p>
       <p>On October 28, 2026 the ESP32-S3 serial monitor showed the request received and parsed: READ header, 22-byte body, sensor ID 1, valid checksum, and both DE AD BE EF frame markers. The capture is on the <Link to="/ARC/#arc-serial">ARC page</Link>.</p>
-      <p><strong>Scope:</strong> that was an isolated bench test of an earlier, read-only protocol. Configuration and reboot packets, and the full pipeline with a real sensor, are not tested on hardware.</p>
+      <p><strong>Scope:</strong> that was an isolated bench test of an earlier, read-only protocol. Configuration and reboot packets were not tested on hardware. The read path with real sensors ran later, on November 10, 2026: see the <Link to="/ARC/#arc-rs485-test">bench test on the ARC page</Link>.</p>
     </NoteShell>
   );
 }

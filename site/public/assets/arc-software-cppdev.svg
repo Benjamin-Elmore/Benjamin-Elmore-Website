@@ -123,4 +123,4 @@
 <text x="1812" y="552" font-size="26">half-duplex</text>
 <rect x="150" y="1148" width="1700" height="48" rx="8" fill="none" stroke="#ffffff" stroke-width="1.6"/>
 <text x="1000.0" y="1181" font-size="26" text-anchor="middle"><tspan font-weight="700">Connection key</tspan>      Solid line: communication path   •   Dashed arrow: software dependency   •   Hollow triangle: interface implementation</text>
-<text x="1000.0" y="1232" font-size="26" text-anchor="middle" fill="#bdb9b1">Design view • Based on ARC source @ CPPDev 49d54a0 • End-to-end sensor integration not yet verified on hardware</text></g></svg>
+<text x="1000.0" y="1232" font-size="26" text-anchor="middle" fill="#bdb9b1">Design view • Based on ARC source @ CPPDev 49d54a0 • Read path bench-verified Nov 10, 2026; not yet on the robot</text></g></svg>

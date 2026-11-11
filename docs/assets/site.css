@@ -633,6 +633,12 @@ main {
   margin-top: var(--space-3);
 }
 
+/* A list right after a figure (ARC data path) needs room below the caption. */
+.case-study__block figure + ul,
+.case-study__block figure + ol {
+  margin-top: var(--space-5);
+}
+
 .case-study__block ul:not([class]) li + li,
 .case-study__block ol:not([class]) li + li,
 .open-work li + li,
