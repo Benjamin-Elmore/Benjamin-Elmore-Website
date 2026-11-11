@@ -1,14 +1,32 @@
 # Benjamin Elmore: portfolio site
 
-React (Vite + React Router) pre-rendered to static HTML. Source is in `site/`; the build output is `docs/`, committed, and is what GitHub Pages serves (`main` `/docs`). Live at https://benjamin-elmore.github.io/Benjamin-Elmore-Website/.
+Portfolio of Benjamin Elmore, a computer science student seeking embedded, autonomy and flight-software work. The site covers the ARC project overview, market testing, CBU Robotics, an About page and a photo Gallery organised into sets with filter buttons.
 
-Pages (routes): `/`, `/ARC/`, `/MarketTesting/`, `/CBU-Robotics/`, `/In-N-Out/`, `/LEGOLAND/`, `/About/`, `/Notes/` (index plus three notes), plus `404.html`. Page content is in `site/src/pages/`; shared styles and the theme script are in `site/public/assets/`.
+## Stack
 
-Run it:
-- Dev server: `cd site && npm ci && npm run dev`
-- Build into `docs/`: `cd site && npm run build` (commit the result; CI fails if `docs/` differs from a fresh build)
-- Preview the build: `cd site && npm run preview`. For a Pages-faithful local server (redirects and 404.html), run `python tools/pages_server.py --root docs`.
+React with React Router, built by Vite. Source is in `site/`. The build pre-renders each route to static HTML in `docs/`, which is committed. The site is dark-only by design.
 
-Checks: `python tools/check_site.py` (also runs in CI, with a headless click-through). To also flag private names, set `PRIVATE_NAMES` (comma separated) or list them in a gitignored `tools/private-names.txt`.
+Routes: `/`, `/ARC/`, `/MarketTesting/`, `/CBU-Robotics/`, `/In-N-Out/`, `/LEGOLAND/`, `/About/`, `/Gallery/`, plus `404.html`. Page content is in `site/src/pages/`; shared styles and scripts are in `site/public/assets/`.
 
-Swapping in a photo: each photo slot is a JSX comment in the page source (`site/src/pages/*.jsx`) naming the file path. Put the image in `site/public/assets/photos/`, replace the dashed `.photo-slot__box` div with an `<img>` for that path (add `alt`, `width`, `height`), keep the caption, then run `npm run build`. The serial-output slot on the ARC page is a `<pre>` block: paste in real captured output.
+## Build
+
+```
+cd site
+npm ci
+npm run build
+```
+
+The build writes to `docs/`. Commit the result; CI fails if `docs/` differs from a fresh build. `npm run dev` starts the dev server.
+
+## Checks
+
+```
+python tools/check_site.py
+node tools/clickthrough.mjs --browser "<path to Edge or Chrome>" --profile "<empty directory>" --root docs
+```
+
+`check_site.py` validates the built pages (titles, canonical and og tags, links, copy rules). `clickthrough.mjs` drives headless Edge or Chrome against a local Pages-faithful server (`tools/pages_server.py`). Both run in CI.
+
+## Hosting
+
+GitHub Pages serves the `main` branch, `/docs` folder, at https://benjamin-elmore.github.io/Benjamin-Elmore-Website/. The Vite base path is `/Benjamin-Elmore-Website/`, and `docs/.nojekyll` disables Jekyll processing.
