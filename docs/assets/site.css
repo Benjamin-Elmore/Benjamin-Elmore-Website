@@ -2053,6 +2053,10 @@ figcaption.figure__caption:has(.fig-tag)::before { content: none; }
 .gallery { align-items: start; }
 .gallery__item { scroll-margin-top: var(--space-4); }
 @media (min-width: 45em) { .gallery__item:has(.gallery__figure--code) { grid-column: 1 / -1; } }
+/* In two and three columns every thumbnail sits in the same 3:2 box (letterboxed on black), so titles line up across a row. */
+@media (min-width: 45em) {
+  .gallery__figure img, .gallery__figure--narrow img { width: 100%; max-height: none; aspect-ratio: 3 / 2; object-fit: contain; }
+}
 
 /* Nav on phones: all six items on one row, no minimum-width boxes, underline matches the word. */
 @media (max-width: 44.99em) {
