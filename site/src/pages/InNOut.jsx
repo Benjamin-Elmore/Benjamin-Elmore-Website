@@ -14,7 +14,10 @@ export default function InNOut() {
         <h2 id="innout-title" className="visually-hidden">Role</h2>
         <ul>
           <li>Associate since May 2024, about two and a half years of continuous work.</li>
-          <li>Serve customers and complete store-wide tasks with teammates during high-volume shifts.</li>
+          <li>Handle customer requests and confirm order details with each customer, asking clarifying questions to keep orders accurate.</li>
+          <li>Manage cash drawer accounts and prevent losses from material waste and payment errors.</li>
+          <li>Coordinate store requirements and triage multiple tasks during high-pressure shifts, completing work in order of priority and time sensitivity.</li>
+          <li>Plan food preparation to balance ingredient supply and demand, based on customer volume and current ingredient stock.</li>
         </ul>
       </section>
     </>
