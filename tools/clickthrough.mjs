@@ -359,6 +359,13 @@ async function main() {
     await tab.until(q.inView('CBU1-02'), '#CBU1-02 in view');
   });
 
+  for (const id of ['work', 'experience', 'contact']) {
+    await step(`K13b fresh load of /#${id} lands on the section`, async () => {
+      await tab.goto(url('#' + id), SETTLE);
+      await tab.until(`(()=>{const e=document.getElementById(${JSON.stringify(id)});return !!e&&scrollY>100&&(e.getBoundingClientRect().top<150||scrollY+innerHeight>=document.documentElement.scrollHeight-2)})()`, `#${id} scrolled into place`, 3000);
+    });
+  }
+
   // K11 JavaScript off
   await step('K11 JavaScript off: content, anchors on every route', async () => {
     await tab.send('Emulation.setScriptExecutionDisabled', { value: true });

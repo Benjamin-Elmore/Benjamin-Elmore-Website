@@ -156,7 +156,7 @@ export default function Gallery() {
       <div className="page-header">
         <p className="eyebrow">Gallery</p>
         <h1>Gallery</h1>
-        <p className="page-header__summary">Every diagram, output, code sample and photo on this site, in sets and subsets, each with a tag such as ARC-01 and its source. Code and outputs are pinned to the commit they came from. Select an image to view it full size.</p>
+        <p className="page-header__summary">Selected project diagrams, bench results, code excerpts and team photos, with source notes and links to the related pages.</p>
         <div className="gallery-filter" role="group" aria-label="Filter the Gallery by set" style={{ visibility: ready ? 'visible' : 'hidden' }}>
           {[{ id: 'all', title: 'All' }, ...SETS].map((s) => (
             <button key={s.id} type="button" className="gallery-filter__btn" disabled={!ready} aria-pressed={filter === s.id} onClick={() => pick(s.id)}>{s.title}</button>

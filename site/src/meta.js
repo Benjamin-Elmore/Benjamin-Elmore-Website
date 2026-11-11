@@ -13,8 +13,8 @@ export const META = {
     description: 'MarketTesting: an independent machine learning project with a data pipeline from CSV or yfinance data to a TensorFlow LSTM and a prediction table.',
   },
   cbuRobotics: {
-    title: 'CBU1 VEX U Robotics | Benjamin Elmore',
-    description: 'The roles of Benjamin Elmore on the CBU1 VEX U Robotics team at California Baptist University: Vice President since October 2026 and Software Engineer since September 2025.',
+    title: 'VEX U Robotics | Benjamin Elmore',
+    description: 'The roles of Benjamin Elmore with CBU Robotics and the CBU1 VEX U team at California Baptist University: Vice President since October 2026 and Software Engineer since September 2025.',
   },
   inNOut: {
     title: 'In-N-Out Burger | Benjamin Elmore',
@@ -30,7 +30,7 @@ export const META = {
   },
   gallery: {
     title: 'Gallery | Benjamin Elmore',
-    description: 'Every diagram, output, code sample and photo on the portfolio of Benjamin Elmore, each tagged and sourced, with code and outputs pinned to the ARC or MarketTesting commit they came from.',
+    description: 'Selected project diagrams, bench results, code excerpts and team photos from the portfolio of Benjamin Elmore, with source notes and links to the related pages.',
   },
   notFound: {
     title: 'Page not found | Benjamin Elmore',

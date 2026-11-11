@@ -13,8 +13,8 @@ export default function Legoland() {
       <section className="section case-study" aria-label="Responsibilities">
         <div className="case-study__block">
           <ul>
-            <li>Communicated with fellow lifeguards during emergency training scenarios so that care was organized and thorough.</li>
-            <li>Supported guests with injuries and park-related questions, providing direct guidance and care until each need was fully met.</li>
+            <li>Practiced coordinated emergency response with fellow lifeguards during training scenarios.</li>
+            <li>Helped guests with injuries and park questions, providing assistance and directing them to the appropriate support.</li>
           </ul>
         </div>
       </section>

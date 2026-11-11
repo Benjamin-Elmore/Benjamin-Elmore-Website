@@ -5,7 +5,7 @@ import SlideList from '../components/SlideList.jsx';
 import ResumeLink, { HAS_RESUME } from '../components/ResumeLink.jsx';
 
 // HOME-1: the intro line under the profile photo. It types out once per visit.
-const INTRO = 'Computer science student at California Baptist University. Software engineer on CBU1, the VEX U robotics team, and Vice President of CBU Robotics, now building ARC: firmware for the custom ESP32-S3 sensor board of the team.';
+const INTRO = 'I am a computer science student at California Baptist University, a software engineer on CBU1 and Vice President of CBU Robotics. I am developing ARC, C++ firmware for the custom ESP32-S3 sensor board of CBU1.';
 
 // Subset of the Technical skills section below.
 const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'TensorFlow', 'Linux', 'Git'];
@@ -40,7 +40,7 @@ export default function Home() {
       <section id="work" className="section section--work" aria-labelledby="work-title">
         <h2 id="work-title" className="section__title"><span aria-hidden="true">01 / </span>Selected work</h2>
         <SlideList className="work-list">
-          <li><Link className="work-row" to="/ARC/"><span className="work-row__name">ARC</span> <span className="work-row__description">Embedded C++ firmware for the custom ESP32-S3 sensor board of the CBU1 robotics team: FreeRTOS sensor tasks, a mutex-protected shared I²C bus and an RS-485 protocol whose read path runs on the bench.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/arc-software-cppdev.svg'} width="96" height="60" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>115200 baud RS-485</span> <span>Up to 15 sensor IDs</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span> <Preview {...ARC_PREVIEW} /></Link></li>
+          <li><Link className="work-row" to="/ARC/"><span className="work-row__name">ARC</span> <span className="work-row__description">C++ firmware for the custom ESP32-S3 sensor board of CBU1, with FreeRTOS sensor tasks, shared I²C access and bench-tested data transfer to the V5 Brain.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/arc-software-cppdev.svg'} width="96" height="60" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>115200 baud RS-485</span> <span>Up to 15 sensor IDs</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span> <Preview {...ARC_PREVIEW} /></Link></li>
           <li><Link className="work-row" to="/MarketTesting/"><span className="work-row__name">MarketTesting</span> <span className="work-row__description">Independent Python project: a data pipeline and LSTM training loop, packaged as an installable Python package with lint checks in CI.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/photos/markettesting-table.jpg'} width="96" height="54" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>100-day windows</span> <span>12-stock run, Nov 8, 2026</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span> <Preview {...MT_PREVIEW} /></Link></li>
         </SlideList>
       </section>
@@ -122,7 +122,7 @@ export default function Home() {
       <section id="contact" className="section section--num" aria-labelledby="contact-title">
         <h2 id="contact-title" className="section__title"><span aria-hidden="true">05 / </span>Contact</h2>
         <p className="section__lede contact__seeking">Looking for a Summer 2027 internship in embedded, autonomy or flight software, especially in defense and aerospace. U.S. citizen.</p>
-        <p className="section__lede">For inquiries, email or LinkedIn is preferred.</p>
+        <p className="section__lede">Contact me by email or on LinkedIn.</p>
         <p className="contact__email">Email: <a href="mailto:benelmore6@gmail.com" data-umami-event="email-click">benelmore6@gmail.com</a></p>
         <ul className="link-list contact__links">
           <li><a href="https://www.linkedin.com/in/benjamin-n-elmore/" rel="noopener" data-umami-event="linkedin-click">LinkedIn</a></li>

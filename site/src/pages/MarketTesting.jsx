@@ -9,7 +9,7 @@ export default function MarketTesting() {
         <p><Link className="back-link" to="/#work">← All work</Link></p>
         <p className="eyebrow">Project 02</p>
         <h1>MarketTesting</h1>
-        <p className="page-header__meta">Independent Python learning project, November 2025 to April 2026</p>
+        <p className="page-header__meta">Developed November 2025 to April 2026; demonstration run November 2026.</p>
         <p className="page-header__summary">An independent machine learning project covering the workflow from data to predictions: acquiring historical equity data, cleaning and scaling it, training an LSTM and recording its predictions in a structured table.</p>
       </div>
       <section className="section case-study" aria-labelledby="mt-title">
@@ -26,7 +26,7 @@ export default function MarketTesting() {
         <div className="case-study__block" id="mt-built">
           <h3>Key components</h3>
           <ul>
-            <li><strong>Data pipeline.</strong> Loading from yfinance or CSV, filtering out empty and index-like tickers, and scaling every stock with one shared scaler.</li>
+            <li><strong>Data pipeline.</strong> Loading from yfinance or CSV, Filters missing or short datasets and skips tickers that exceed fixed price or scaling thresholds. Every stock is scaled with one shared scaler.</li>
             <li><strong>Model and training.</strong> A Keras LSTM with dropout and early stopping, trained ticker by ticker, including diagnosis of a scaling defect that drove validation loss to NaN.</li>
             <li><strong>Prediction log and packaging.</strong> A DataLog that turns predictions into a day-by-day table, Pylint checks on GitHub Actions, and an installable Python package.</li>
           </ul>
