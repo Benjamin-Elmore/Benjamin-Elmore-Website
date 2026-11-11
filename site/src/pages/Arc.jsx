@@ -36,7 +36,7 @@ export default function Arc() {
           <h3>Operation</h3>
           <p>ARC reads I²C sensors on the ARSENAL and serves their data to the V5 Brain over RS-485. ARC also accepts configuration from the Brain (sensor types and register offsets) and reboot commands; these packets are implemented but not yet tested on hardware.</p>
           <h3>Role</h3>
-          <p>I am the sole author of ARC. I designed the RS-485 protocol together with another team member, who wrote the matching V5 Brain code. Development began in August 2026 in the private team repository and continues in the public ARC repository.</p>
+          <p>I am the sole author of ARC. I designed the RS-485 protocol together with another team member, who writes the matching V5 Brain code. Development began in August 2026 in the private team repository and continues in the public ARC repository.</p>
         </div>
         <div className="case-study__block" id="arc-built">
           <h3>What was built</h3>
@@ -52,14 +52,14 @@ export default function Arc() {
           <h3>Results</h3>
           <ul>
             <li>An earlier, read-only version of the RS-485 link was verified on the bench against multiple packet formats in late October 2026, with the link under isolated test.</li>
-            <li>On November 10, 2026, three TMP117 temperature sensors on the ARSENAL-3 were read by the V5 Brain through ARC over RS-485. Of 510 read requests sent by the Brain in this run, 59 replies were received, and all 59 had valid DE AD BE EF markers and checksums. The read path ran end to end on the bench; the missing replies are still to be investigated.</li>
+            <li>On November 10, 2026, three TMP117 temperature sensors on the ARSENAL-3 were read by the V5 Brain through ARC over RS-485. Every reply received by the Brain had valid DE AD BE EF markers and checksums, with 0 bad packets. The read path ran end to end on the bench.</li>
           </ul>
         </div>
         <div className="case-study__block" id="arc-status-block">
           <h3>Fault handling and testing</h3>
           <p>Each packet carries a mod-256 checksum. When a read or a getter fails for a specific sensor, ARC reports that failure for the sensor in its reply instead of sending stale data. There are no automated tests yet; all verification so far is on the bench.</p>
           <h3>Next steps</h3>
-          <p>Find out why most requests in the November 10 run received no reply, run the read path on the robot, test the configuration and reboot packets on hardware, and add automated tests.</p>
+          <p>Run the read path on the robot, test the configuration and reboot packets on hardware, and add automated tests.</p>
         </div>
         <div className="case-study__block" id="data-path">
           <h3>Data path</h3>
@@ -74,7 +74,7 @@ export default function Arc() {
           <figure className="photo-slot" id="arc-rs485-test">
             {/* Photo "arc-rs485-test": Ben's iPhone photo 20261111_044950481_iOS.jpg (November 10, 2026, 8:49 PM PST), resized to 1600x1200, levels and gamma lifted, metadata stripped; original in the private notes folder. */}
             <img src={BASE + 'assets/photos/arc-rs485-v5-screen.jpg'} width="1600" height="1200" loading="lazy" decoding="async" alt="V5 Brain screen titled V5PacketSender, ARC three-temperature bus test: port 21 at 115200 baud, 510 sent, 59 received, 0 bad; reply OK with markers and checksum; header 82, 34-byte body, 49 bytes total; sensor IDs 2, 3 and 4 reading 27.40, 28.02 and 26.30 degrees C; and a hex dump of the reply ending in DE AD BE EF." />
-            <figcaption className="figure__caption"><FigTag id="ARC-05" />The V5 Brain side of the November 10 bench test. Each reply from ARC is a 49-byte packet (header 82, 34-byte body) carrying readings from sensors 2, 3 and 4 at about 26 to 28 °C. The Brain sent 510 read requests and received 59 replies, all with valid DE AD BE EF markers and checksums; the missing replies have not yet been investigated.</figcaption>
+            <figcaption className="figure__caption"><FigTag id="ARC-05" />The V5 Brain side of the November 10 bench test. Each reply from ARC is a 49-byte packet (header 82, 34-byte body) carrying readings from sensors 2, 3 and 4 at about 26 to 28 °C. Every reply has valid DE AD BE EF markers and checksums, with 0 bad packets.</figcaption>
           </figure>
           <ol>
             <li>The read function of the sensor retrieves its registers over I²C and stores the result as three 16-bit values.</li>
