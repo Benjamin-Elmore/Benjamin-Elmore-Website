@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigationType } from 'react-router';
 import { hydration } from '../hydration.js';
 import CodeWindow from '../components/CodeWindow.jsx';
-import { SERIAL_CAPTURE, LOCKGUARD_CODE } from '../codeSamples.js';
+import { SERIAL_CAPTURE } from '../codeSamples.js';
 import { BASE } from '../routes.js';
 
 const ARC_COMMIT = <>ARC <code>CPPDev</code> 49d54a0</>;
@@ -20,10 +20,10 @@ const SETS = [
             used: [['/ARC/#arc-board', 'ARC']] },
           { id: 'ARC-02', src: 'arc-software-cppdev.svg', w: 2000, h: 1250, title: 'ARC system architecture',
             alt: 'ARC system architecture in three packages: sensor hardware, the ESP32-S3 controller firmware classes, and the RS-485 robot interface to the V5 Brain.',
-            ref: <>Redrawn from the original PlantUML layout, updated to {ARC_COMMIT}. Design view. The read path was verified on the bench on November 10, 2026; not yet run on the robot.</>,
+            ref: <>Redrawn from the original PlantUML layout, updated to {ARC_COMMIT}. The read path was verified on the bench on November 10, 2026; not yet run on the robot.</>,
             used: [['/ARC/#arc-software', 'ARC'], ['/', 'Home thumbnail']] },
           { id: 'ARC-03', code: 'serial', w: 0, h: 0, title: 'ARC serial monitor output', language: 'Serial output', codeTitle: 'ESP32-S3 serial monitor, October 28, 2026',
-            ref: <>Bench serial output from ARC, October 28, 2026, with the RS-485 link under isolated test: a read request from the V5 Brain received and parsed without error. Duplicate buffer output and all-zero rows are omitted. Text, as on the ARC page.</>,
+            ref: <>Bench serial output from ARC, October 28, 2026, with the RS-485 link under isolated test on the ARSENAL-2.5: a read request from the V5 Brain received and parsed without error. Duplicate buffer output and all-zero rows are omitted. Text, as on the ARC page.</>,
             used: [['/ARC/#arc-serial', 'ARC']] },
           { id: 'ARC-04', src: 'arc-architecture.svg', w: 1000, h: 370, title: 'ARC data path',
             alt: 'Data path: I²C sensors to an I²C multiplexer to the ESP32-S3 running ARC firmware, then half-duplex RS-485 to the V5 Brain.',
@@ -33,17 +33,14 @@ const SETS = [
             alt: 'V5 Brain screen showing the ARC three-temperature bus test: 510 sent, 59 received, 0 bad, reply OK with markers and checksum, 49-byte reply, sensors 2, 3 and 4 at about 26 to 28 degrees C, and a hex dump of the reply.',
             ref: <>The V5 Brain side of the same bench test: 59 replies to 510 requests, every reply a 49-byte packet with valid DE AD BE EF markers and checksum. Levels adjusted.</>,
             used: [['/ARC/#arc-rs485-test', 'ARC']] },
-          { id: 'ARC-06', code: 'lockguard', w: 0, h: 0, title: 'LockGuard, condensed', language: 'C++', codeTitle: 'lib/LockGuard.h (condensed)',
-            ref: <>Condensed from <a href="https://github.com/Benjamin-Elmore/ARC/blob/49d54a0584fecc4dd5a5edd4ad0cba9e79eb81d6/lib/LockGuard.h" rel="noopener">lib/LockGuard.h</a> at {ARC_COMMIT}. Text, as on the ARC page.</>,
-            used: [['/ARC/#arc-lockguard', 'ARC']] },
-          { id: 'ARC-07', src: 'photos/arc-i2cbus-code.jpg', w: 1280, h: 560, title: 'I2CBus: removeSensorFromBus()',
-            alt: 'Code window of removeSensorFromBus in I2CBus.h, which refuses to run unless the bus lock is held.',
-            ref: <><a href="https://github.com/Benjamin-Elmore/ARC/blob/49d54a0584fecc4dd5a5edd4ad0cba9e79eb81d6/lib/i2cComm/I2CBus.h" rel="noopener">lib/i2cComm/I2CBus.h</a> at {ARC_COMMIT}.</>,
-            used: [['/', 'Home hover background']] },
-          { id: 'ARC-08', src: 'photos/arc-lockguard-code.jpg', w: 1280, h: 560, title: 'LockGuard',
+          { id: 'ARC-06', src: 'photos/arc-sensor-example-code.jpg', w: 1280, h: 560, title: 'TMP117 sensor example: readTemperature()',
+            alt: 'Code window of the readTemperature function for the TMP117 sensor: it reads the temperature register under the held bus lock, checks the status, combines the two bytes and calls setReadings.',
+            ref: <>Condensed from <code>lib/Sensor/SensorOffsetConfig.h</code> at <code>CPPDev</code> b24ce84; the full example, from <code>src/main.cpp</code> and <code>SensorOffsetConfig.h</code>, is on the ARC page.</>,
+            used: [['/ARC/#arc-sensor-example', 'ARC'], ['/', 'Home hover background']] },
+          { id: 'ARC-07', src: 'photos/arc-lockguard-code.jpg', w: 1280, h: 560, title: 'LockGuard, condensed',
             alt: 'Code window of the LockGuard RAII class that holds the shared I²C bus mutex.',
-            ref: <><a href="https://github.com/Benjamin-Elmore/ARC/blob/49d54a0584fecc4dd5a5edd4ad0cba9e79eb81d6/lib/LockGuard.h" rel="noopener">lib/LockGuard.h</a> at {ARC_COMMIT}.</>,
-            used: [['/', 'Home hover background']] },
+            ref: <>Condensed from <a href="https://github.com/Benjamin-Elmore/ARC/blob/49d54a0584fecc4dd5a5edd4ad0cba9e79eb81d6/lib/LockGuard.h" rel="noopener">lib/LockGuard.h</a> at {ARC_COMMIT}.</>,
+            used: [['/ARC/#arc-lockguard', 'ARC'], ['/', 'Home hover background']] },
       ] },
       { id: 'markettesting', title: 'MarketTesting', prefix: 'MT', items: [
           { id: 'MT-01', src: 'markettesting-pipeline.svg', w: 360, h: 664, title: 'MarketTesting pipeline', narrow: true,
@@ -68,9 +65,9 @@ const SETS = [
   {
     id: 'teams', title: 'Teams', subsets: [
       { id: 'cbu1', title: 'CBU1 Robotics', prefix: 'CBU1', items: [
-          { id: 'CBU1-01', src: 'photos/cbu-team.jpg', w: 2000, h: 857, title: 'CBU1 at 2026 Worlds, St. Louis',
-            alt: 'The CBU1 VEX U team posed in team polos at the 2026 VEX Robotics World Championship in St. Louis, with two team robots in the front row.',
-            ref: <>CBU1 VEX U team photo, 2026 VEX Robotics World Championship, St. Louis.</>,
+          { id: 'CBU1-01', src: 'photos/cbu-team.jpg', w: 2000, h: 857, title: 'CBU1 members at 2026 Worlds, St. Louis',
+            alt: 'Members of the CBU1 VEX U team posed in team polos at the 2026 VEX Robotics World Championship in St. Louis, with two team robots in the front row.',
+            ref: <>Members of the CBU1 VEX U team, 2026 VEX Robotics World Championship, St. Louis.</>,
             used: [['/CBU-Robotics/#cbu-team', 'CBU Robotics']] },
           { id: 'CBU1-02', src: 'photos/cbu-club-2026.jpg', w: 2000, h: 857, title: 'CBU Robotics full team, November 2026',
             alt: 'The full CBU Robotics team in matching navy club shirts, standing in three rows in a university building lobby.',
@@ -89,7 +86,7 @@ const SETS = [
   },
 ];
 
-const CODE = { serial: SERIAL_CAPTURE, lockguard: LOCKGUARD_CODE };
+const CODE = { serial: SERIAL_CAPTURE };
 
 const filterOf = (search) => {
   const v = new URLSearchParams(search).get('set');
