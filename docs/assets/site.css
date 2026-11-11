@@ -1053,10 +1053,12 @@ main {
 /* ---------- Education ---------- */
 
 .edu__degree,
+.edu__gpa,
 .edu .meta {
   margin-top: var(--space-1);
 }
 
+.edu__gpa,
 .edu .meta {
   font-family: var(--font-num);
 }
