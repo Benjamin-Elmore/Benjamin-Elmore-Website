@@ -20,7 +20,7 @@ mkdirSync(profile, { recursive: true });
 
 const BASE = '/Benjamin-Elmore-Website/';
 const SITE_URL = 'https://benjamin-elmore.github.io' + BASE;
-const PAGES = ['', 'ARC/', 'MarketTesting/', 'CBU-Robotics/', 'In-N-Out/', 'LEGOLAND/', 'About/', 'Notes/', 'Gallery/', 'Notes/i2c-bus-sharing/', 'Notes/rs485-bring-up/', 'Notes/false-status-flag/'];
+const PAGES = ['', 'ARC/', 'MarketTesting/', 'CBU-Robotics/', 'In-N-Out/', 'LEGOLAND/', 'About/', 'Gallery/'];
 async function get(url) {  // fetch without following redirects, body always drained
   const r = await fetch(url, { redirect: 'manual' });
   await r.arrayBuffer();
