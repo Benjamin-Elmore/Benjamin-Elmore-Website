@@ -35,3 +35,64 @@ private:
     SemaphoreHandle_t& _mutexReference;
     bool _isLockedByLockGuard = false;
 };`;
+
+
+export const SENSOR_EXAMPLE_CODE = `// src/main.cpp
+namespace {
+    constexpr uint8_t TMP117_ADDRESS = 0x48;
+    constexpr uint8_t TEMP1_ID = 2;
+    constexpr uint8_t TEMP1_MUX_CHANNEL = 3;   // 0x70, channel 3
+    // ...
+}
+
+extern "C" void app_main()
+{
+    // ...
+    auto& sensorBus = *I2CARSENAL::multiplexerBus;
+    constexpr auto temperature = SensorUtils::SensorConfig::TEMPERATURE;
+    static Sensor<2> temp1(
+        "temp1", sensorBus, TMP117_ADDRESS, TEMP1_ID, false, temperature, TEMP1_MUX_CHANNEL);
+    // ...
+        const auto status = sensor->setup();
+        if (status != SensorUtils::SENSOR_OK) {
+            ESP_LOGE(TAG, "%s setup failed: %s", sensor->getName().data(),
+                     SensorUtils::sensor_status_str(status));
+            continue;
+        }
+    // ...
+}
+
+// lib/Sensor/SensorOffsetConfig.h
+namespace SensorOffsetConfig {
+
+    template <std::size_t N>
+    void readTemperature(Sensor<N>& sensor, LockGuard& lock) {
+        constexpr uint8_t temperatureRegister = 0x00;
+        uint8_t temperatureBytes[2]{};
+        const esp_err_t readStatus = sensor.readDeviceRegister(
+            temperatureRegister, temperatureBytes, sizeof(temperatureBytes), lock);
+
+        if (readStatus != ESP_OK) {
+            return;
+        }
+
+        const uint16_t highByte = temperatureBytes[0];
+        const uint16_t lowByte = temperatureBytes[1];
+        const uint16_t rawTemperature = (highByte << 8) | lowByte;
+        sensor.setReadings({rawTemperature, 0, 0});
+    }
+
+    template <std::size_t N>
+    void addTemperatureOffsets(Sensor<N>& sensor) {
+        constexpr uint8_t temperatureOffsetRegister = 0x07;
+        constexpr uint16_t defaultTemperatureOffset = 0;
+        constexpr uint8_t temperaturePacketSection = 0;
+        constexpr uint8_t temperatureComponent = 0;
+        constexpr auto registerLayout = SensorUtils::OffsetLayout::REG_16_BIT_HIGH_FIRST;
+
+        sensor.appendOffset(
+            "offsetTemperature", defaultTemperatureOffset, temperatureOffsetRegister,
+            temperaturePacketSection, temperatureComponent, registerLayout);
+    }
+
+}`;
