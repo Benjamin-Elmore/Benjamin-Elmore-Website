@@ -25,12 +25,19 @@ export default function Home() {
     <>
       <section id="top" className="section section--intro" aria-labelledby="intro-title">
         <p className="intro__role">Software Engineer <span aria-hidden="true">/</span> Computer Science Student</p>
-        <p className="intro__status">B.S. Computer Science, expected May 2029 · GPA 4.00 · Seeking a Summer 2027 internship in embedded, autonomy or flight software · U.S. citizen</p>
         <h1 id="intro-title" className="visually-hidden">Benjamin Elmore</h1>
-        <figure className="photo-slot intro__photo" id="profile">
-          {/* Profile photo: an 800px square crop of Ben's Profile.jpg, metadata stripped. */}
-          <img src={BASE + 'assets/photos/profile-square.jpg'} alt="Benjamin Elmore" width="800" height="800" />
-        </figure>
+        <div className="intro__head">
+          <figure className="photo-slot intro__photo" id="profile">
+            {/* Profile photo: an 800px square crop of Ben's Profile.jpg, metadata stripped. */}
+            <img src={BASE + 'assets/photos/profile-square.jpg'} alt="Benjamin Elmore" width="800" height="800" />
+          </figure>
+          <ul className="intro__status" aria-label="At a glance">
+            <li>B.S. Computer Science, expected May 2029</li>
+            <li>GPA 4.00</li>
+            <li>Seeking a Summer 2027 internship in embedded, autonomy or flight software</li>
+            <li>U.S. citizen</li>
+          </ul>
+        </div>
         <TypeLine className="intro__lede" text={INTRO} />
         <p className="intro__team"><Link className="cbu-logo" to="/CBU-Robotics/"><img src={BASE + 'assets/photos/cbu1-logo-white.png'} width="400" height="115" decoding="async" alt="CBU1 VEX U Robotics" /></Link></p>
         <ul className="tag-list keyword-strip" aria-label="Core technologies">
