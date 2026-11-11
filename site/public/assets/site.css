@@ -1528,6 +1528,20 @@ time {
   content: "";
 }
 
+.page-header > .cbu-logo {
+  margin-top: var(--space-4);
+}
+
+.cbu-logo img {
+  display: block;
+  width: 130px;
+  height: auto;
+}
+
+@media (min-width: 45em) {
+  .cbu-logo img { width: 180px; }
+}
+
 #main .page-header h1 {
   margin-top: var(--space-2);
   font-family: var(--font-display);

@@ -6,7 +6,8 @@ export default function CbuRobotics() {
     <>
       <div className="page-header">
         <p><Link className="back-link" to="/#experience">← All experience</Link></p>
-        <p className="eyebrow">Experience</p>
+        <p className="eyebrow visually-hidden">Experience</p>
+        <div className="cbu-logo"><img src={BASE + 'assets/photos/cbu1-logo-white.png'} width="400" height="115" decoding="async" alt="" /></div>
         <h1>CBU1 VEX U Robotics</h1>
         <p className="page-header__meta">California Baptist University · Vice President and Software Engineer</p>
         <p className="page-header__summary">Software engineer for CBU1, the VEX U robotics team at California Baptist University: drivetrain and navigation software from fall 2025, ARC sensor firmware from August 2026, and Vice President of CBU Robotics since October 2026.</p>
