@@ -659,22 +659,6 @@ main {
   font-size: 0.9375rem;
 }
 
-/*
-  The repo link sits in a sentence (WCAG 2.5.8 inline exception), but it is the box's lead link, so an
-  invisible ::before stretches its hit area to 44px: 18px up into the box padding, 6px down into the
-  line gap. Line spacing and the focus ring (which stays on the text) are unchanged. This only holds
-  while the link sits on one line; if it wraps (320px, large default fonts) the ::before shrinks to a
-  thin strip and the inline exception alone covers it.
-*/
-.case-study__repo a {
-  position: relative;
-}
-
-.case-study__repo a::before {
-  content: "";
-  position: absolute;
-  inset: -18px -4px -6px;
-}
 
 /* Figure */
 
@@ -1451,7 +1435,9 @@ time {
   margin-top: var(--space-3);
 }
 
-.case-study__block ol + p {
+.case-study__block ol + p,
+.case-study__block ul + p,
+.case-study__block figure + p {
   margin-top: var(--space-4);
 }
 
@@ -1556,6 +1542,8 @@ time {
 }
 
 /* CBU1 logo on Home, under the typed intro: a link to the CBU Robotics page, image only (no underline). */
+/* Static line under the role line: degree, GPA, what is sought and eligibility. */
+.intro__status { max-width: 58ch; margin-top: var(--space-2); font-family: var(--font-mono); font-size: 0.8125rem; line-height: 1.6; text-wrap: pretty; }
 .intro__team { margin-top: var(--space-4); }
 
 .cbu-logo {
@@ -1997,7 +1985,8 @@ figcaption.figure__caption::before {
 .status-table th, .status-table td { text-align: left; vertical-align: top; padding: var(--space-2) var(--space-3) var(--space-2) 0; border-top: 1px solid var(--color-border); }
 .status-table th { font-weight: 600; width: 40%; }
 .status-table td { font-family: var(--font-mono); font-size: 0.875rem; color: var(--color-muted); }
-.figure__note { margin-top: calc(-1 * var(--space-2)); }
+/* Footnote under a figure caption: a small gap below the caption and clear space before the next section title. */
+.figure__note { margin-top: var(--space-2); margin-bottom: var(--space-6); }
 
 /* Keyword strip under the Home intro. */
 .keyword-strip { margin-top: var(--space-4); max-width: 58ch; }
@@ -2105,4 +2094,45 @@ figcaption.figure__caption:has(.fig-tag)::before { content: none; }
 @media (max-width: 44.99em) {
   .site-nav__list { gap: 0 var(--space-2); }
   .site-nav__list a { min-width: 0; font-size: 0.6875rem; letter-spacing: 0; }
+}
+
+/* ---------- Tap targets ---------- */
+/* Standalone links (not inside a running sentence) are at least 44px tall; the underline stays close to the text. */
+.photo-slot__link a,
+.next-project a,
+.about__link a,
+.contact__email a,
+.case-study__repo a,
+.gallery__used a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  background-position: 0 calc(100% - 0.55rem), 0 calc(100% - 0.55rem);
+}
+.gallery__used a { background-position: 0 calc(100% - 0.8rem), 0 calc(100% - 0.8rem); }
+/* Figure tags keep their size in the caption line; an invisible ::before stretches the hit area to 44px. */
+.fig-tag { position: relative; }
+.fig-tag::before { content: ""; position: absolute; inset: -10px 0; min-width: var(--tap); }
+/* Nav on phones: every item is at least 44px wide, so the row gap is tighter. */
+@media (max-width: 44.99em) {
+  .site-nav__list { gap: 0 var(--space-1); }
+  .site-nav__list a { min-width: var(--tap); }
+}
+
+/* ---------- Long code windows ---------- */
+/* About 30 lines are shown; the rest scrolls inside the window. Print shows every line. */
+.code-window__body { max-height: calc(30 * 1.6em + 2 * var(--space-3)); overflow: auto; }
+@media print { .code-window__body { max-height: none; overflow: visible; } }
+
+/* ---------- Lightbox on phones ---------- */
+/* The image fills the height and may be wider than the screen, so wide images are enlarged and pan sideways. */
+@media (max-width: 44.99em) {
+  .lightbox { overflow: auto; }
+  .lightbox[open] { justify-content: flex-start; align-items: flex-end; }
+  .lightbox__img {
+    flex: none;
+    max-width: none;
+    height: calc(100dvh - 2 * var(--gutter) - var(--tap) - 1rem);
+    margin-inline: auto;
+  }
 }
