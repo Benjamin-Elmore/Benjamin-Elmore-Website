@@ -18,7 +18,7 @@ export default function Arc() {
         <figure className="photo-slot" id="arc-board">
           {/* Photo "arc-board": Ben's iPhone photo 20261111_045206199_iOS.jpg (November 10, 2026, 8:52 PM PST), resized to 1600x1200, levels and gamma lifted, metadata stripped; original in the private notes folder. */}
           <img src={BASE + 'assets/photos/arc-rs485-bench.jpg'} width="1600" height="1200" loading="lazy" decoding="async" alt="The ARSENAL-3 board, a black circuit board on pink anti-static foam with its status LEDs lit, cabled to a VEX V5 Brain labelled CBU 3. The Brain screen shows the ARC three-temperature bus test." />
-          <figcaption className="figure__caption"><FigTag id="ARC-01" />ARSENAL-3 running ARC on the bench, November 10, 2026, linked to the V5 Brain over RS-485. The three TMP117 temperature sensors are built into the I²C bus hardware of the ARSENAL. The Brain is polling the board and showing the three temperature readings it receives.</figcaption>
+          <figcaption className="figure__caption"><FigTag id="ARC-01" />The ARSENAL-3 running ARC on the bench, November 10, 2026, linked to the V5 Brain over RS-485. The three TMP117 temperature sensors are built into the I²C bus hardware of the ARSENAL. The Brain is polling the board and showing the three temperature readings it receives.</figcaption>
         </figure>
         <figure className="photo-slot photo-slot--diagram" id="arc-software">
           {/* Diagram "arc-software": hand-drawn SVG of Ben's PlantUML layout, updated to CPPDev 49d54a0 with a black background. */}
@@ -41,7 +41,7 @@ export default function Arc() {
         <div className="case-study__block" id="arc-built">
           <h3>What was built</h3>
           <ul>
-            <li><strong>Sensor template.</strong> A <code>{'Sensor<N>'}</code> template that defines each sensor as a configuration plus a single read function. Each sensor executes in a dedicated FreeRTOS task with configurable priority and reports a status code on failure. A sensor can be assigned a type, which attaches the register offsets of that type automatically; offsets and setup and loop callbacks are appendable rather than hard-coded.</li>
+            <li><strong>Sensor template.</strong> A <code>{'Sensor<N>'}</code> template that defines each sensor as a configuration plus a single read function. Each sensor executes in a dedicated FreeRTOS task with configurable priority and reports a status code on failure. A sensor can be assigned a type, which attaches the register offsets of that type automatically; from b24ce84, the temperature type also supplies its read function. Offsets and setup and loop callbacks are appendable rather than hard-coded.</li>
             <li><strong>Shared I²C bus with a lock.</strong> An <code>{'I2CBus<N>'}</code> class that owns the bus and its multiplexers, selects the channel of each sensor, and serializes access with a mutex to prevent contention between sensor tasks. Every register read and write takes the held lock as an argument and is refused without it, and each bus error is logged with the operation that produced it.</li>
             <li><strong>RS-485 protocol with 6 packet types.</strong> A half-duplex link to the V5 Brain with a byte-level state-machine parser, DE AD BE EF frame markers and a mod-256 checksum. The parser accepts six packet types (read, a three-stage configuration sequence, reboot and failure) and dispatches each to its own parser and response compiler.</li>
             <li><strong>Optional SD logger.</strong> An optional SD-card logger that records uptime and heap usage, disabled by default.</li>
@@ -52,7 +52,7 @@ export default function Arc() {
           <h3>Results</h3>
           <ul>
             <li>An earlier, read-only version of the RS-485 link was verified on the bench against multiple packet formats in late October 2026, with the link under isolated test.</li>
-            <li>On November 10, 2026, three TMP117 temperature sensors on ARSENAL-3 were read by the V5 Brain through ARC over RS-485. Of 510 read requests sent by the Brain in this run, 59 replies were received, and all 59 had valid DE AD BE EF markers and checksums. The read path ran end to end on the bench; the missing replies are still to be investigated.</li>
+            <li>On November 10, 2026, three TMP117 temperature sensors on the ARSENAL-3 were read by the V5 Brain through ARC over RS-485. Of 510 read requests sent by the Brain in this run, 59 replies were received, and all 59 had valid DE AD BE EF markers and checksums. The read path ran end to end on the bench; the missing replies are still to be investigated.</li>
           </ul>
         </div>
         <div className="case-study__block" id="arc-status-block">
@@ -74,7 +74,7 @@ export default function Arc() {
           <figure className="photo-slot" id="arc-rs485-test">
             {/* Photo "arc-rs485-test": Ben's iPhone photo 20261111_044950481_iOS.jpg (November 10, 2026, 8:49 PM PST), resized to 1600x1200, levels and gamma lifted, metadata stripped; original in the private notes folder. */}
             <img src={BASE + 'assets/photos/arc-rs485-v5-screen.jpg'} width="1600" height="1200" loading="lazy" decoding="async" alt="V5 Brain screen titled V5PacketSender, ARC three-temperature bus test: port 21 at 115200 baud, 510 sent, 59 received, 0 bad; reply OK with markers and checksum; header 82, 34-byte body, 49 bytes total; sensor IDs 2, 3 and 4 reading 27.40, 28.02 and 26.30 degrees C; and a hex dump of the reply ending in DE AD BE EF." />
-            <figcaption className="figure__caption"><FigTag id="ARC-05" />The V5 Brain side of the November 10 bench test. Each reply from ARC is a 49-byte packet (header 82, 34-byte body) with valid DE AD BE EF markers and checksum, carrying readings from sensors 2, 3 and 4 at about 26 to 28 °C. Of 510 read requests sent by the Brain in this run, 59 replies were received, and all 59 had valid DE AD BE EF markers and checksums. The replies that arrived were all valid; the missing replies have not yet been investigated.</figcaption>
+            <figcaption className="figure__caption"><FigTag id="ARC-05" />The V5 Brain side of the November 10 bench test. Each reply from ARC is a 49-byte packet (header 82, 34-byte body) carrying readings from sensors 2, 3 and 4 at about 26 to 28 °C. The Brain sent 510 read requests and received 59 replies, all with valid DE AD BE EF markers and checksums; the missing replies have not yet been investigated.</figcaption>
           </figure>
           <ol>
             <li>The read function of the sensor retrieves its registers over I²C and stores the result as three 16-bit values.</li>
@@ -99,16 +99,16 @@ export default function Arc() {
         </div>
         <div className="case-study__block" id="sensor-instances">
           <h3>Adding a sensor</h3>
-          <p>Adding a sensor requires no new class: a <code>{'Sensor<N>'}</code> is configured and supplied with one read function, where <code>N</code> is the number of multiplexers on its bus.</p>
+          <p>Adding a sensor requires no new class: a <code>{'Sensor<N>'}</code> is configured and given one read function, either directly or through its sensor type, where <code>N</code> is the number of multiplexers on its bus.</p>
           <ol>
-            <li>Implement a read function that receives the sensor and the held bus lock, reads the registers of the sensor through that lock and calls <code>setReadings</code>.</li>
-            <li>Construct the <code>{'Sensor<N>'}</code> with its name, bus, I²C address, ID (1 to 15), multiplexer channel, task priority and read function, plus an optional sensor type, callbacks and offsets.</li>
-            <li>Assign a sensor type, in the constructor or with <code>SensorOffsetConfig::addOffsets</code>, to attach the offset registers of that type.</li>
+            <li>Implement a read function that receives the sensor and the held bus lock, reads the registers of the sensor through that lock and calls <code>setReadings</code>, unless the sensor type already supplies one.</li>
+            <li>Construct the <code>{'Sensor<N>'}</code> with, in order, its name, bus, I²C address, ID (1 to 15), a flag to print readings, sensor type, multiplexer channel and task priority, followed by optional setup and loop callbacks, methods, variables, offsets, a read function and an offset register.</li>
+            <li>Assign a sensor type, in the constructor or with <code>SensorOffsetConfig::addOffsets</code>, to attach the offset registers of that type. At <code>CPPDev</code> b24ce84, the temperature type also attaches its read function and offset register, so the example below passes no read function.</li>
             <li>Call <code>setup()</code> before starting RS-485. This registers the sensor on the bus, runs its initialization steps, registers it with the RS-485 link and starts its task. The RS-485 sensor registry is closed to changes once its task starts.</li>
           </ol>
           <figure className="photo-slot photo-slot--text" id="arc-sensor-example">
-            <CodeWindow title="Example: TMP117 temperature sensor" language="C++">{SENSOR_EXAMPLE_CODE}</CodeWindow>
-            <figcaption className="figure__caption"><FigTag id="ARC-06" />The full path of one sensor, from construction to the read function and the offset register, from <code>src/main.cpp</code> and <code>lib/Sensor/SensorOffsetConfig.h</code> at <code>CPPDev</code> b24ce84.</figcaption>
+            <CodeWindow title="Example: TMP117 temperature sensor (condensed)" language="C++">{SENSOR_EXAMPLE_CODE}</CodeWindow>
+            <figcaption className="figure__caption"><FigTag id="ARC-06" />Excerpts from <code>CPPDev</code> b24ce84 that follow one sensor: its construction and setup in <code>src/main.cpp</code>, the temperature type attaching the read function and offset register in <code>lib/Sensor/ARC_Sensor.h</code>, and the read function and offsets in <code>lib/Sensor/SensorOffsetConfig.h</code>. Omitted lines are marked <code>// ...</code>.</figcaption>
           </figure>
           <p>Because multiple sensor tasks share one I²C bus, every read executes under a lock. The RAII class below makes that lock difficult to misuse.</p>
           <figure className="photo-slot photo-slot--text" id="arc-lockguard">

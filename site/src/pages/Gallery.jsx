@@ -14,9 +14,9 @@ const SETS = [
   {
     id: 'projects', title: 'Projects', subsets: [
       { id: 'arc', title: 'ARC', prefix: 'ARC', items: [
-          { id: 'ARC-01', src: 'photos/arc-rs485-bench.jpg', w: 1600, h: 1200, title: 'ARSENAL-3 to V5 Brain over RS-485',
+          { id: 'ARC-01', src: 'photos/arc-rs485-bench.jpg', w: 1600, h: 1200, title: 'The ARSENAL-3 to the V5 Brain over RS-485',
             alt: 'The ARSENAL-3 board on pink anti-static foam, cabled to a VEX V5 Brain labelled CBU 3 that shows the ARC three-temperature bus test.',
-            ref: <>Bench test, November 10, 2026: three temperature sensors on ARSENAL-3, read by ARC and sent over RS-485 to the V5 Brain. Levels adjusted.</>,
+            ref: <>Bench test, November 10, 2026: three temperature sensors on the ARSENAL-3, read by ARC and sent over RS-485 to the V5 Brain. Levels adjusted.</>,
             used: [['/ARC/#arc-board', 'ARC']] },
           { id: 'ARC-02', src: 'arc-software-cppdev.svg', w: 2000, h: 1250, title: 'ARC system architecture',
             alt: 'ARC system architecture in three packages: sensor hardware, the ESP32-S3 controller firmware classes, and the RS-485 robot interface to the V5 Brain.',
@@ -35,7 +35,7 @@ const SETS = [
             used: [['/ARC/#arc-rs485-test', 'ARC']] },
           { id: 'ARC-06', src: 'photos/arc-sensor-example-code.jpg', w: 1280, h: 560, title: 'TMP117 sensor example: readTemperature()',
             alt: 'Code window of the readTemperature function for the TMP117 sensor: it reads the temperature register under the held bus lock, checks the status, combines the two bytes and calls setReadings.',
-            ref: <>Condensed from <code>lib/Sensor/SensorOffsetConfig.h</code> at <code>CPPDev</code> b24ce84; the full example, from <code>src/main.cpp</code> and <code>SensorOffsetConfig.h</code>, is on the ARC page.</>,
+            ref: <>Lines 8 to 23 of <code>lib/Sensor/SensorOffsetConfig.h</code> at <code>CPPDev</code> b24ce84, blank lines omitted. The longer example, with excerpts from <code>src/main.cpp</code>, <code>ARC_Sensor.h</code> and <code>SensorOffsetConfig.h</code>, is on the ARC page.</>,
             used: [['/ARC/#arc-sensor-example', 'ARC'], ['/', 'Home hover background']] },
           { id: 'ARC-07', src: 'photos/arc-lockguard-code.jpg', w: 1280, h: 560, title: 'LockGuard, condensed',
             alt: 'Code window of the LockGuard RAII class that holds the shared I²C bus mutex.',

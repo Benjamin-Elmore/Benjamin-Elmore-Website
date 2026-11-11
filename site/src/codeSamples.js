@@ -36,11 +36,12 @@ private:
     bool _isLockedByLockGuard = false;
 };`;
 
-
 export const SENSOR_EXAMPLE_CODE = `// src/main.cpp
 namespace {
+    constexpr const char* TAG = "ARC";
     constexpr uint8_t TMP117_ADDRESS = 0x48;
     constexpr uint8_t TEMP1_ID = 2;
+    // ...
     constexpr uint8_t TEMP1_MUX_CHANNEL = 3;   // 0x70, channel 3
     // ...
 }
@@ -53,13 +54,46 @@ extern "C" void app_main()
     static Sensor<2> temp1(
         "temp1", sensorBus, TMP117_ADDRESS, TEMP1_ID, false, temperature, TEMP1_MUX_CHANNEL);
     // ...
+
+    for (auto* sensor : {&temp1, &temp2, &temp3}) {
         const auto status = sensor->setup();
         if (status != SensorUtils::SENSOR_OK) {
             ESP_LOGE(TAG, "%s setup failed: %s", sensor->getName().data(),
                      SensorUtils::sensor_status_str(status));
             continue;
         }
+        // ...
+    }
+
+    ESP_ERROR_CHECK(RS485ARSENAL::startRS485ARSENAL());
     // ...
+}
+
+// lib/Sensor/ARC_Sensor.h, in the Sensor<N> constructor
+    // SET SENSOR TYPE
+    // Offsets are added and type is changed
+    if (sensorType != SensorUtils::SensorConfig::NONE) {
+        this->setSensorType(sensorType);
+    }
+
+// lib/Sensor/ARC_Sensor.h, Sensor<N> members
+bool setSensorType(SensorUtils::SensorConfig config) override {
+    // Set the type of sensor and add the relevant values needed.
+
+    this->setSensorTypeWoOffset(config);
+    SensorOffsetConfig::addOffsets(*this, config);
+    return true;
+}
+
+bool setSensorTypeWoOffset(SensorUtils::SensorConfig config) {
+    // Set the type of sensor on its own
+
+    this->_type = config;
+    if (config == SensorUtils::SensorConfig::TEMPERATURE) {
+        this->_readFunction = SensorOffsetConfig::readTemperature<N>;
+        this->_offsetMemReg = 0x07;
+    }
+    return true;
 }
 
 // lib/Sensor/SensorOffsetConfig.h
@@ -93,6 +127,20 @@ namespace SensorOffsetConfig {
         sensor.appendOffset(
             "offsetTemperature", defaultTemperatureOffset, temperatureOffsetRegister,
             temperaturePacketSection, temperatureComponent, registerLayout);
+    }
+
+    // ...
+
+    // Register preset offsets once, before starting the sensor.
+    template <std::size_t N>
+    void addOffsets(Sensor<N>& sensor, SensorUtils::SensorConfig type) {
+        // ...
+        switch (type) {
+            case SensorUtils::SensorConfig::TEMPERATURE:
+                addTemperatureOffsets(sensor);
+                break;
+            // ...
+        }
     }
 
 }`;
