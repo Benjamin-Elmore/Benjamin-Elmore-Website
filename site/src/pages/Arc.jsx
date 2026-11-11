@@ -34,7 +34,7 @@ export default function Arc() {
         <h2 id="arc-title" className="section__title"><span aria-hidden="true">01 / </span>Overview</h2>
         <div className="case-study__block" id="arc-what">
           <h3>What it does</h3>
-          <p>ARC reads I²C sensors on ARSENAL and serves their data to the V5 Brain over RS-485. The Brain can also configure ARC, including sensor types, register offsets and reboot commands. Sole committer on the public ARC repository; earlier development from August 2026 resides in the private team repository.</p>
+          <p>ARC reads I²C sensors on ARSENAL and serves their data to the V5 Brain over RS-485. ARC also accepts configuration from the Brain (sensor types and register offsets) and reboot commands; these packets are implemented but not yet tested on hardware. Sole committer on the public ARC repository; earlier development from August 2026 resides in the private team repository.</p>
         </div>
         <div className="case-study__block" id="arc-built">
           <h3>What was built</h3>
