@@ -31,7 +31,7 @@ const SETS = [
             used: [['/ARC/#arc-serial', 'ARC']] },
           { id: 'ARC-05', src: 'photos/arc-rs485-v5-screen.jpg', w: 1600, h: 1200, title: 'V5 Brain: ARC three-temperature bus test',
             alt: 'V5 Brain screen showing the ARC three-temperature bus test: 510 sent, 59 received, 0 bad, reply OK with markers and checksum, 49-byte reply, sensors 2, 3 and 4 at about 26 to 28 degrees C, and a hex dump of the reply.',
-            ref: <>The V5 Brain side of the same bench test: every reply a 49-byte packet with valid DE AD BE EF markers and checksum, 0 bad packets. Levels adjusted.</>,
+            ref: <>The V5 Brain side of the same bench test. The V5 display recorded 510 sent, 59 received, 0 bad. Each reply is a 49-byte packet with DE AD BE EF markers and a checksum. Levels adjusted.</>,
             used: [['/ARC/#arc-rs485-test', 'ARC']] },
           { id: 'ARC-06', src: 'photos/arc-sensor-example-code.jpg', w: 1280, h: 560, title: 'TMP117 sensor example: readTemperature()',
             alt: 'Code window of the readTemperature function for the TMP117 sensor: it reads the temperature register under the held bus lock, checks the status, combines the two bytes and calls setReadings.',

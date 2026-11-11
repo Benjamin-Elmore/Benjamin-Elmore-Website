@@ -24,10 +24,10 @@ export default function CbuRobotics() {
         <div className="role-section" id="vice-president">
           <h3>Vice President</h3>
           <p className="meta">Since <time dateTime="2026-10">October 2026</time></p>
-          <p>Since October 2026, the role has also included helping with the weekly engineering updates of the team (Responsible Engineer reports).</p>
           <ul>
             <li>Coordinate engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
             <li>Support planning of team events, competitions and team participation in the VEX U World Championship.</li>
+            <li>Help prepare the weekly Responsible Engineer updates for the team.</li>
           </ul>
           <figure className="photo-slot photo-slot--21x9" id="cbu-club">
             {/* Photo "cbu-club": 21:9 crop (2000x857) of IMG_0258.jpg (Canon, November 9, 2026); the original is in the private notes folder. */}

@@ -26,7 +26,7 @@ export default function MarketTesting() {
         <div className="case-study__block" id="mt-built">
           <h3>Key components</h3>
           <ul>
-            <li><strong>Data pipeline.</strong> Loading from yfinance or CSV, Filters missing or short datasets and skips tickers that exceed fixed price or scaling thresholds. Every stock is scaled with one shared scaler.</li>
+            <li><strong>Data pipeline.</strong> The pipeline loads data from yfinance or a CSV file, filters out missing or short datasets and skips tickers that exceed fixed price or scaling thresholds. Every stock is scaled with one shared scaler.</li>
             <li><strong>Model and training.</strong> A Keras LSTM with dropout and early stopping, trained ticker by ticker, including diagnosis of a scaling defect that drove validation loss to NaN.</li>
             <li><strong>Prediction log and packaging.</strong> A DataLog that turns predictions into a day-by-day table, Pylint checks on GitHub Actions, and an installable Python package.</li>
           </ul>

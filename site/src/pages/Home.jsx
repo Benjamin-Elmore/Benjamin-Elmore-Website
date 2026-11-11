@@ -5,7 +5,7 @@ import SlideList from '../components/SlideList.jsx';
 import ResumeLink, { HAS_RESUME } from '../components/ResumeLink.jsx';
 
 // HOME-1: the intro line under the profile photo. It types out once per visit.
-const INTRO = 'I am a computer science student at California Baptist University, a software engineer on CBU1 and Vice President of CBU Robotics. I am developing ARC, C++ firmware for the custom ESP32-S3 sensor board of CBU1.';
+const INTRO = 'I study computer science at California Baptist University, where I write software for CBU1, the VEX U robotics team, and serve as Vice President of CBU Robotics. My current project is ARC, the C++ firmware for the custom ESP32-S3 sensor board of the team.';
 
 // Subset of the Technical skills section below.
 const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'TensorFlow', 'Linux', 'Git'];
