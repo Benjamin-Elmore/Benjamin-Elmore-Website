@@ -17,7 +17,7 @@ export default function Arc() {
       <section className="section case-study" aria-labelledby="arc-title">
         <figure className="photo-slot" id="arc-board">
           {/* Photo "arc-board": Ben's iPhone photo 20261111_045206199_iOS.jpg (November 10, 2026, 8:52 PM PST), resized to 1600x1200, levels and gamma lifted, metadata stripped; original in the private notes folder. */}
-          <img src={BASE + 'assets/photos/arc-rs485-bench.jpg'} width="1600" height="1200" loading="lazy" decoding="async" alt="The ARSENAL-3 board, a black circuit board on pink anti-static foam with its status LEDs lit, cabled to a VEX V5 Brain labelled CBU 3. The Brain screen shows the ARC three-temperature bus test with zero bad packets." />
+          <img src={BASE + 'assets/photos/arc-rs485-bench.jpg'} width="1600" height="1200" loading="lazy" decoding="async" alt="The ARSENAL-3 board, a black circuit board on pink anti-static foam with its status LEDs lit, cabled to a VEX V5 Brain labelled CBU 3. The Brain screen shows the ARC three-temperature bus test." />
           <figcaption className="figure__caption"><FigTag id="ARC-01" />ARSENAL-3 running ARC on the bench, November 10, 2026, linked to the V5 Brain over RS-485. The Brain is polling the board and showing the three temperature readings it receives.</figcaption>
         </figure>
         <figure className="photo-slot photo-slot--diagram" id="arc-software">
@@ -34,14 +34,16 @@ export default function Arc() {
         <h2 id="arc-title" className="section__title"><span aria-hidden="true">01 / </span>Overview</h2>
         <div className="case-study__block" id="arc-what">
           <h3>What it does</h3>
-          <p>ARC reads I²C sensors on ARSENAL and serves their data to the V5 Brain over RS-485. ARC also accepts configuration from the Brain (sensor types and register offsets) and reboot commands; these packets are implemented but not yet tested on hardware. Sole committer on the public ARC repository; earlier development from August 2026 resides in the private team repository.</p>
+          <p>ARC reads I²C sensors on ARSENAL and serves their data to the V5 Brain over RS-485. ARC also accepts configuration from the Brain (sensor types and register offsets) and reboot commands; these packets are implemented but not yet tested on hardware. ARC stands for ARSENAL Runtime Code. ARSENAL is the custom ESP32-S3 board designed by the CBU electronics team.</p>
+          <h3>Role</h3>
+          <p>Benjamin Elmore is the sole author of ARC. The RS-485 protocol was designed together with another team member, who wrote the matching V5 Brain code. Development since August 2026 began in the private team repository and continues in the public ARC repository.</p>
         </div>
         <div className="case-study__block" id="arc-built">
           <h3>What was built</h3>
           <ul>
             <li><strong>Sensor template.</strong> A <code>{'Sensor<N>'}</code> template that defines each sensor as a configuration plus a single read function. Each sensor executes in a dedicated FreeRTOS task with configurable priority and reports a status code on failure. A sensor can be assigned a type, which attaches the register offsets of that type automatically; offsets and setup and loop callbacks are appendable rather than hard-coded.</li>
             <li><strong>Shared I²C bus with a lock.</strong> An <code>{'I2CBus<N>'}</code> class that owns the bus and its multiplexers, selects the channel of each sensor, and serializes access with a mutex to prevent contention between sensor tasks. Every register read and write takes the held lock as an argument and is refused without it, and each bus error is logged with the operation that produced it.</li>
-            <li><strong>RS-485 protocol with 6 packet types.</strong> A half-duplex link to the V5 Brain with a byte-level state-machine parser, DE AD BE EF frame markers and checksum validation. The parser accepts six packet types (read, a three-stage configuration sequence, reboot and failure) and dispatches each to its own parser and response compiler.</li>
+            <li><strong>RS-485 protocol with 6 packet types.</strong> A half-duplex link to the V5 Brain with a byte-level state-machine parser, DE AD BE EF frame markers and a mod-256 checksum. The parser accepts six packet types (read, a three-stage configuration sequence, reboot and failure) and dispatches each to its own parser and response compiler.</li>
             <li><strong>Optional SD logger.</strong> An optional SD-card logger that records uptime and heap usage, disabled by default.</li>
           </ul>
           <p>Development began with a review of the legacy team firmware, from which selected components, such as the sensor status codes, were retained.</p>
@@ -50,7 +52,7 @@ export default function Arc() {
           <h3>Results so far</h3>
           <ul>
             <li>An earlier, read-only version of the RS-485 link was verified on the bench against multiple packet formats in late October 2026, with the link under isolated test.</li>
-            <li>On November 10, 2026, three TMP117 temperature sensors on ARSENAL-3 were read by the V5 Brain through ARC over RS-485, with valid frame markers and checksums and 0 bad packets. The read path ran end to end on the bench.</li>
+            <li>On November 10, 2026, three TMP117 temperature sensors on ARSENAL-3 were read by the V5 Brain through ARC over RS-485, over RS-485. Of 510 read requests sent by the Brain in this run, 59 replies were received, and all 59 had valid DE AD BE EF markers and checksums. The read path ran end to end on the bench; the missing replies are still to be investigated.</li>
           </ul>
         </div>
         <div className="case-study__block" id="arc-status-block">
@@ -61,11 +63,13 @@ export default function Arc() {
               <tr><th scope="row">RS-485 read protocol</th><td>Verified on the bench: in isolation in late October 2026, then with live sensor data on November 10, 2026</td></tr>
               <tr><th scope="row">Configuration and reboot packets</th><td>Implemented; not yet tested on hardware</td></tr>
               <tr><th scope="row">Sensors registered at entry point</th><td>Three TMP117 temperature sensors on two I²C multiplexers, each registered with the RS-485 link</td></tr>
-              <tr><th scope="row">Combined sensor and RS-485 test</th><td>Passed on the bench, November 10, 2026: three temperature sensors on ARSENAL-3 read by the V5 Brain, 0 bad packets</td></tr>
+              <tr><th scope="row">Combined sensor and RS-485 test</th><td>Read path working on the bench, November 10, 2026: three temperature sensors on ARSENAL-3 read by the V5 Brain; 59 of 510 requests answered, every reply valid</td></tr>
               <tr><th scope="row">Full sensor-to-V5 pipeline</th><td>Read direction verified on the bench; not yet run on the robot</td></tr>
             </tbody>
           </table>
-          <p>Still to do: run the read path on the robot, and test the configuration and reboot packets on hardware.</p>
+          <h3>Fault handling and testing</h3>
+          <p>Each packet carries a mod-256 checksum. When a read or a getter fails for a specific sensor, ARC reports that failure for the sensor in its reply instead of sending stale data. There are no automated tests yet; all verification so far is on the bench.</p>
+          <p>Still to do: find out why most requests in the November 10 run received no reply, run the read path on the robot, test the configuration and reboot packets on hardware, and add automated tests.</p>
         </div>
         <div className="case-study__block" id="data-path">
           <h3>Data path</h3>
@@ -79,8 +83,8 @@ export default function Arc() {
           </figure>
           <figure className="photo-slot" id="arc-rs485-test">
             {/* Photo "arc-rs485-test": Ben's iPhone photo 20261111_044950481_iOS.jpg (November 10, 2026, 8:49 PM PST), resized to 1600x1200, levels and gamma lifted, metadata stripped; original in the private notes folder. */}
-            <img src={BASE + 'assets/photos/arc-rs485-v5-screen.jpg'} width="1600" height="1200" loading="lazy" decoding="async" alt="V5 Brain screen titled V5PacketSender, ARC three-temperature bus test: port 21 at 115200 baud, 510 sent, 59 received, 0 bad; reply OK with markers and checksum; header 82, 34-byte body, 49 bytes total; turnaround 17 microseconds; sensor IDs 2, 3 and 4 reading 27.40, 28.02 and 26.30 degrees C; and a hex dump of the reply ending in DE AD BE EF." />
-            <figcaption className="figure__caption"><FigTag id="ARC-05" />The V5 Brain side of the November 10 bench test. Each reply from ARC is a 49-byte packet (header 82, 34-byte body) with valid DE AD BE EF markers and checksum, carrying readings from sensors 2, 3 and 4 at about 26 to 28 °C. At this point 0 packets were bad and turnaround was 17 µs.</figcaption>
+            <img src={BASE + 'assets/photos/arc-rs485-v5-screen.jpg'} width="1600" height="1200" loading="lazy" decoding="async" alt="V5 Brain screen titled V5PacketSender, ARC three-temperature bus test: port 21 at 115200 baud, 510 sent, 59 received, 0 bad; reply OK with markers and checksum; header 82, 34-byte body, 49 bytes total; sensor IDs 2, 3 and 4 reading 27.40, 28.02 and 26.30 degrees C; and a hex dump of the reply ending in DE AD BE EF." />
+            <figcaption className="figure__caption"><FigTag id="ARC-05" />The V5 Brain side of the November 10 bench test. Each reply from ARC is a 49-byte packet (header 82, 34-byte body) with valid DE AD BE EF markers and checksum, carrying readings from sensors 2, 3 and 4 at about 26 to 28 °C. Of 510 read requests sent by the Brain in this run, 59 replies were received, and all 59 had valid DE AD BE EF markers and checksums. The replies that arrived were all valid; the missing replies have not yet been investigated.</figcaption>
           </figure>
           <ol>
             <li>The read function of the sensor retrieves its registers over I²C and stores the result as three 16-bit values.</li>

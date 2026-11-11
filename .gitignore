@@ -11,3 +11,4 @@ tools/private-names.txt
 # React site build
 site/node_modules/
 site/.ssr/
+.claude/

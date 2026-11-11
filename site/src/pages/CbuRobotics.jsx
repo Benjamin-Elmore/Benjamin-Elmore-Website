@@ -41,14 +41,13 @@ export default function CbuRobotics() {
           <p>C++ development for the competition robots on PROS and for ARC on ESP-IDF. Focus has progressed from robot control to communication between sensors, the custom team board and the V5 Brain.</p>
           <h4>Drivetrain and navigation, fall 2025</h4>
           <ul>
-            <li>Developed driver controls, a PID controller and point-to-point navigation that converts odometry into left, right and strafe motor commands.</li>
-            <li>Prototyped Pure Pursuit path following with spline search; spline generation and odometry integration remained open at the transition to ARC.</li>
+            <li>First assignment on the team: writing control code for the competition robot base in PROS, the C++ environment for the V5 Brain. Details are in section 02 below.</li>
           </ul>
           <h4>ARC sensor firmware, from August 2026</h4>
           <ul>
-            <li>Develop ARC, the C++ firmware for ARSENAL, the custom ESP32-S3 sensor board of the team. See the <Link to="/ARC/">ARC overview</Link>.</li>
-            <li>Implemented its sensor abstraction, shared I²C bus management and RS-485 protocol.</li>
-            <li>Verified RS-485 parsing of V5 Brain test packets on the bench in October 2026. In November 2026, ran the read path end to end on the bench: three temperature sensors on the ARSENAL-3 board, through ARC, to the V5 Brain with zero bad packets. Testing on the robot is the next step.</li>
+            <li>Sole author of ARC (ARSENAL Runtime Code), the firmware for the ESP32-S3 board built by the CBU electronics team.</li>
+            <li>Co-designed the RS-485 protocol with the team member who writes the V5 Brain side, and worked with the electronics team on the board interfaces.</li>
+            <li>Bench testing, the packet format and the status of each feature are on the <Link to="/ARC/">ARC overview</Link>.</li>
           </ul>
           <p><strong>Tools:</strong> C++, PROS, ESP-IDF, FreeRTOS, PlatformIO, ESP32-S3, I²C, UART, RS-485, Git</p>
         </div>

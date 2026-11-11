@@ -19,6 +19,7 @@ export default function About() {
         <div className="edu">
           <h3 className="edu__school">California Baptist University</h3>
           <p className="edu__degree">B.S. Computer Science, Machine Learning and Artificial Intelligence concentration</p>
+          <p className="edu__gpa">GPA: 4.00</p>
           <p className="meta">Expected <time dateTime="2029-05">May 2029</time></p>
         </div>
       </section>
