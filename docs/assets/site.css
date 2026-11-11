@@ -2137,12 +2137,17 @@ figcaption.figure__caption:has(.fig-tag)::before { content: none; }
   }
 }
 
-/* CBU Robotics page: large CBU1 wordmark at the top of the header, above the h1. */
+/* CBU Robotics page: CBU1 wordmark at the top of the header, above the h1
+   (about 18% smaller than the first version so the title and roles keep presence). */
 .page-header > .cbu-hero-logo {
   margin-block: var(--space-4) var(--space-3);
 }
 .cbu-hero-logo img {
   display: block;
-  width: min(100%, 40rem);
+  width: min(82%, 33rem);
   height: auto;
+}
+/* The roles sit on their own line, directly under the university line. */
+.page-header .page-header__roles {
+  margin-top: var(--space-1);
 }
