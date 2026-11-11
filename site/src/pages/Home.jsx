@@ -13,11 +13,12 @@ const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'T
 // Hover backgrounds on the Selected work and Experience rows (pointer devices only, see "Hover backgrounds" in
 // site.css): the row image fills the row behind its text, blurred and dimmed. label = small credit line;
 // veil = overlay opacity, measured per image so muted text stays at 4.5:1 or better.
-const ARC_PREVIEW = { src: 'assets/photos/arc-sensor-example-code.jpg', label: 'ARC TMP117 sensor example · CPPDev b24ce84', veil: 0.05 };
+// blur = optional blur radius; the ARC code render is text-on-text behind the row, so it gets a heavier blur and veil.
+const ARC_PREVIEW = { src: 'assets/photos/arc-sensor-example-code.jpg', label: 'ARC TMP117 sensor example · CPPDev b24ce84', veil: 0.45, blur: '4px' };
 const MT_PREVIEW = { src: 'assets/photos/markettesting-lstm.jpg', label: 'MarketTesting LSTM layers · stock_model.py · main 79f6e12', veil: 0.3 };
 const CODE_PREVIEW = { src: 'assets/photos/arc-lockguard-code.jpg', label: 'ARC lib/LockGuard.h · CPPDev 49d54a0', veil: 0.1 };
 const TEAM_PREVIEW = { src: 'assets/photos/cbu-club-2026.jpg', label: 'CBU Robotics full team · November 2026', veil: 0.49 };
-const Preview = ({ src, label, veil }) => <span className="hover-preview" data-label={label} style={{ '--veil': veil }} aria-hidden="true"><img src={BASE + src} alt="" loading="lazy" decoding="async" /></span>;
+const Preview = ({ src, label, veil, blur }) => <span className="hover-preview" data-label={label} style={blur ? { '--veil': veil, '--blur': blur } : { '--veil': veil }} aria-hidden="true"><img src={BASE + src} alt="" loading="lazy" decoding="async" /></span>;
 
 export default function Home() {
   return (
@@ -30,6 +31,7 @@ export default function Home() {
           <img src={BASE + 'assets/photos/profile-square.jpg'} alt="Benjamin Elmore" width="800" height="800" />
         </figure>
         <TypeLine className="intro__lede" text={INTRO} />
+        <p className="intro__team"><Link className="cbu-logo" to="/CBU-Robotics/"><img src={BASE + 'assets/photos/cbu1-logo-white.png'} width="400" height="115" decoding="async" alt="CBU1 VEX U Robotics" /></Link></p>
         <ul className="tag-list keyword-strip" aria-label="Core technologies">
           {KEYWORDS.map((k) => <li className="tag" key={k}>{k}</li>)}
         </ul>
@@ -45,6 +47,16 @@ export default function Home() {
         <h2 id="experience-title" className="section__title"><span aria-hidden="true">02 / </span>Experience</h2>
         <SlideList className="exp-list">
           <li>
+            <Link className="exp-row__link" to="/CBU-Robotics/#vice-president"><span className="exp-row__role">Vice President</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U Robotics</span> <span className="exp-row__dates">Since <time dateTime="2026-10">October 2026</time></span> <Preview {...TEAM_PREVIEW} /></Link>
+            <details className="exp-details">
+              <summary>Responsibilities</summary>
+              <ul className="role__points">
+                <li>Coordinate engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
+                <li>Support planning of team events, competitions and team participation in the VEX U World Championship.</li>
+              </ul>
+            </details>
+          </li>
+          <li>
             <Link className="exp-row__link" to="/CBU-Robotics/#software-engineer"><span className="exp-row__role">Software Engineer</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U Robotics</span> <span className="exp-row__dates">Since <time dateTime="2025-09">September 2025</time></span> <Preview {...CODE_PREVIEW} /></Link>
             {/* home-responsibilities */}
             <details className="exp-details">
@@ -57,16 +69,6 @@ export default function Home() {
               </ul>
             </details>
             {/* /home-responsibilities */}
-          </li>
-          <li>
-            <Link className="exp-row__link" to="/CBU-Robotics/#vice-president"><span className="exp-row__role">Vice President</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U Robotics</span> <span className="exp-row__dates">Since <time dateTime="2026-10">October 2026</time></span> <Preview {...TEAM_PREVIEW} /></Link>
-            <details className="exp-details">
-              <summary>Responsibilities</summary>
-              <ul className="role__points">
-                <li>Coordinate engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
-                <li>Support planning of team events, competitions and team participation in the VEX U World Championship.</li>
-              </ul>
-            </details>
           </li>
           <li><Link className="exp-row__link" to="/In-N-Out/"><span className="exp-row__role">Associate</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">In-N-Out Burger</span> <span className="exp-row__dates">Since <time dateTime="2024-05">May 2024</time></span></Link></li>
           <li><Link className="exp-row__link" to="/LEGOLAND/"><span className="exp-row__role">Seasonal Lifeguard</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">LEGOLAND California Resort</span> <span className="exp-row__dates"><time dateTime="2026-04">April</time> to <time dateTime="2026-08">August 2026</time></span></Link></li>

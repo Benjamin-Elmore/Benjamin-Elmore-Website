@@ -20,11 +20,11 @@ export default function MarketTesting() {
         <p className="figure__caption figure__note" id="markettesting-table-note"><small>* Run conditions: 12-stock training run, November 8, 2026, code at <code>main</code> 79f6e12. The 90-day forecast uses a sliding window, with each prediction fed back as input. Values are model output only; no accuracy is claimed.</small></p>
         <h2 id="mt-title" className="section__title"><span aria-hidden="true">01 / </span>Project</h2>
         <div className="case-study__block" id="mt-what">
-          <h3>What it is</h3>
+          <h3>Overview</h3>
           <p>MarketTesting downloads daily price history for NASDAQ stocks with yfinance, or reads it from a CSV, segments it into 100-day windows, and trains a two-layer LSTM in TensorFlow to predict the open, high, low, close and volume for the next day. As a learning project, it makes no claims of predictive accuracy.</p>
         </div>
         <div className="case-study__block" id="mt-built">
-          <h3>Main pieces</h3>
+          <h3>Key components</h3>
           <ul>
             <li><strong>Data pipeline.</strong> Loading from yfinance or CSV, filtering out empty and index-like tickers, and scaling every stock with one shared scaler.</li>
             <li><strong>Model and training.</strong> A Keras LSTM with dropout and early stopping, trained ticker by ticker, including diagnosis of a scaling defect that drove validation loss to NaN.</li>

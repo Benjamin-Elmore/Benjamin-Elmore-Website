@@ -240,7 +240,7 @@ def check_links(errors, parsed):
 
 TAGGED_PAGES = ["ARC/index.html", "MarketTesting/index.html", "CBU-Robotics/index.html"]
 TAG_EXEMPT = {"profile"}  # figure ids with no Gallery tag (Home profile photo)
-IMG_EXEMPT = ("cbu1-logo-white.png",)  # images outside figures that need no tag (CBU1 logo)
+IMG_EXEMPT = ("cbu1-logo-white.png",)  # images outside figures that need no tag (CBU1 logo on Home)
 MAIN_RE = re.compile(r'<main.*?</main>', re.S)
 IMG_RE = re.compile(r'<img[^>]*>')
 FIG_RE = re.compile(r'<figure\b([^>]*)>(.*?)</figure>', re.S)

@@ -7,8 +7,7 @@ export default function CbuRobotics() {
     <>
       <div className="page-header">
         <p><Link className="back-link" to="/#experience">← All experience</Link></p>
-        <p className="eyebrow visually-hidden">Experience</p>
-        <div className="cbu-logo"><img src={BASE + 'assets/photos/cbu1-logo-white.png'} width="400" height="115" decoding="async" alt="" /></div>
+        <p className="eyebrow">Experience</p>
         <h1>CBU1 VEX U Robotics</h1>
         <p className="page-header__meta">California Baptist University · Vice President and Software Engineer</p>
         <p className="page-header__summary">Software engineer for CBU1, the VEX U robotics team at California Baptist University: drivetrain and navigation software from fall 2025, ARC sensor firmware from August 2026, and Vice President of CBU Robotics since October 2026.</p>
@@ -16,8 +15,8 @@ export default function CbuRobotics() {
       <section className="section case-study section--page" aria-labelledby="role-title">
         <figure className="photo-slot photo-slot--21x9" id="cbu-team">
           {/* Photo "cbu-team" (2026, St. Louis): 21:9 crop (2000x857) of Ben's Team-Photo-At-Worlds.jpg; the 15 MB original is kept outside the build, in the private notes folder. */}
-          <img src={BASE + 'assets/photos/cbu-team.jpg'} width="2000" height="857" loading="lazy" decoding="async" alt="The CBU1 VEX U team posed in team polos at the 2026 VEX Robotics World Championship in St. Louis, with two of the team robots held up in the front row." />
-          <figcaption className="figure__caption"><FigTag id="CBU1-01" />The CBU1 VEX U team at the 2026 VEX Robotics World Championship in St. Louis.</figcaption>
+          <img src={BASE + 'assets/photos/cbu-team.jpg'} width="2000" height="857" loading="lazy" decoding="async" alt="Members of the CBU1 VEX U team posed in team polos at the 2026 VEX Robotics World Championship in St. Louis, with two of the team robots held up in the front row." />
+          <figcaption className="figure__caption"><FigTag id="CBU1-01" />Members of the CBU1 VEX U team at the 2026 VEX Robotics World Championship in St. Louis.</figcaption>
         </figure>
         <h2 id="role-title" className="section__title"><span aria-hidden="true">01 / </span>Roles</h2>
         <div className="role-section" id="vice-president">
@@ -47,7 +46,7 @@ export default function CbuRobotics() {
           <ul>
             <li>Sole author of ARC (ARSENAL Runtime Code), the firmware for the ESP32-S3 board built by the CBU electronics team.</li>
             <li>Co-designed the RS-485 protocol with the team member who writes the V5 Brain side, and worked with the electronics team on the board interfaces.</li>
-            <li>Bench testing, the packet format and the status of each feature are on the <Link to="/ARC/">ARC overview</Link>.</li>
+            <li>Bench results, the packet format and the data path are on the <Link to="/ARC/">ARC overview</Link>.</li>
           </ul>
           <p><strong>Tools:</strong> C++, PROS, ESP-IDF, FreeRTOS, PlatformIO, ESP32-S3, I²C, UART, RS-485, Git</p>
         </div>
