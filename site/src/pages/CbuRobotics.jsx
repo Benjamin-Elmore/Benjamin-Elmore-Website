@@ -10,7 +10,7 @@ export default function CbuRobotics() {
         <p className="eyebrow">Experience</p>
         <h1>CBU1 VEX U Robotics</h1>
         <p className="page-header__meta">California Baptist University · Vice President and Software Engineer</p>
-        <p className="page-header__summary">Software engineer for CBU1, the VEX U robotics team at California Baptist University: drivetrain and navigation software from fall 2025, ARC sensor firmware from August 2026, and Vice President of CBU Robotics since October 2026.</p>
+        <p className="page-header__summary">Vice President of CBU Robotics since October 2026 and software engineer for CBU1, the VEX U robotics team at California Baptist University: drivetrain and navigation software from fall 2025, then ARC sensor firmware from August 2026.</p>
       </div>
       <section className="section case-study section--page" aria-labelledby="role-title">
         <figure className="photo-slot photo-slot--21x9" id="cbu-team">
@@ -22,12 +22,11 @@ export default function CbuRobotics() {
         <div className="role-section" id="vice-president">
           <h3>Vice President</h3>
           <p className="meta">Since <time dateTime="2026-10">October 2026</time></p>
-          <p>Coordinates milestones across the discipline teams and supports event and competition planning. More recently, also supports the weekly team Responsible Engineer updates.</p>
+          <p>Since taking the role, also supports the weekly team Responsible Engineer updates.</p>
           <ul>
             <li>Coordinate engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
-            <li>Support planning of team events, competitions and participation of the team in the VEX U World Championship.</li>
+            <li>Support planning of team events, competitions and team participation in the VEX U World Championship.</li>
           </ul>
-          <p><strong>Focus areas:</strong> Milestone planning, deadline tracking, cross-team communication, event and competition planning, Responsible Engineer reporting</p>
           <figure className="photo-slot photo-slot--21x9" id="cbu-club">
             {/* Photo "cbu-club": 21:9 crop (2000x857) of IMG_0258.jpg (Canon, November 9, 2026); the original is in the private notes folder. */}
             <img src={BASE + 'assets/photos/cbu-club-2026.jpg'} width="2000" height="857" loading="lazy" decoding="async" alt="The full CBU Robotics team in matching navy club shirts, standing in three rows in a university building lobby." />
@@ -73,7 +72,7 @@ export default function CbuRobotics() {
           </ul>
           <h3>Results</h3>
           <p>Implemented; no on-robot test recorded.</p>
-          <h3>What's next</h3>
+          <h3>Left open</h3>
           <p>Spline generation and odometry integration were still open when the focus of the team moved to ARC.</p>
         </div>
         <p className="next-project"><Link to="/ARC/">Next project: ARC →</Link></p>

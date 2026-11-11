@@ -14,10 +14,10 @@ export default function MarketTesting() {
       </div>
       <section className="section case-study" aria-labelledby="mt-title">
         <figure className="photo-slot photo-slot--16x9" id="markettesting-table">
-          <img src={BASE + 'assets/photos/markettesting-table.jpg'} width="3200" height="1800" alt="MarketTesting prediction table for AAPL: dated rows of predicted open, high, low, close and volume over a 90-day forecast." loading="lazy" decoding="async" />
+          <img src={BASE + 'assets/photos/markettesting-table.jpg'} width="3200" height="1800" alt="MarketTesting prediction table for AAPL: rows for day +1 to day +90 of predicted open, high, low, close and volume." loading="lazy" decoding="async" />
           <figcaption className="figure__caption"><FigTag id="MT-02" />AAPL prediction table, 90-day forecast, from the November 8, 2026 training run. Model output only; not a validated trading result.*</figcaption>
         </figure>
-        <p className="figure__caption figure__note" id="markettesting-table-note"><small>* Run conditions: 12-stock training run, November 8, 2026, code at <code>main</code> 79f6e12. The 90-day forecast uses a sliding window, with each prediction fed back as input. Values are model output only; no accuracy is claimed.</small></p>
+        <p className="figure__caption figure__note" id="markettesting-table-note"><small>* Run conditions: 12-stock training run, November 8, 2026, code at <code>main</code> 79f6e12. The 90-day forecast uses a sliding window, with each prediction fed back as input.</small></p>
         <h2 id="mt-title" className="section__title"><span aria-hidden="true">01 / </span>Project</h2>
         <div className="case-study__block" id="mt-what">
           <h3>Overview</h3>
@@ -28,7 +28,7 @@ export default function MarketTesting() {
           <ul>
             <li><strong>Data pipeline.</strong> Loading from yfinance or CSV, filtering out empty and index-like tickers, and scaling every stock with one shared scaler.</li>
             <li><strong>Model and training.</strong> A Keras LSTM with dropout and early stopping, trained ticker by ticker, including diagnosis of a scaling defect that drove validation loss to NaN.</li>
-            <li><strong>Prediction log and packaging.</strong> A DataLog that turns predictions into a time-based table, Pylint checks on GitHub Actions, and an installable Python package.</li>
+            <li><strong>Prediction log and packaging.</strong> A DataLog that turns predictions into a day-by-day table, Pylint checks on GitHub Actions, and an installable Python package.</li>
           </ul>
           <ul className="tag-list">
             <li className="tag">Python</li>

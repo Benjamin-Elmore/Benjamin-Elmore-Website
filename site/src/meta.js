@@ -14,7 +14,7 @@ export const META = {
   },
   cbuRobotics: {
     title: 'CBU1 VEX U Robotics | Benjamin Elmore',
-    description: 'The roles of Benjamin Elmore on the CBU1 VEX U Robotics team at California Baptist University: Software Engineer since September 2025 and Vice President since October 2026.',
+    description: 'The roles of Benjamin Elmore on the CBU1 VEX U Robotics team at California Baptist University: Vice President since October 2026 and Software Engineer since September 2025.',
   },
   inNOut: {
     title: 'In-N-Out Burger | Benjamin Elmore',
@@ -34,6 +34,6 @@ export const META = {
   },
   notFound: {
     title: 'Page not found | Benjamin Elmore',
-    description: 'There’s no page at this address. Go to the portfolio home for Benjamin Elmore or one of the project pages.',
+    description: 'No page exists at this address. Go to the portfolio home for Benjamin Elmore or one of the project pages.',
   },
 };
