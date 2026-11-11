@@ -610,6 +610,10 @@ main {
   font-size: 1.25rem;
 }
 
+.section .case-study__block > * + h3 {
+  margin-top: var(--space-6);
+}
+
 .section .case-study__block > h4 {
   margin-top: var(--space-6);
   margin-bottom: var(--space-3);
@@ -1058,9 +1062,30 @@ main {
   margin-top: var(--space-1);
 }
 
-.edu__gpa,
 .edu .meta {
   font-family: var(--font-num);
+}
+
+/* GPA as a stat: small mono label, large number. */
+.edu__gpa {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  margin-top: var(--space-2);
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.edu__gpa-value {
+  color: var(--color-text);
+  font-family: var(--font-num);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.1;
 }
 
 /* ---------- Footer ---------- */
@@ -1530,18 +1555,28 @@ time {
   content: "";
 }
 
-.page-header > .cbu-logo {
-  margin-top: var(--space-4);
+/* CBU1 logo on Home, under the typed intro: a link to the CBU Robotics page, image only (no underline). */
+.intro__team { margin-top: var(--space-4); }
+
+.cbu-logo {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  background-image: none;
 }
 
 .cbu-logo img {
   display: block;
-  width: 130px;
+  width: 120px;
   height: auto;
+  transition: opacity 0.2s ease;
 }
 
+.cbu-logo:hover img,
+.cbu-logo:focus-visible img { opacity: 0.75; }
+
 @media (min-width: 45em) {
-  .cbu-logo img { width: 180px; }
+  .cbu-logo img { width: 150px; }
 }
 
 #main .page-header h1 {
@@ -1922,7 +1957,7 @@ figcaption.figure__caption::before {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: blur(2px);
+    filter: blur(var(--blur, 2px));
     transform: scale(1.04);
   }
   .hover-preview::after {
