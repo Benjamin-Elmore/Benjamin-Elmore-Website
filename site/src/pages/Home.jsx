@@ -1,9 +1,11 @@
 import { Link } from 'react-router';
+import TypeLine from '../components/TypeLine.jsx';
 import { BASE } from '../routes.js';
 import SlideList from '../components/SlideList.jsx';
 import ResumeLink, { HAS_RESUME } from '../components/ResumeLink.jsx';
 
 // HOME-1: the intro line under the profile photo. It types out once per visit.
+const INTRO = 'Computer science student at California Baptist University. Software engineer and Vice President of CBU1, the VEX U robotics team, now building ARC: firmware for the custom ESP32-S3 sensor board of the team.';
 
 // Subset of the Technical skills section below.
 const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'TensorFlow', 'Linux', 'Git'];
@@ -27,6 +29,7 @@ export default function Home() {
           {/* Profile photo: an 800px square crop of Ben's Profile.jpg, metadata stripped. */}
           <img src={BASE + 'assets/photos/profile-square.jpg'} alt="Benjamin Elmore" width="800" height="800" />
         </figure>
+        <TypeLine className="intro__lede" text={INTRO} />
         <ul className="tag-list keyword-strip" aria-label="Core technologies">
           {KEYWORDS.map((k) => <li className="tag" key={k}>{k}</li>)}
         </ul>
