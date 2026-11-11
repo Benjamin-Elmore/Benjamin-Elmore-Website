@@ -13,9 +13,9 @@ export default function CbuRobotics() {
       </div>
       <section className="section case-study section--page" aria-labelledby="role-title">
         <figure className="photo-slot photo-slot--21x9" id="cbu-team">
-          {/* Photo "cbu-team": 21:9 crop (2000x857) of Ben's Team-Photo-At-Worlds.jpg; the 15 MB original is kept outside the build, in the private notes folder. */}
-          <img src={BASE + 'assets/photos/cbu-team.jpg'} width="2000" height="857" loading="lazy" decoding="async" alt="The CBU1 VEX U team posed in team polos at the VEX Robotics World Championship, with two of the team robots held up in the front row." />
-          <figcaption className="figure__caption">The CBU1 VEX U team at the VEX Robotics World Championship.</figcaption>
+          {/* Photo "cbu-team" (2026, St. Louis): 21:9 crop (2000x857) of Ben's Team-Photo-At-Worlds.jpg; the 15 MB original is kept outside the build, in the private notes folder. */}
+          <img src={BASE + 'assets/photos/cbu-team.jpg'} width="2000" height="857" loading="lazy" decoding="async" alt="The CBU1 VEX U team posed in team polos at the 2026 VEX Robotics World Championship in St. Louis, with two of the team robots held up in the front row." />
+          <figcaption className="figure__caption">The CBU1 VEX U team at the 2026 VEX Robotics World Championship in St. Louis.</figcaption>
         </figure>
         <h2 id="role-title" className="section__title"><span aria-hidden="true">01 / </span>Roles</h2>
         <div className="role-section" id="vice-president">

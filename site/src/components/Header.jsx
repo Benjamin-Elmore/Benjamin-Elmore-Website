@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router';
 import ResumeLink, { HAS_RESUME } from './ResumeLink.jsx';
 
-const LABELS = { work: 'Work', experience: 'Experience', about: 'About', contact: 'Contact' };
+const LABELS = { work: 'Work', experience: 'Experience', contact: 'Contact' };
 
 export default function Header() {
   const { pathname } = useLocation();
@@ -16,9 +16,9 @@ export default function Header() {
         : <Link className="site-header__name" to="/">Benjamin Elmore</Link>}
       <nav className="site-nav" aria-label="Sections">
         <ul className="site-nav__list">
+          <li><Link to="/About/" {...(aboutPage ? { 'aria-current': 'page' } : {})}>About</Link></li>
           <li>{frag('work')}</li>
           <li>{frag('experience')}</li>
-          <li>{aboutPage ? <Link to="/About/" aria-current="page">About</Link> : frag('about')}</li>
           <li><Link to="/Gallery/" {...(galleryPage ? { 'aria-current': 'page' } : {})}>Gallery</Link></li>
           <li>{frag('contact')}</li>
           {HAS_RESUME && <li><ResumeLink /></li>}
