@@ -44,7 +44,7 @@ export default function CbuRobotics() {
           </ul>
           <h4>ARC sensor firmware, from August 2026</h4>
           <ul>
-            <li>Develop ARC, the C++ firmware for ARSENAL, the custom ESP32-S3 sensor board of the team. See the <Link to="/ARC/">ARC case study</Link>.</li>
+            <li>Develop ARC, the C++ firmware for ARSENAL, the custom ESP32-S3 sensor board of the team. See the <Link to="/ARC/">ARC overview</Link>.</li>
             <li>Implemented its sensor abstraction, shared I²C bus management and RS-485 protocol.</li>
             <li>Verified RS-485 parsing of V5 Brain test packets on the bench in October 2026. In November 2026, ran the read path end to end on the bench: three temperature sensors on the ARSENAL-3 board, through ARC, to the V5 Brain with zero bad packets. Testing on the robot is the next step.</li>
           </ul>

@@ -6,7 +6,7 @@ export const META = {
   },
   arc: {
     title: 'ARC firmware for ARSENAL | Benjamin Elmore',
-    description: 'Case study: ARC, C++ sensor firmware for a custom ESP32-S3 board designed to connect external sensors to a VEX V5 Brain. Role, two-way RS-485 protocol, data path and sensor integration.',
+    description: 'Overview of ARC, C++ sensor firmware for a custom ESP32-S3 board designed to connect external sensors to a VEX V5 Brain. What it does, what was built, bench results, status, data path and sensor integration.',
   },
   marketTesting: {
     title: 'MarketTesting | Benjamin Elmore',

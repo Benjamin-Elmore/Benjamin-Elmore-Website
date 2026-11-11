@@ -44,16 +44,41 @@ _sensorIDS (slot order): 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 UART received: 37`}</CodeWindow>
           <figcaption className="figure__caption">Bench serial output from ARC, October 28, 2026, with the RS-485 link under isolated test. A read request from the V5 Brain was received and parsed without error: READ header, 22-byte body, sensor ID 1, valid checksum and both DE AD BE EF frame markers. <code>_validPacket</code> reads false because the receive loop clears the flag as soon as the reply is sent, before the status block prints. Captured before the protocol was extended to configuration packets; duplicate buffer output and all-zero rows are omitted.</figcaption>
         </figure>
-        <h2 id="arc-title" className="section__title"><span aria-hidden="true">01 / </span>Case study</h2>
-        <div className="case-study__block" id="role">
-          <h3>Role</h3>
-          <p>Sole committer on the public ARC repository; earlier development from August 2026 resides in the private team repository. Development began with a review of the legacy team firmware, from which selected components, such as the sensor status codes, were retained.</p>
+        <h2 id="arc-title" className="section__title"><span aria-hidden="true">01 / </span>Overview</h2>
+        <div className="case-study__block" id="arc-what">
+          <h3>What it does</h3>
+          <p>ARC reads I²C sensors on ARSENAL and serves their data to the V5 Brain over RS-485. The Brain can also configure ARC, including sensor types, register offsets and reboot commands. Sole committer on the public ARC repository; earlier development from August 2026 resides in the private team repository.</p>
+        </div>
+        <div className="case-study__block" id="arc-built">
+          <h3>What was built</h3>
           <ul>
-            <li><strong>Sensor abstraction.</strong> A <code>{'Sensor<N>'}</code> template that defines each sensor as a configuration plus a single read function. Each sensor executes in a dedicated FreeRTOS task with configurable priority and reports a status code on failure. A sensor can be assigned a type, which attaches the register offsets of that type automatically; offsets and setup and loop callbacks are appendable rather than hard-coded.</li>
-            <li><strong>Shared I²C bus.</strong> An <code>{'I2CBus<N>'}</code> class that owns the bus and its multiplexers, selects the channel of each sensor, and serializes access with a mutex to prevent contention between sensor tasks. Every register read and write takes the held lock as an argument and is refused without it, and each bus error is logged with the operation that produced it.</li>
-            <li><strong>RS-485 protocol.</strong> A half-duplex link to the V5 Brain with a byte-level state-machine parser, DE AD BE EF frame markers and checksum validation. The parser accepts six packet types (read, a three-stage configuration sequence, reboot and failure) and dispatches each to its own parser and response compiler. An earlier, read-only version was verified on the bench against multiple packet formats in late October 2026. On November 10, 2026, read requests from the V5 Brain returned live sensor data from ARSENAL-3 with valid frame markers and checksums; the configuration and reboot packets have not yet been tested on hardware.</li>
-            <li><strong>Diagnostics.</strong> An optional SD-card logger that records uptime and heap usage, disabled by default.</li>
+            <li><strong>Sensor template.</strong> A <code>{'Sensor<N>'}</code> template that defines each sensor as a configuration plus a single read function. Each sensor executes in a dedicated FreeRTOS task with configurable priority and reports a status code on failure. A sensor can be assigned a type, which attaches the register offsets of that type automatically; offsets and setup and loop callbacks are appendable rather than hard-coded.</li>
+            <li><strong>Shared I²C bus with a lock.</strong> An <code>{'I2CBus<N>'}</code> class that owns the bus and its multiplexers, selects the channel of each sensor, and serializes access with a mutex to prevent contention between sensor tasks. Every register read and write takes the held lock as an argument and is refused without it, and each bus error is logged with the operation that produced it.</li>
+            <li><strong>RS-485 protocol with 6 packet types.</strong> A half-duplex link to the V5 Brain with a byte-level state-machine parser, DE AD BE EF frame markers and checksum validation. The parser accepts six packet types (read, a three-stage configuration sequence, reboot and failure) and dispatches each to its own parser and response compiler.</li>
+            <li><strong>Optional SD logger.</strong> An optional SD-card logger that records uptime and heap usage, disabled by default.</li>
           </ul>
+          <p>Development began with a review of the legacy team firmware, from which selected components, such as the sensor status codes, were retained.</p>
+        </div>
+        <div className="case-study__block" id="arc-results">
+          <h3>Results so far</h3>
+          <ul>
+            <li>An earlier, read-only version of the RS-485 link was verified on the bench against multiple packet formats in late October 2026, with the link under isolated test.</li>
+            <li>On November 10, 2026, three TMP117 temperature sensors on ARSENAL-3 were read by the V5 Brain through ARC over RS-485, with valid frame markers and checksums and 0 bad packets. The read path ran end to end on the bench.</li>
+          </ul>
+        </div>
+        <div className="case-study__block" id="arc-status-block">
+          <h3>Status and next steps</h3>
+          <table className="status-table" id="arc-status">
+            <caption>Status as of the November 10, 2026 bench test (<code>CPPDev</code> b24ce84)</caption>
+            <tbody>
+              <tr><th scope="row">RS-485 read protocol</th><td>Verified on the bench: in isolation in late October 2026, then with live sensor data on November 10, 2026</td></tr>
+              <tr><th scope="row">Configuration and reboot packets</th><td>Implemented; not yet tested on hardware</td></tr>
+              <tr><th scope="row">Sensors registered at entry point</th><td>Three TMP117 temperature sensors on two I²C multiplexers, each registered with the RS-485 link</td></tr>
+              <tr><th scope="row">Combined sensor and RS-485 test</th><td>Passed on the bench, November 10, 2026: three temperature sensors on ARSENAL-3 read by the V5 Brain, 0 bad packets</td></tr>
+              <tr><th scope="row">Full sensor-to-V5 pipeline</th><td>Read direction verified on the bench; not yet run on the robot</td></tr>
+            </tbody>
+          </table>
+          <p>Still to do: run the read path on the robot, and test the configuration and reboot packets on hardware.</p>
         </div>
         <div className="case-study__block" id="data-path">
           <h3>Data path</h3>
@@ -76,16 +101,6 @@ UART received: 37`}</CodeWindow>
             <li>On request from the V5 Brain, ARC responds with a single packet containing two timestamps, up to 15 sensor IDs and six bytes of data per sensor, terminated by frame markers and a checksum. A sensor without a valid reading is reported as 0xFFFF rather than as stale data.</li>
             <li>Configuration requests run in stages: the first sets the type of each sensor, the following packets carry up to three offset vectors per sensor, and the final packet writes those offsets to the registers of the sensor. A reboot request restores the default offsets of each sensor and clears its readings.</li>
           </ol>
-          <table className="status-table" id="arc-status">
-            <caption>Status as of the November 10, 2026 bench test (<code>CPPDev</code> b24ce84)</caption>
-            <tbody>
-              <tr><th scope="row">RS-485 read protocol</th><td>Verified on the bench: in isolation in late October 2026, then with live sensor data on November 10, 2026</td></tr>
-              <tr><th scope="row">Configuration and reboot packets</th><td>Implemented; not yet tested on hardware</td></tr>
-              <tr><th scope="row">Sensors registered at entry point</th><td>Three TMP117 temperature sensors on two I²C multiplexers, each registered with the RS-485 link</td></tr>
-              <tr><th scope="row">Combined sensor and RS-485 test</th><td>Passed on the bench, November 10, 2026: three temperature sensors on ARSENAL-3 read by the V5 Brain, 0 bad packets</td></tr>
-              <tr><th scope="row">Full sensor-to-V5 pipeline</th><td>Read direction verified on the bench; not yet run on the robot</td></tr>
-            </tbody>
-          </table>
         </div>
         <div className="case-study__block" id="arc-numbers">
           <h3>By the numbers</h3>

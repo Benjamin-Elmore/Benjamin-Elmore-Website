@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 750" width="360" height="750" role="img" aria-labelledby="arcs-title arcs-desc"><title id="arcs-title">ARC data path</title><desc id="arcs-desc">Designed data path, top to bottom: I²C sensors (optical and other external sensors) connect over I²C to an I²C multiplexer for channel selection; the multiplexed bus connects over I²C to the ESP32-S3 running ARC firmware on the ARSENAL board with ESP-IDF and FreeRTOS, marked as the case study; the ESP32-S3 exchanges data with the V5 Brain, the robot controller, over a bidirectional half-duplex RS-485 link. Read direction verified on the bench on November 10, 2026; not yet run on the robot.</desc><rect width="360" height="750" fill="#000000"/><g font-family="'IBM Plex Sans', system-ui, sans-serif" fill="#ffffff">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 750" width="360" height="750" role="img" aria-labelledby="arcs-title arcs-desc"><title id="arcs-title">ARC data path</title><desc id="arcs-desc">Designed data path, top to bottom: I²C sensors (optical and other external sensors) connect over I²C to an I²C multiplexer for channel selection; the multiplexed bus connects over I²C to the ESP32-S3 running ARC firmware on the ARSENAL board with ESP-IDF and FreeRTOS; the ESP32-S3 exchanges data with the V5 Brain, the robot controller, over a bidirectional half-duplex RS-485 link. Read direction verified on the bench on November 10, 2026; not yet run on the robot.</desc><rect width="360" height="750" fill="#000000"/><g font-family="'IBM Plex Sans', system-ui, sans-serif" fill="#ffffff">
 <text x="180" y="40" font-size="22" font-weight="700" text-anchor="middle">ARC | Data Path</text>
 <text x="180" y="64" font-size="14" font-weight="600" text-anchor="middle">Sensor acquisition to the V5 Brain</text>
 <rect x="24" y="96" width="312" height="100" rx="6" fill="none" stroke="#ffffff" stroke-width="1.4"/>
@@ -12,7 +12,6 @@
 <rect x="24" y="406" width="302" height="120" fill="none" stroke="#ffffff" stroke-width="2"/>
 <polyline points="24,406 34,396 336,396 336,516 326,526" fill="none" stroke="#ffffff" stroke-width="2"/>
 <line x1="326" y1="406" x2="336" y2="396" stroke="#ffffff" stroke-width="2"/>
-<text x="38" y="430" font-size="12" fill="#bdb9b1">«case study»</text>
 <text x="38" y="454" font-size="17" font-weight="700">ESP32-S3</text>
 <text x="38" y="482" font-size="14">ARC firmware on ARSENAL board</text>
 <text x="38" y="504" font-size="14">ESP-IDF / FreeRTOS</text>
