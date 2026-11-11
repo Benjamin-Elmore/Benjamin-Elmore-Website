@@ -34,7 +34,7 @@ const SETS = [
             used: [['/ARC/#arc-rs485-test', 'ARC']] },
           { id: 'ARC-06', code: 'lockguard', w: 0, h: 0, title: 'LockGuard, condensed', language: 'C++', codeTitle: 'lib/LockGuard.h (condensed)',
             ref: <>Condensed from <a href="https://github.com/Benjamin-Elmore/ARC/blob/49d54a0584fecc4dd5a5edd4ad0cba9e79eb81d6/lib/LockGuard.h" rel="noopener">lib/LockGuard.h</a> at {ARC_COMMIT}. Text, as on the ARC page.</>,
-            used: [['/ARC/#sensor-instances', 'ARC']] },
+            used: [['/ARC/#arc-lockguard', 'ARC']] },
           { id: 'ARC-07', src: 'photos/arc-i2cbus-code.jpg', w: 1280, h: 560, title: 'I2CBus: removeSensorFromBus()',
             alt: 'Code window of removeSensorFromBus in I2CBus.h, which refuses to run unless the bus lock is held.',
             ref: <><a href="https://github.com/Benjamin-Elmore/ARC/blob/49d54a0584fecc4dd5a5edd4ad0cba9e79eb81d6/lib/i2cComm/I2CBus.h" rel="noopener">lib/i2cComm/I2CBus.h</a> at {ARC_COMMIT}.</>,
@@ -99,6 +99,14 @@ export default function Gallery() {
   const [ready, setReady] = useState(false);
   // The filter bar needs JS, so it only appears after hydration; without JS every set shows.
   useEffect(() => setReady(true), []);
+  // Highlight the linked item. :target does not update on client-side navigation, so track the hash here
+  // (after hydration, so the prerendered markup still matches).
+  const [targetId, setTargetId] = useState(null);
+  useEffect(() => {
+    let id = hash.slice(1);
+    try { id = decodeURIComponent(id); } catch (e) { /* keep raw */ }
+    setTargetId(id || null);
+  }, [hash]);
   // A link to a tag clears any filter that would hide its target.
   if (hash !== lastHash) {
     setLastHash(hash);
@@ -129,7 +137,7 @@ export default function Gallery() {
               <h3 className="gallery-subset__title">{sub.title}</h3>
               <ul className="gallery">
                 {sub.items.map((it) => (
-                  <li key={it.id} id={it.id} className="gallery__item">
+                  <li key={it.id} id={it.id} className={'gallery__item' + (targetId === it.id ? ' is-target' : '')}>
                     <figure className={'figure gallery__figure' + (it.narrow ? ' gallery__figure--narrow' : '') + (it.code ? ' gallery__figure--code' : '')}>
                       {it.code
                         ? <CodeWindow title={it.codeTitle} language={it.language}>{CODE[it.code]}</CodeWindow>

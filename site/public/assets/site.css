@@ -2031,3 +2031,20 @@ figcaption.figure__caption::before {
 .gallery__item:target { outline: 2px solid var(--color-focus); outline-offset: 6px; }
 .gallery__figure--code .code-window { margin: 0; }
 section[hidden] { display: none; }
+
+/* Figure tags: a page figure links to its Gallery item by tag (ARC-01 ...). The tag takes the place of the FIG. 01 counter. */
+figcaption.figure__caption:has(.fig-tag)::before { content: none; }
+.fig-tag {
+  display: inline-flex; align-items: center;
+  min-height: 24px; /* WCAG 2.5.8 target size */
+  margin-right: 0.75em; padding-right: 0.75em;
+  border-right: 1px solid var(--color-border);
+  color: var(--color-muted); font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em; line-height: 1;
+  text-decoration: none; vertical-align: baseline;
+  background-image: linear-gradient(currentColor, currentColor); background-position: 0 85%; background-repeat: no-repeat; background-size: 0 1px;
+  transition: background-size 0.2s, color 0.2s;
+}
+.fig-tag + .fig-tag { margin-left: 0; }
+.fig-tag:hover, .fig-tag:focus-visible { color: var(--color-text); background-size: calc(100% - 0.75em) 1px; }
+@media (prefers-reduced-motion: reduce) { .fig-tag { transition: none; } }
+.gallery__item.is-target { outline: 2px solid var(--color-focus); outline-offset: 6px; }

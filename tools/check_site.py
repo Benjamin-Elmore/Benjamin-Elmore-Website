@@ -237,6 +237,37 @@ def check_links(errors, parsed):
                 errors.append(f"{p}: missing anchor {link}")
 
 
+TAGGED_PAGES = ["ARC/index.html", "MarketTesting/index.html", "CBU-Robotics/index.html"]
+TAG_EXEMPT = {"profile"}  # figure ids with no Gallery tag (Home profile photo)
+FIG_RE = re.compile(r'<figure\b([^>]*)>(.*?)</figure>', re.S)
+TAG_RE = re.compile(r'<a class="fig-tag"[^>]*\bhref="([^"]*)"[^>]*>([^<]*)</a>')
+
+
+def check_gallery_tags(errors, raw):
+    """Every figure on the content pages carries one tag per image (or code window), each tag links to
+    /Gallery/#<tag>, and the Gallery item ids are unique."""
+    gal = raw.get("Gallery/index.html", "")
+    gids = re.findall(r'<li id="([^"]+)" class="gallery__item', gal)
+    for d in sorted({i for i in gids if gids.count(i) > 1}):
+        errors.append(f"Gallery: duplicate item id {d}")
+    gset = set(gids)
+    for p in TAGGED_PAGES:
+        for attrs, body in FIG_RE.findall(raw.get(p, "")):
+            m = re.search(r'\bid="([^"]+)"', attrs)
+            fid = m.group(1) if m else "?"
+            if fid in TAG_EXEMPT:
+                continue
+            tags = TAG_RE.findall(body)
+            want = body.count("<img") + len(re.findall(r'class="code-window[" ]', body))
+            if len(tags) != max(want, 1):
+                errors.append(f"{p}: figure #{fid} has {len(tags)} tags for {want} images/code windows")
+            for href, text in tags:
+                if href != f"{BASE}Gallery/#{text}":
+                    errors.append(f"{p}: tag {text} links to {href}")
+                if text not in gset:
+                    errors.append(f"{p}: tag {text} has no Gallery item")
+
+
 def check_bundle_strings(errors, name, text, page_urls=()):
     for url in sorted(set(URL_RE.findall(text))):
         if url.startswith(tuple(BUNDLE_ALLOWED)) or url.startswith(tuple(BUNDLE_ALLOWED_PREFIX)) or url in page_urls:
@@ -280,6 +311,8 @@ def main():
     if len(bundles) == 1:
         page_urls = {l for pg in parsed.values() for l in pg.links if l.startswith("https://")}
         check_bundle_strings(errors, bundles[0], (DOCS / bundles[0]).read_text(encoding="utf-8"), page_urls)
+
+    check_gallery_tags(errors, raw)
 
     for name, (p, text) in REQUIRED.items():
         if p in raw and text not in raw[p]:

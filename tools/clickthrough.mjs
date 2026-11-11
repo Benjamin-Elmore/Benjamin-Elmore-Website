@@ -336,6 +336,26 @@ async function main() {
     check((await tab.eval("document.querySelector('meta[name=robots]')?.content")) === 'noindex', 'no noindex');
   });
 
+  // K13 figure tags: one tag per content page goes to its Gallery item without a reload, and the item is highlighted
+  const landed = (id) => `location.pathname===${JSON.stringify(BASE + 'Gallery/')} && location.hash==='#${id}' && document.getElementById(${JSON.stringify(id)})?.classList.contains('is-target')`;
+  for (const [p, id] of [['ARC/', 'ARC-05'], ['MarketTesting/', 'MT-03'], ['CBU-Robotics/', 'CBU1-04']]) {
+    await step(`K13 ${p} tag ${id} -> Gallery item`, async () => {
+      await tab.goto(url(p), SETTLE);
+      // wait for hydration (React attaches props to the tag element) so the click is client-side
+      await tab.until(`(()=>{const a=document.querySelector('main a.fig-tag');return !!a&&Object.keys(a).some(k=>k.startsWith('__reactProps'))})()`, 'hydrated');
+      await tab.eval('window.__marker=7');
+      await tab.eval(`(()=>{const a=[...document.querySelectorAll('main a.fig-tag')].find(x=>x.textContent===${JSON.stringify(id)});if(!a)throw new Error('no tag');a.click();return true})()`);
+      await tab.until(landed(id), `landing on #${id}`);
+      await tab.until(q.inView(id), `#${id} in view`);
+      check(await tab.eval('window.__marker') === 7, 'page reloaded');
+    });
+  }
+  await step('K13 fresh load of /Gallery/#CBU1-02 lands on the item', async () => {
+    await tab.goto(url('Gallery/#CBU1-02'), SETTLE);
+    await tab.until(landed('CBU1-02'), 'highlight');
+    await tab.until(q.inView('CBU1-02'), '#CBU1-02 in view');
+  });
+
   // K11 JavaScript off
   await step('K11 JavaScript off: content, anchors on every route', async () => {
     await tab.send('Emulation.setScriptExecutionDisabled', { value: true });

@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { BASE } from '../routes.js';
+import FigTag from '../components/FigTag.jsx';
 
 export default function CbuRobotics() {
   return (
@@ -16,7 +17,7 @@ export default function CbuRobotics() {
         <figure className="photo-slot photo-slot--21x9" id="cbu-team">
           {/* Photo "cbu-team" (2026, St. Louis): 21:9 crop (2000x857) of Ben's Team-Photo-At-Worlds.jpg; the 15 MB original is kept outside the build, in the private notes folder. */}
           <img src={BASE + 'assets/photos/cbu-team.jpg'} width="2000" height="857" loading="lazy" decoding="async" alt="The CBU1 VEX U team posed in team polos at the 2026 VEX Robotics World Championship in St. Louis, with two of the team robots held up in the front row." />
-          <figcaption className="figure__caption">The CBU1 VEX U team at the 2026 VEX Robotics World Championship in St. Louis.</figcaption>
+          <figcaption className="figure__caption"><FigTag id="CBU1-01" />The CBU1 VEX U team at the 2026 VEX Robotics World Championship in St. Louis.</figcaption>
         </figure>
         <h2 id="role-title" className="section__title"><span aria-hidden="true">01 / </span>Roles</h2>
         <div className="role-section" id="vice-president">
@@ -31,7 +32,7 @@ export default function CbuRobotics() {
           <figure className="photo-slot photo-slot--21x9" id="cbu-club">
             {/* Photo "cbu-club": 21:9 crop (2000x857) of IMG_0258.jpg (Canon, November 9, 2026); the original is in the private notes folder. */}
             <img src={BASE + 'assets/photos/cbu-club-2026.jpg'} width="2000" height="857" loading="lazy" decoding="async" alt="The full CBU Robotics team in matching navy club shirts, standing in three rows in a university building lobby." />
-            <figcaption className="figure__caption">The full CBU Robotics team, November 2026.</figcaption>
+            <figcaption className="figure__caption"><FigTag id="CBU1-02" />The full CBU Robotics team, November 2026.</figcaption>
           </figure>
         </div>
         <div className="role-section" id="software-engineer">
@@ -57,7 +58,7 @@ export default function CbuRobotics() {
             <img src={BASE + 'assets/photos/cbu-members-sign.jpg'} width="1600" height="1067" loading="lazy" decoding="async" alt="The seven CBU Robotics leads in navy club shirts, sitting and standing along a wooden bench in front of a carved CBU wall sign." />
             <img src={BASE + 'assets/photos/cbu-members-lineup.jpg'} width="1600" height="1067" loading="lazy" decoding="async" alt="The seven CBU Robotics leads in navy club shirts, standing in a staggered line with arms crossed in front of a dotted world map wall." />
           </div>
-          <figcaption className="figure__caption">CBU Robotics leads at California Baptist University, November 2026.</figcaption>
+          <figcaption className="figure__caption"><FigTag id="CBU1-03" /><FigTag id="CBU1-04" />CBU Robotics leads at California Baptist University, November 2026.</figcaption>
         </figure>
         <h2 id="drivetrain-title" className="section__title"><span aria-hidden="true">02 / </span>Drivetrain control and point-to-point navigation (fall 2025)</h2>
         <div className="case-study__block" id="drivetrain">
