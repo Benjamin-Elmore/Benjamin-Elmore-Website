@@ -120,7 +120,7 @@ export default function Home() {
       </section>
       <section id="contact" className="section section--num" aria-labelledby="contact-title">
         <h2 id="contact-title" className="section__title"><span aria-hidden="true">05 / </span>Contact</h2>
-        <p className="section__lede contact__seeking">Looking for a Summer 2027 internship in embedded, autonomy or flight software, especially in defense and aerospace.</p>
+        <p className="section__lede contact__seeking">Looking for a Summer 2027 internship in embedded, autonomy or flight software, especially in defense and aerospace. U.S. citizen.</p>
         <p className="section__lede">For inquiries, email or LinkedIn is preferred.</p>
         <p className="contact__email">Email: <a href="mailto:benelmore6@gmail.com" data-umami-event="email-click">benelmore6@gmail.com</a></p>
         <ul className="link-list contact__links">
