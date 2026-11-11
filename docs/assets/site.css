@@ -2016,3 +2016,18 @@ figcaption.figure__caption::before {
 .gallery__title { font-size: 1rem; }
 .gallery__ref, .gallery__used { color: var(--color-muted); }
 .gallery__used { font-family: var(--font-mono); font-size: 0.75rem; }
+
+/* Gallery sets, subsets and filter */
+.gallery-filter { display: flex; flex-wrap: wrap; gap: 0 var(--space-3); margin-top: var(--space-4); }
+.gallery-filter__btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: var(--tap); min-height: var(--tap); padding: 0; border: 0; background: none;
+  color: var(--color-text); font-family: var(--font-mono); font-size: 0.8125rem; cursor: pointer;
+  background-image: linear-gradient(currentColor, currentColor); background-position: 0 100%; background-repeat: no-repeat; background-size: 0 2px;
+}
+.gallery-filter__btn:hover, .gallery-filter__btn:focus-visible, .gallery-filter__btn[aria-pressed="true"] { background-size: 100% 2px; }
+.gallery-subset { margin-top: var(--space-5); }
+.gallery-subset__title { margin: 0; font-size: 1.125rem; }
+.gallery__item:target { outline: 2px solid var(--color-focus); outline-offset: 6px; }
+.gallery__figure--code .code-window { margin: 0; }
+section[hidden] { display: none; }

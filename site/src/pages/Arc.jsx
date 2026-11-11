@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import { BASE } from '../routes.js';
 import CodeWindow from '../components/CodeWindow.jsx';
+import { SERIAL_CAPTURE, LOCKGUARD_CODE } from '../codeSamples.js';
 
 export default function Arc() {
   return (
@@ -26,22 +27,7 @@ export default function Arc() {
         </figure>
         <figure className="photo-slot photo-slot--text" id="arc-serial">
           {/* Real capture: Ben's ESP32 monitor output, vault chat "2026-10-28 Create PROS RS485 packet sender" (the UART received: 37 block). Only the identical _lastReadBytes copy and all-zero rows 048-112 are cut. */}
-          <CodeWindow title="ESP32-S3 serial monitor, October 28, 2026" language="Serial output" label="ARC serial monitor output">{`=== SERIAL STATUS ===
-_status: ESP_OK (0)
-_isFirstRead: false
-_validPacket: false
-_currentPacketState: WAITING_FOR_HEADER (0)
-_packetLength: 22 body bytes
-_timeSinceLastReceive: 0
-_timeOfSending: 164438584
-_packet [full buffer] (128 bytes, hex):
-  000: 80 00 16 00 00 00 00 09 CD 22 38 10 00 00 00 00
-  016: 00 00 00 00 00 00 00 00 00 DE AD BE EF 00 00 00
-  032: 40 DE AD BE EF 00 00 00 00 00 00 00 00 00 00 00
-  ... (rows 048-112: all 00)
-_sensorIDS (slot order): 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-=====================
-UART received: 37`}</CodeWindow>
+          <CodeWindow title="ESP32-S3 serial monitor, October 28, 2026" language="Serial output" label="ARC serial monitor output">{SERIAL_CAPTURE}</CodeWindow>
           <figcaption className="figure__caption">Bench serial output from ARC, October 28, 2026, with the RS-485 link under isolated test. A read request from the V5 Brain was received and parsed without error: READ header, 22-byte body, sensor ID 1, valid checksum and both DE AD BE EF frame markers. <code>_validPacket</code> reads false because the receive loop clears the flag as soon as the reply is sent, before the status block prints. Captured before the protocol was extended to configuration packets; duplicate buffer output and all-zero rows are omitted.</figcaption>
         </figure>
         <h2 id="arc-title" className="section__title"><span aria-hidden="true">01 / </span>Overview</h2>
@@ -126,25 +112,7 @@ UART received: 37`}</CodeWindow>
             <li>Call <code>setup()</code> before starting RS-485. This registers the sensor on the bus, runs its initialization steps, registers it with the RS-485 link and starts its task. The RS-485 sensor registry is closed to changes once its task starts.</li>
           </ol>
           <p>Because multiple sensor tasks share one I²C bus, every read executes under a lock. The RAII class below makes that lock difficult to misuse.</p>
-          <CodeWindow title="lib/LockGuard.h (condensed)" language="C++">{`class LockGuard {
-public:
-    explicit LockGuard(SemaphoreHandle_t& mutex) : _mutexReference(mutex) {
-        if (_mutexReference != nullptr &&
-            xSemaphoreTake(_mutexReference, portMAX_DELAY) != pdFALSE) {
-            _isLockedByLockGuard = true;
-        }
-    }
-    // Releases only if this guard took the mutex.
-    ~LockGuard() noexcept {
-        if (_isLockedByLockGuard) xSemaphoreGive(_mutexReference);
-    }
-    LockGuard(const LockGuard&) = delete;
-    LockGuard& operator=(const LockGuard&) = delete;
-    bool isMutexLocked() { return _isLockedByLockGuard; }
-private:
-    SemaphoreHandle_t& _mutexReference;
-    bool _isLockedByLockGuard = false;
-};`}</CodeWindow>
+          <CodeWindow title="lib/LockGuard.h (condensed)" language="C++">{LOCKGUARD_CODE}</CodeWindow>
           <p>The lock is released automatically when the guard leaves scope, and only if this guard acquired it, so a failed acquisition can never release a lock held by another task.</p>
         </div>
         <p className="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/ARC/tree/CPPDev" rel="noopener" data-umami-event="repo-arc">Benjamin-Elmore/ARC on GitHub</a>. Described at the <code>CPPDev</code> development branch, commit 49d54a0 (November 9, 2026); the default <code>main</code> branch is an earlier revision. Earlier commits are in a private team repository.</p>
