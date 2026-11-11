@@ -39,7 +39,7 @@ export default function CbuRobotics() {
           <p>C++ development for the competition robots on PROS and for ARC on ESP-IDF. Focus has progressed from robot control to communication between sensors, the custom team board and the V5 Brain.</p>
           <h4>Drivetrain and navigation, fall 2025</h4>
           <ul>
-            <li>First assignment on the team: writing control code for the competition robot base in PROS, the C++ environment for the V5 Brain. Details are in section 02 below.</li>
+            <li>First assignment on the team: driver controls, a PID function and point-to-point navigation for the competition robot base, written in C++ on PROS, the environment for the V5 Brain.</li>
           </ul>
           <h4>ARC sensor firmware, from August 2026</h4>
           <ul>
@@ -57,24 +57,6 @@ export default function CbuRobotics() {
           </div>
           <figcaption className="figure__caption"><FigTag id="CBU1-03" /><FigTag id="CBU1-04" />CBU Robotics leads at California Baptist University, November 2026.</figcaption>
         </figure>
-        <h2 id="drivetrain-title" className="section__title"><span aria-hidden="true">02 / </span>Drivetrain control and point-to-point navigation (fall 2025)</h2>
-        <div className="case-study__block" id="drivetrain">
-          <h3>Role</h3>
-          <p>Software engineer on CBU1 VEX U. Authored 14 commits to the team HamburgerTesting repository between September 16 and October 28, 2025, and 2 commits to a second drivetrain repository. Both repositories also contain imported PROS scaffolding, which is not part of this work.</p>
-          <h3>Problem</h3>
-          <p>Drive the robot base from a controller, and move it to a target point using odometry, by issuing left, right and strafe motor commands. Autonomous path following was unfinished.</p>
-          <h3>Approach</h3>
-          <ul>
-            <li>A driver-controls module and joystick drivetrain control, with the controller and motor groups configured in one header.</li>
-            <li>A PID function, added in one commit.</li>
-            <li>Point navigation using proportional control: it reads odometry, rotates the target error into the robot frame, computes proportional x, y and heading commands, and maps them to left, right and strafe motors. Later commits fixed a target-angle unit issue and a bug in a second spline.</li>
-            <li>An exploration of Pure Pursuit path following with a temporary linear spline search.</li>
-          </ul>
-          <h3>Results</h3>
-          <p>Implemented; no on-robot test recorded.</p>
-          <h3>Left open</h3>
-          <p>Spline generation and odometry integration were still open when the focus of the team moved to ARC.</p>
-        </div>
         <p className="next-project"><Link to="/ARC/">Next project: ARC →</Link></p>
       </section>
     </>
