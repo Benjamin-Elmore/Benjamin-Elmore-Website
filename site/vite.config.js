@@ -16,9 +16,9 @@ function gitValue(cmd) {
     return '';
   }
 }
-const SHA = gitValue('git log -1 --format=%h -- site');
+const SHA = gitValue('git log -1 --format=%h -- .');
 const BUILD_SHA = /^[0-9a-f]{7,12}$/.test(SHA) ? SHA : '';
-const DATE = BUILD_SHA ? gitValue('git log -1 --format=%cs -- site') : '';
+const DATE = BUILD_SHA ? gitValue('git log -1 --format=%cs -- .') : '';
 const BUILD_DATE = /^\d{4}-\d{2}-\d{2}$/.test(DATE) ? DATE : '';
 
 export default defineConfig(({ isSsrBuild, isPreview }) => ({
