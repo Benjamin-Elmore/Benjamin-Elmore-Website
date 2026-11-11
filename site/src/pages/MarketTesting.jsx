@@ -14,7 +14,7 @@ export default function MarketTesting() {
       </div>
       <section className="section case-study" aria-labelledby="mt-title">
         <figure className="photo-slot photo-slot--16x9" id="markettesting-table">
-          <img src={BASE + 'assets/photos/markettesting-table.jpg'} width="1600" height="900" alt="MarketTesting prediction table for AAPL: dated rows of predicted open, high, low, close and volume over a 90-day forecast." loading="lazy" decoding="async" />
+          <img src={BASE + 'assets/photos/markettesting-table.jpg'} width="3200" height="1800" alt="MarketTesting prediction table for AAPL: dated rows of predicted open, high, low, close and volume over a 90-day forecast." loading="lazy" decoding="async" />
           <figcaption className="figure__caption"><FigTag id="MT-02" />AAPL prediction table, 90-day forecast, from the November 8, 2026 training run. Model output only; not a validated trading result.*</figcaption>
         </figure>
         <p className="figure__caption figure__note" id="markettesting-table-note"><small>* Run conditions: 12-stock training run, November 8, 2026, code at <code>main</code> 79f6e12. The 90-day forecast uses a sliding window, with each prediction fed back as input. Values are model output only; no accuracy is claimed.</small></p>
@@ -42,8 +42,8 @@ export default function MarketTesting() {
           <figcaption className="figure__caption"><FigTag id="MT-01" />End-to-end pipeline, from raw price data to the prediction table.</figcaption>
         </figure>
         <figure className="photo-slot photo-slot--16x9" id="markettesting-terminal">
-          <img src={BASE + 'assets/photos/markettesting-terminal.jpg'} width="1600" height="900" alt="Terminal output from a MarketTesting training run, training one ticker at a time with per-epoch loss, early stopping for MSFT and NVDA skipped." loading="lazy" decoding="async" />
-          <figcaption className="figure__caption"><FigTag id="MT-03" />Per-ticker training. Early stopping terminates MSFT after four epochs once validation loss plateaus; NVDA is excluded because its scaled prices fall outside the range of the model.</figcaption>
+          <img src={BASE + 'assets/photos/markettesting-terminal.jpg'} width="3200" height="1800" alt="Terminal output from a MarketTesting training run, one ticker at a time: per-epoch loss for MSFT, NVDA skipped with a scaled-data message, then AMD." loading="lazy" decoding="async" />
+          <figcaption className="figure__caption"><FigTag id="MT-03" />Per-ticker training. MSFT shows four of 25 epochs, with validation loss rising from 0.0539 to 0.0641; NVDA is skipped with the message "Scaled data for NVDA is too large!!", and AMD training follows.</figcaption>
         </figure>
         <p className="case-study__repo">Code: <a href="https://github.com/Benjamin-Elmore/MarketTesting" rel="noopener" data-umami-event="repo-markettesting">Benjamin-Elmore/MarketTesting on GitHub</a>. Described at <code>main</code> 79f6e12.</p>
         <p className="next-project"><Link to="/CBU-Robotics/">Next project: CBU Robotics →</Link></p>
