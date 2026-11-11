@@ -25,6 +25,7 @@ export default function Home() {
     <>
       <section id="top" className="section section--intro" aria-labelledby="intro-title">
         <p className="intro__role">Software Engineer <span aria-hidden="true">/</span> Computer Science Student</p>
+        <p className="intro__status">B.S. Computer Science, expected May 2029 · GPA 4.00 · Seeking a Summer 2027 internship in embedded, autonomy or flight software · U.S. citizen</p>
         <h1 id="intro-title" className="visually-hidden">Benjamin Elmore</h1>
         <figure className="photo-slot intro__photo" id="profile">
           {/* Profile photo: an 800px square crop of Ben's Profile.jpg, metadata stripped. */}

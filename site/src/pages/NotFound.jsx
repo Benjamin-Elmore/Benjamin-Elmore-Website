@@ -5,7 +5,7 @@ export default function NotFound() {
     <div className="page-header">
       <p><Link className="back-link" to="/">← Home</Link></p>
       <h1>Page not found</h1>
-      <p className="page-header__summary"><Link to="/">Home</Link>, <Link to="/ARC/">ARC</Link>, <Link to="/MarketTesting/">MarketTesting</Link></p>
+      <ul className="link-list"><li><Link to="/">Home</Link></li><li><Link to="/ARC/">ARC</Link></li><li><Link to="/MarketTesting/">MarketTesting</Link></li></ul>
     </div>
   );
 }
