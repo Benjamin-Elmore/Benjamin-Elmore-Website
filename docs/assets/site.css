@@ -2048,3 +2048,14 @@ figcaption.figure__caption:has(.fig-tag)::before { content: none; }
 .fig-tag:hover, .fig-tag:focus-visible { color: var(--color-text); background-size: calc(100% - 0.75em) 1px; }
 @media (prefers-reduced-motion: reduce) { .fig-tag { transition: none; } }
 .gallery__item.is-target { outline: 2px solid var(--color-focus); outline-offset: 6px; }
+
+/* Gallery layout: code windows span the row, items hug their content, landings leave room above the item. */
+.gallery { align-items: start; }
+.gallery__item { scroll-margin-top: var(--space-4); }
+@media (min-width: 45em) { .gallery__item:has(.gallery__figure--code) { grid-column: 1 / -1; } }
+
+/* Nav on phones: all six items on one row, no minimum-width boxes, underline matches the word. */
+@media (max-width: 44.99em) {
+  .site-nav__list { gap: 0 var(--space-2); }
+  .site-nav__list a { min-width: 0; font-size: 0.6875rem; letter-spacing: 0; }
+}

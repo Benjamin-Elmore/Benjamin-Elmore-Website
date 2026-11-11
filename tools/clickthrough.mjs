@@ -210,6 +210,9 @@ async function main() {
       await tab.eval(q.click(BASE + 'CBU-Robotics/#' + id));
       await tab.until(`location.pathname===${JSON.stringify(BASE + 'CBU-Robotics/')} && location.hash==='#${id}'`, 'route and hash');
       await tab.until(q.inView(id), `#${id} in view`);
+      await sleep(1200);
+      const top = await tab.eval(`document.getElementById(${JSON.stringify(id)}).getBoundingClientRect().top`);
+      check(top >= 0 && top < 80, `#${id} top ${top}px, expected 0 to 80`);
       check(await tab.eval('window.__marker') === 1, 'page reloaded');
       await tab.eval('history.back()');
       await tab.until(`location.pathname===${JSON.stringify(BASE)}`, 'back');

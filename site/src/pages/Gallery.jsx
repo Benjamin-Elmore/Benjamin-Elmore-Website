@@ -107,6 +107,19 @@ export default function Gallery() {
     try { id = decodeURIComponent(id); } catch (e) { /* keep raw */ }
     setTargetId(id || null);
   }, [hash]);
+  // Re-scroll to the linked item once the page has settled (the filter bar appears and heights change after hydration).
+  useEffect(() => {
+    if (!targetId) return;
+    const f = requestAnimationFrame(() => {
+      const el = document.getElementById(targetId);
+      if (!el) return;
+      const root = document.documentElement, prev = root.style.scrollBehavior;
+      root.style.scrollBehavior = 'auto';
+      el.scrollIntoView({ block: 'start' });
+      root.style.scrollBehavior = prev;
+    });
+    return () => cancelAnimationFrame(f);
+  }, [ready, targetId]);
   // A link to a tag clears any filter that would hide its target.
   if (hash !== lastHash) {
     setLastHash(hash);
