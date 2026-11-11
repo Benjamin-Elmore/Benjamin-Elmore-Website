@@ -1734,11 +1734,16 @@ time {
 .page-header__meta { text-wrap: balance; }
 
 /* Readability pass: the ARC diagram breaks out of the text column like the code windows. */
-.case-study .photo-slot--diagram img {
+.case-study .photo-slot--diagram .diagram-frame {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
   width: min(60rem, calc(100vw - 2 * var(--gutter)));
+  max-width: none;
+}
+.case-study .photo-slot--diagram .diagram-frame img {
+  display: block;
+  width: 100%;
   max-width: none;
 }
 
@@ -1801,7 +1806,8 @@ figcaption.figure__caption::before {
 }
 @media (min-width: 45em) { .figure--diagram > picture { max-width: none; } }
 .intro__photo::after,
-.figure--diagram > picture::after {
+.figure--diagram > picture::after,
+.diagram-frame::after {
   --t: 8px;
   --c: var(--color-border);
   position: absolute;
