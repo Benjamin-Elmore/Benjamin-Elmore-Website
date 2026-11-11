@@ -33,7 +33,7 @@ export default function Arc() {
         </figure>
         <h2 id="arc-title" className="section__title"><span aria-hidden="true">01 / </span>Overview</h2>
         <div className="case-study__block" id="arc-what">
-          <h3>Status</h3>
+          <h3>Operation</h3>
           <p>The read path runs on the bench. The configuration and reboot packets are implemented but not yet tested on hardware.</p>
           <h3>Role</h3>
           <p>I am the sole author of ARC. I designed the RS-485 protocol together with another team member, who writes the matching V5 Brain code. Development began in August 2026 in the private team repository and continues in the public ARC repository.</p>
