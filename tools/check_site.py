@@ -239,6 +239,9 @@ def check_links(errors, parsed):
 
 TAGGED_PAGES = ["ARC/index.html", "MarketTesting/index.html", "CBU-Robotics/index.html"]
 TAG_EXEMPT = {"profile"}  # figure ids with no Gallery tag (Home profile photo)
+IMG_EXEMPT = ("cbu1-logo-white.png",)  # images outside figures that need no tag (CBU1 logo)
+MAIN_RE = re.compile(r'<main.*?</main>', re.S)
+IMG_RE = re.compile(r'<img[^>]*>')
 FIG_RE = re.compile(r'<figure\b([^>]*)>(.*?)</figure>', re.S)
 TAG_RE = re.compile(r'<a class="fig-tag"[^>]*\bhref="([^"]*)"[^>]*>([^<]*)</a>')
 
@@ -251,7 +254,22 @@ def check_gallery_tags(errors, raw):
     for d in sorted({i for i in gids if gids.count(i) > 1}):
         errors.append(f"Gallery: duplicate item id {d}")
     gset = set(gids)
+    if "markettesting-code.jpg" in gal:
+        errors.append("Gallery: markettesting-code.jpg must not have an item")
+    for i in gids:
+        if not re.fullmatch(r"(ARC|MT|CBU1)-\d{2}", i):
+            errors.append(f"Gallery: item id {i} is not PREFIX-NN")
+    home = re.search(r'<main.*?</main>', raw.get("index.html", ""), re.S)
+    if home and "fig-tag" in home.group(0):
+        errors.append("index.html: Home carries no tags")
     for p in TAGGED_PAGES:
+        main = MAIN_RE.search(raw.get(p, ""))
+        outside = FIG_RE.sub("", main.group(0)) if main else ""
+        for img in IMG_RE.findall(outside):
+            if not any(x in img for x in IMG_EXEMPT):
+                errors.append(f"{p}: image outside a tagged figure: {img[:90]}")
+        if main and "markettesting-code.jpg" in main.group(0):
+            errors.append(f"{p}: markettesting-code.jpg is not in the Gallery and must not be on a page")
         for attrs, body in FIG_RE.findall(raw.get(p, "")):
             m = re.search(r'\bid="([^"]+)"', attrs)
             fid = m.group(1) if m else "?"

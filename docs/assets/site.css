@@ -2029,7 +2029,7 @@ figcaption.figure__caption::before {
 .gallery-subset { margin-top: var(--space-5); }
 .gallery-subset__title { margin: 0; font-size: 1.125rem; }
 .gallery__item:target { outline: 2px solid var(--color-focus); outline-offset: 6px; }
-.gallery__figure--code .code-window { margin: 0; }
+.gallery__figure--code .code-window { margin: 0; left: 0; transform: none; width: auto; max-width: 100%; }
 section[hidden] { display: none; }
 
 /* Figure tags: a page figure links to its Gallery item by tag (ARC-01 ...). The tag takes the place of the FIG. 01 counter. */
