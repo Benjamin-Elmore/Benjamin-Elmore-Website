@@ -5,7 +5,7 @@ import SlideList from '../components/SlideList.jsx';
 import ResumeLink, { HAS_RESUME } from '../components/ResumeLink.jsx';
 
 // HOME-1: the intro line under the profile photo. It types out once per visit.
-const INTRO = 'Computer science student at California Baptist University. Software engineer and Vice President of CBU1, the VEX U robotics team, now building ARC: firmware for the custom ESP32-S3 sensor board of the team.';
+const INTRO = 'Computer science student at California Baptist University. Software engineer on CBU1, the VEX U robotics team, and Vice President of CBU Robotics, now building ARC: firmware for the custom ESP32-S3 sensor board of the team.';
 
 // Subset of the Technical skills section below.
 const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'TensorFlow', 'Linux', 'Git'];
@@ -48,7 +48,7 @@ export default function Home() {
         <h2 id="experience-title" className="section__title"><span aria-hidden="true">02 / </span>Experience</h2>
         <SlideList className="exp-list">
           <li>
-            <Link className="exp-row__link" to="/CBU-Robotics/#vice-president"><span className="exp-row__role">Vice President</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U Robotics</span> <span className="exp-row__dates">Since <time dateTime="2026-10">October 2026</time></span> <Preview {...TEAM_PREVIEW} /></Link>
+            <Link className="exp-row__link" to="/CBU-Robotics/#vice-president"><span className="exp-row__role">Vice President</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU Robotics</span> <span className="exp-row__dates">Since <time dateTime="2026-10">October 2026</time></span> <Preview {...TEAM_PREVIEW} /></Link>
             <details className="exp-details">
               <summary>Responsibilities</summary>
               <ul className="role__points">
@@ -99,7 +99,7 @@ export default function Home() {
               <li className="tag">Java</li>
               <li className="tag">TensorFlow</li>
               <li className="tag">pandas/NumPy</li>
-              <li className="tag">MATLAB/Simulink</li>
+              <li className="tag">MATLAB</li>
             </ul>
           </div>
           <div className="skill-group">

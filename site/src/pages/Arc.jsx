@@ -12,7 +12,7 @@ export default function Arc() {
         <p className="eyebrow">Project 01</p>
         <h1>ARC firmware for the ARSENAL</h1>
         <p className="page-header__meta">CBU1 VEX U Robotics · C++ · ESP32-S3 · ESP-IDF</p>
-        <p className="page-header__summary">ARC (ARSENAL Runtime Code) is a C++ firmware library for the ARSENAL, the custom ESP32-S3 board built by the CBU electronics team for CBU1 robotics. It is designed to acquire data from third-party I²C sensors, deliver that data to the VEX V5 Brain over RS-485 for autonomous control, and accept configuration from the Brain, including sensor type, register offsets and reboot commands. The library is meant to carry over from season to season, with the game-specific code for each year layered on top.</p>
+        <p className="page-header__summary">ARC (ARSENAL Runtime Code) is a C++ firmware library for the ARSENAL, the custom board built by the CBU electronics team for CBU1 robotics around a Seeed XIAO ESP32-S3 microcontroller. It is designed to acquire data from third-party I²C sensors, deliver that data to the VEX V5 Brain over RS-485 for autonomous control, and accept configuration from the Brain, including sensor type, register offsets and reboot commands. The library is meant to carry over from season to season, with the game-specific code for each year layered on top.</p>
       </div>
       <section className="section case-study" aria-labelledby="arc-title">
         <figure className="photo-slot" id="arc-board">

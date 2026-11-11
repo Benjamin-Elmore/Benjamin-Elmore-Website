@@ -48,7 +48,7 @@ const SETS = [
             ref: <>Data flow through the package at {MT_COMMIT}.</>,
             used: [['/MarketTesting/#markettesting-pipeline', 'MarketTesting']] },
           { id: 'MT-02', src: 'photos/markettesting-table.jpg', w: 3200, h: 1800, title: 'AAPL prediction table',
-            alt: 'MarketTesting prediction table for AAPL: rows of predicted open, high, low, close and volume over 90 trading days.',
+            alt: 'MarketTesting prediction table for AAPL: rows of predicted close, high, low, open and volume over 90 trading days, in the column order of the model output.',
             ref: <>Written by <a href="https://github.com/Benjamin-Elmore/MarketTesting/blob/79f6e126636b6706006b147a128676d5668054ce/src/markettesting/analysis/data_log.py" rel="noopener">DataLog</a> from the November 8, 2026 training run at {MT_COMMIT}. Model output only; not a validated trading result.</>,
             used: [['/MarketTesting/#markettesting-table', 'MarketTesting'], ['/', 'Home thumbnail']] },
           { id: 'MT-03', src: 'photos/markettesting-terminal.jpg', w: 3200, h: 1800, title: 'Per-ticker training run',
