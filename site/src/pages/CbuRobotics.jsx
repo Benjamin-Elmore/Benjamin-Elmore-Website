@@ -25,7 +25,7 @@ export default function CbuRobotics() {
           <h3>Vice President</h3>
           <p className="meta">Since <time dateTime="2026-10">October 2026</time></p>
           <ul>
-            <li>Coordinating engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
+            <li>Coordinating engineering milestones across the build, electronics and software sub-teams and supporting engineers in meeting deadlines.</li>
             <li>Supporting the planning of team events, competitions and participation in the VEX U World Championship.</li>
             <li>Helping prepare the weekly Responsible Engineer updates for the team.</li>
           </ul>
@@ -46,7 +46,7 @@ export default function CbuRobotics() {
           <h4>ARC sensor firmware, from August 2026</h4>
           <ul>
             <li>He is the sole author of ARC (ARSENAL Runtime Code), the firmware for the ESP32-S3 board designed by the CBU electronics team.</li>
-            <li>Co-design of the RS-485 protocol with the teammate who writes the V5 Brain software, and work with the electronics team on the board interfaces.</li>
+            <li>He co-designed the RS-485 protocol with the teammate who writes the V5 Brain software. He also works with the electronics team on the board interfaces.</li>
             <li>Bench results, the packet format and the data path are on the <Link to="/ARC/">ARC overview</Link>.</li>
           </ul>
           <p><strong>Tools:</strong> C++, PROS, ESP-IDF, FreeRTOS, PlatformIO, ESP32-S3, I²C, UART, RS-485, Git</p>
