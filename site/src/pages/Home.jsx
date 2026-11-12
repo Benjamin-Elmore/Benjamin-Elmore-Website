@@ -58,8 +58,8 @@ export default function Home() {
             <details className="exp-details">
               <summary>Responsibilities</summary>
               <ul className="role__points">
-                <li>Coordinate engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
-                <li>Support planning of team events, competitions and team participation in the VEX U World Championship.</li>
+                <li>I coordinate engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
+                <li>I support planning of team events, competitions and team participation in the VEX U World Championship.</li>
               </ul>
             </details>
           </li>
@@ -69,9 +69,9 @@ export default function Home() {
             <details className="exp-details">
               <summary>Responsibilities and projects</summary>
               <ul className="role__points">
-                <li>Developed driver controls, a PID function and point-to-point navigation in C++ on PROS.</li>
-                <li>Develop ARC, the C++ sensor firmware for the custom ESP32-S3 board, built on ESP-IDF and FreeRTOS.</li>
-                <li>Implemented the RS-485 protocol designed to carry sensor readings to the VEX V5 Brain.</li>
+                <li>I developed driver controls, a PID function and point-to-point navigation in C++ on PROS.</li>
+                <li>I develop ARC, the C++ sensor firmware for the custom ESP32-S3 board, built on ESP-IDF and FreeRTOS.</li>
+                <li>I co-designed the RS-485 protocol that carries sensor readings to the VEX V5 Brain and implemented the ARC side.</li>
                 <li>Full detail on the <Link to="/CBU-Robotics/">CBU Robotics page</Link>.</li>
               </ul>
             </details>
@@ -127,7 +127,7 @@ export default function Home() {
       </section>
       <section id="contact" className="section section--num" aria-labelledby="contact-title">
         <h2 id="contact-title" className="section__title"><span aria-hidden="true">05 / </span>Contact</h2>
-        <p className="section__lede contact__seeking">Looking for a Summer 2027 internship in embedded, autonomy or flight software, especially in defense and aerospace. U.S. citizen.</p>
+        <p className="section__lede contact__seeking">I am looking for a Summer 2027 internship in embedded, autonomy or flight software, especially in defense and aerospace. U.S. citizen.</p>
         <p className="section__lede">Contact me by email or on LinkedIn.</p>
         <p className="contact__email">Email: <a href="mailto:benelmore6@gmail.com" data-umami-event="email-click">benelmore6@gmail.com</a></p>
         <ul className="link-list contact__links">

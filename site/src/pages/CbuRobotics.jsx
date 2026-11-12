@@ -12,7 +12,7 @@ export default function CbuRobotics() {
         <h1>VEX U Robotics</h1>
         <p className="page-header__meta">California Baptist University</p>
         <p className="page-header__meta page-header__roles">Vice President, CBU Robotics{'\u00a0'}· Software Engineer, CBU1</p>
-        <p className="page-header__summary">Vice President of CBU Robotics since October 2026 and software engineer for CBU1, the VEX U robotics team at California Baptist University: drivetrain and navigation software from fall 2025, then ARC sensor firmware from August 2026.</p>
+        <p className="page-header__summary">Benjamin Elmore has been Vice President of CBU Robotics since October 2026 and a software engineer for CBU1, the VEX U robotics team at California Baptist University: drivetrain and navigation software from fall 2025, then ARC sensor firmware from August 2026.</p>
       </div>
       <section className="section case-study section--page" aria-labelledby="role-title">
         <figure className="photo-slot photo-slot--21x9" id="cbu-team">
@@ -25,9 +25,9 @@ export default function CbuRobotics() {
           <h3>Vice President</h3>
           <p className="meta">Since <time dateTime="2026-10">October 2026</time></p>
           <ul>
-            <li>Coordinate engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
-            <li>Support planning of team events, competitions and team participation in the VEX U World Championship.</li>
-            <li>Help prepare the weekly Responsible Engineer updates for the team.</li>
+            <li>Coordinating engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
+            <li>Supporting the planning of team events, competitions and participation in the VEX U World Championship.</li>
+            <li>Helping prepare the weekly Responsible Engineer updates for the team.</li>
           </ul>
           <figure className="photo-slot photo-slot--21x9" id="cbu-club">
             {/* Photo "cbu-club": 21:9 crop (2000x857) of IMG_0258.jpg (Canon, November 9, 2026); the original is in the private notes folder. */}
@@ -41,12 +41,12 @@ export default function CbuRobotics() {
           <p>C++ development for the competition robots on PROS and for ARC on ESP-IDF. Focus has progressed from robot control to communication between sensors, the custom team board and the V5 Brain.</p>
           <h4>Drivetrain and navigation, fall 2025</h4>
           <ul>
-            <li>First assignment on the team: driver controls, a PID function and point-to-point navigation for the competition robot base, written in C++ on PROS, the environment for the V5 Brain.</li>
+            <li>His first assignment on the team was driver controls, a PID function and point-to-point navigation for the competition robot base, written in C++ on PROS, the environment for the V5 Brain.</li>
           </ul>
           <h4>ARC sensor firmware, from August 2026</h4>
           <ul>
-            <li>Sole author of ARC (ARSENAL Runtime Code), the firmware for the ESP32-S3 board built by the CBU electronics team.</li>
-            <li>Co-designed the RS-485 protocol with the team member who writes the V5 Brain side, and worked with the electronics team on the board interfaces.</li>
+            <li>He is the sole author of ARC (ARSENAL Runtime Code), the firmware for the ESP32-S3 board designed by the CBU electronics team.</li>
+            <li>Co-design of the RS-485 protocol with the teammate who writes the V5 Brain software, and work with the electronics team on the board interfaces.</li>
             <li>Bench results, the packet format and the data path are on the <Link to="/ARC/">ARC overview</Link>.</li>
           </ul>
           <p><strong>Tools:</strong> C++, PROS, ESP-IDF, FreeRTOS, PlatformIO, ESP32-S3, I²C, UART, RS-485, Git</p>

@@ -8,7 +8,7 @@ export default function InNOut() {
         <p className="eyebrow">Experience</p>
         <h1>In-N-Out Burger</h1>
         <p className="page-header__meta">Associate · Since May 2024</p>
-        <p className="page-header__summary">Associate since May 2024, serving customers and completing store tasks with team members during busy shifts.</p>
+        <p className="page-header__summary">Benjamin Elmore has been an associate since May 2024, serving customers and completing store tasks with team members during busy shifts.</p>
       </div>
       <section className="section case-study section--page" aria-labelledby="innout-title">
         <h2 id="innout-title" className="visually-hidden">Role</h2>

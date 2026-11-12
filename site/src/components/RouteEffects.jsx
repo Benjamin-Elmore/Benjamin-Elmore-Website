@@ -42,16 +42,11 @@ export default function RouteEffects() {
     const onScroll = () => { if (keyRef.current !== 'default') positions.current.set(keyRef.current, window.scrollY); };
     // Hand scroll restoration back to the browser on unload, so a reload keeps its position.
     const onHide = () => { try { history.scrollRestoration = 'auto'; } catch (e) {} };
-    // Same-document fragment changes (an in-page link, or a hash typed into the address bar) also open
-    // a closed <details> around the target; the router sees these too, but this covers any it misses.
-    const onHash = () => { const el = hashTarget(location.hash); if (reveal(el)) instant(() => el.scrollIntoView()); };
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('pagehide', onHide);
-    window.addEventListener('hashchange', onHash);
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('pagehide', onHide);
-      window.removeEventListener('hashchange', onHash);
     };
   }, []);
 

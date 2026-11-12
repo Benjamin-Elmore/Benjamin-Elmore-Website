@@ -8,7 +8,7 @@ export default function Legoland() {
         <p className="eyebrow">Experience</p>
         <h1>LEGOLAND California Resort</h1>
         <p className="page-header__meta">Seasonal Lifeguard · April to August 2026</p>
-        <p className="page-header__summary">Seasonal lifeguard at LEGOLAND California Resort, April to August 2026.</p>
+        <p className="page-header__summary">Benjamin Elmore worked as a seasonal lifeguard at LEGOLAND California Resort from April to August 2026.</p>
       </div>
       <section className="section case-study" aria-label="Responsibilities">
         <div className="case-study__block">

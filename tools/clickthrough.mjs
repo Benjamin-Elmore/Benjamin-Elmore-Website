@@ -421,6 +421,20 @@ async function main() {
     check(await tab.eval("document.getElementById('arc-technical').open===false"), 'summary click did not close it');
   });
 
+  await step('K14 skip link on a fresh /ARC/#arc-lockguard load leaves a closed Technical detail closed', async () => {
+    await tab.goto('about:blank', "location.href==='about:blank'");
+    await tab.goto(url('ARC/#arc-lockguard'), SETTLE);
+    await tab.until(detailsOpen, 'details open', 3000);
+    await sleep(800);
+    await tab.eval("document.querySelector('#arc-technical > summary').click()");
+    await tab.eval("window.scrollTo(0,0)");
+    await sleep(300);
+    await tab.eval("document.querySelector('a[href=\"#main\"]').click()");
+    await sleep(1000);
+    check(await tab.eval("document.getElementById('arc-technical').open===false"), 'details reopened by skip link');
+    check(await tab.eval("(()=>{const t=document.getElementById('main').getBoundingClientRect().top;return t>=-2&&t<200})()"), '#main not near top');
+  });
+
   // K11 JavaScript off
   await step('K11 JavaScript off: content, anchors on every route', async () => {
     await tab.send('Emulation.setScriptExecutionDisabled', { value: true });

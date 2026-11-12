@@ -33,7 +33,7 @@ export default function Arc() {
         <p className="eyebrow">Project 01</p>
         <h1>ARC firmware for the ARSENAL</h1>
         <p className="page-header__meta">CBU1 VEX U Robotics · C++ · ESP32-S3 · ESP-IDF</p>
-        <p className="page-header__summary">ARC (ARSENAL Runtime Code) is C++ firmware for the ARSENAL, the custom sensor board of CBU1, built around a Seeed XIAO ESP32-S3. It reads I²C sensors and sends their data to the VEX V5 Brain over RS-485, and is meant to be reused from season to season.</p>
+        <p className="page-header__summary">ARC (ARSENAL Runtime Code) is C++ firmware for the ARSENAL, the custom sensor board of CBU1, built around a Seeed XIAO ESP32-S3. It reads I²C sensors and sends their data to the VEX V5 Brain over RS-485, and is meant to be reused from season to season. Benjamin Elmore is the sole author of the firmware. In a bench test on November 10, 2026, the V5 display recorded 59 replies and 0 bad packets.</p>
       </div>
       <section className="section case-study" aria-labelledby="arc-title">
         <figure className="figure figure--diagram" id="arc-data-path">
@@ -52,8 +52,7 @@ export default function Arc() {
         </div>
         <div className="case-study__block" id="arc-results">
           <h3>Verification and remaining work</h3>
-          <p>In October 2026, an earlier version of ARC ran on the ARSENAL-2.5 with the RS-485 link under isolated test, and a read request from the V5 Brain was received and parsed without error.</p>
-          <p>On November 10, 2026, the ARSENAL-3 ran ARC on the bench with three TMP117 temperature sensors built into its I²C bus hardware, while the V5 Brain polled the board over RS-485. The captured V5 display recorded 59 replies and 0 bad packets, with valid frame markers and checksums.</p>
+          <p>On November 10, 2026, the ARSENAL-3 ran ARC on the bench with three TMP117 temperature sensors built into its I²C bus hardware, while the V5 Brain polled the board over RS-485. The captured V5 display recorded 59 replies and 0 bad packets, with valid frame markers and checksums. Each packet carries a mod-256 checksum. A failed or missing read is reported as 0xFFFF for that sensor.</p>
           <figure className="photo-slot" id="arc-board">
             {/* Photo "arc-board": Ben's iPhone photo 20261111_045206199_iOS.jpg (November 10, 2026, 8:52 PM PST), resized to 1600x1200, levels and gamma lifted, metadata stripped; original in the private notes folder. */}
             <img src={BASE + 'assets/photos/arc-rs485-bench.jpg'} width="1600" height="1200" loading="lazy" decoding="async" alt="The ARSENAL-3 board, a black circuit board on pink anti-static foam with its status LEDs lit, cabled to a VEX V5 Brain labelled CBU 3. The Brain screen shows the ARC three-temperature bus test." />
@@ -64,19 +63,19 @@ export default function Arc() {
             <img src={BASE + 'assets/photos/arc-rs485-v5-screen.jpg'} width="1600" height="1200" loading="lazy" decoding="async" alt="V5 Brain screen titled V5PacketSender, ARC three-temperature bus test: port 21 at 115200 baud, 510 sent, 59 received, 0 bad; reply OK with markers and checksum; header 82, 34-byte body, 49 bytes total; sensor IDs 2, 3 and 4 reading 27.40, 28.02 and 26.30 degrees C; and a hex dump of the reply ending in DE AD BE EF." />
             <figcaption className="figure__caption"><FigTag id="ARC-03" />The V5 Brain display during the same test, with readings from sensors 2, 3 and 4.</figcaption>
           </figure>
-          <p>Each packet carries a mod-256 checksum. A failed or missing read is reported as 0xFFFF for that sensor.</p>
+          <p>In October 2026, an earlier version of ARC ran on the ARSENAL-2.5 with the RS-485 link under isolated test, and a read request from the V5 Brain was received and parsed without error; the serial capture is in Technical detail.</p>
           <p>The sensor read path has been demonstrated on the bench. Robot integration, hardware testing of configuration and reboot commands, and automated tests remain.</p>
         </div>
         <div className="case-study__block" id="arc-decisions">
           <h3>Engineering decisions</h3>
           <ul>
-            <li><strong>Sensor abstraction.</strong> Every sensor uses one acquisition framework, the <code>{'Sensor<N>'}</code> template. The register reads specific to a sensor are supplied by its sensor type or by a read callback, so a new sensor needs no new class.</li>
-            <li><strong>Shared-bus ownership.</strong> Each sensor task holds the bus mutex across multiplexer channel selection and the register transaction, so no other task can switch channels mid-read. The held lock is passed to every register read and write.</li>
-            <li><strong>Separate communication.</strong> A dedicated RS-485 task answers V5 requests from cached readings, so requests do not wait on sensor acquisition.</li>
+            <li><strong>Sensor abstraction.</strong> Every sensor uses one acquisition framework, the <code>{'Sensor<N>'}</code> template. The register reads specific to a sensor are supplied by its sensor type or by a read callback, so a new sensor needs no new class. <a href="#sensor-instances">Adding a sensor</a> shows an example.</li>
+            <li><strong>Shared-bus ownership.</strong> Each sensor task holds the bus mutex across multiplexer channel selection and the register transaction, so no other task can switch channels mid-read. The held lock is passed to every register read and write. <a href="#arc-lock">Bus lock</a> shows the guard class.</li>
+            <li><strong>Separate communication.</strong> A dedicated RS-485 task answers V5 requests from cached readings, so requests do not wait on sensor acquisition. <a href="#data-path">Packets and configuration</a> describes the packets.</li>
           </ul>
         </div>
         <div className="case-study__repo" id="arc-source">
-          <p>Bench-tested at <code>CPPDev</code> <Commit href={BENCH_COMMIT} />; class structure and code excerpts described at <Commit href={DESCRIBED_COMMIT} />, except the TMP117 sensor example, which is taken from <code>b24ce84</code>.</p>
+          <p>ARC was bench-tested at <code>CPPDev</code> <Commit href={BENCH_COMMIT} />. The class structure and code excerpts on this page come from <Commit href={DESCRIBED_COMMIT} />; the TMP117 example comes from <code>b24ce84</code>.</p>
           <p><a href="https://github.com/Benjamin-Elmore/ARC/tree/CPPDev" rel="noopener" data-umami-event="repo-arc">Benjamin-Elmore/ARC on GitHub</a></p>
         </div>
         <details className="arc-technical" id="arc-technical" ref={technical}>
@@ -89,15 +88,6 @@ export default function Arc() {
               <p className="photo-slot__link"><a href={BASE + 'assets/arc-software-cppdev.svg'}>Open full-size diagram</a></p>
               <figcaption className="figure__caption"><FigTag id="ARC-04" />ARC software architecture in three packages: sensor hardware, the ARC controller classes and the RS-485 robot interface.</figcaption>
             </figure>
-          </div>
-          <div className="case-study__block" id="arc-serial-block">
-            <h3>Serial capture, October 2026</h3>
-            <figure className="photo-slot photo-slot--text" id="arc-serial">
-              {/* Real capture: Ben's ESP32 monitor output, vault chat "2026-10-28 Create PROS RS485 packet sender" (the UART received: 37 block). Only the identical _lastReadBytes copy and all-zero rows 048-112 are cut. */}
-              <CodeWindow title="ESP32-S3 serial monitor, October 28, 2026" language="Serial output" label="ARC serial monitor output">{SERIAL_CAPTURE}</CodeWindow>
-              <figcaption className="figure__caption"><FigTag id="ARC-05" />Serial output from an earlier ARC version on the ARSENAL-2.5, October 28, 2026, with the RS-485 link under isolated test. Duplicate buffer output and all-zero rows are omitted.</figcaption>
-            </figure>
-            <p>The capture shows a read request from the V5 Brain received and parsed without error: READ header, 22-byte body, sensor ID 1, valid checksum and both DE AD BE EF frame markers. <code>_validPacket</code> reads false because the receive loop clears the flag as soon as the reply is sent, before the status block prints. The capture predates the configuration packets.</p>
           </div>
           <div className="case-study__block" id="sensor-instances">
             <h3>Adding a sensor</h3>
@@ -124,7 +114,7 @@ export default function Arc() {
           </div>
           <div className="case-study__block" id="data-path">
             <h3>Packets and configuration</h3>
-            <p>A byte-level state machine parses incoming packets and accepts six packet types: read, a three-stage configuration sequence, reboot and failure. Read, configuration and reboot packets are dispatched to their own parsers.</p>
+            <p>A byte-level state machine parses incoming packets and accepts six packet types: read, a three-stage configuration sequence, reboot and failure. Read, configuration and reboot packets are dispatched to their own parsers. The RS-485 task answers each read request from the cached readings that the sensor tasks keep current.</p>
             <ul>
               <li>A read reply is a single packet containing two timestamps, up to 15 sensor IDs and six bytes of data per sensor, with DE AD BE EF frame markers around the checksum.</li>
               <li>Configuration runs in stages: the first packet sets the type of each sensor, the following packets carry up to three offset vectors per sensor, and the final packet writes those offsets to the registers of the sensor.</li>
@@ -141,10 +131,19 @@ export default function Arc() {
                 <tr><th scope="row">Packet types</th><td>6</td></tr>
                 <tr><th scope="row">Receive buffer</th><td>128 bytes</td></tr>
                 <tr><th scope="row">Sensor task delay</th><td>10 ms between cycles</td></tr>
-                <tr><th scope="row">Bench read request</th><td>37 bytes (as in the serial capture above)</td></tr>
+                <tr><th scope="row">Bench read request</th><td>37 bytes (as in the serial capture below)</td></tr>
               </tbody>
             </table>
             <p>An optional SD logger records uptime and heap usage to an SD card; it is disabled by default.</p>
+          </div>
+          <div className="case-study__block" id="arc-serial-block">
+            <h3>Serial capture, October 2026</h3>
+            <figure className="photo-slot photo-slot--text" id="arc-serial">
+              {/* Real capture: Ben's ESP32 monitor output, vault chat "2026-10-28 Create PROS RS485 packet sender" (the UART received: 37 block). Only the identical _lastReadBytes copy and all-zero rows 048-112 are cut. */}
+              <CodeWindow title="ESP32-S3 serial monitor, October 28, 2026" language="Serial output" label="ARC serial monitor output">{SERIAL_CAPTURE}</CodeWindow>
+              <figcaption className="figure__caption"><FigTag id="ARC-05" />Serial output from an earlier ARC version on the ARSENAL-2.5, October 28, 2026, with the RS-485 link under isolated test. Duplicate buffer output and all-zero rows are omitted.</figcaption>
+            </figure>
+            <p>The capture shows a read request from the V5 Brain received and parsed without error: READ header, 22-byte body, sensor ID 1, valid checksum and both DE AD BE EF frame markers. <code>_validPacket</code> reads false because the receive loop clears the flag as soon as the reply is sent, before the status block prints. The capture predates the configuration packets.</p>
           </div>
         </details>
         <p className="next-project"><Link to="/MarketTesting/">Next project: MarketTesting →</Link></p>
