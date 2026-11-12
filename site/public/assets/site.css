@@ -1566,29 +1566,6 @@ time {
   text-wrap: pretty;
 }
 .intro__status li + li { margin-top: var(--space-2); }
-.intro__team { margin: 0 0 var(--space-3); }
-
-.cbu-logo {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap);
-  background-image: none;
-}
-
-.cbu-logo img {
-  display: block;
-  width: 120px;
-  height: auto;
-  transition: opacity 0.2s ease;
-}
-
-.cbu-logo:hover img,
-.cbu-logo:focus-visible img { opacity: 0.75; }
-
-@media (min-width: 45em) {
-  .cbu-logo img { width: 150px; }
-}
-
 #main .page-header h1 {
   margin-top: var(--space-2);
   font-family: var(--font-display);

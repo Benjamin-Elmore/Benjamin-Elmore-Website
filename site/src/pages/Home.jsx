@@ -31,15 +31,12 @@ export default function Home() {
             {/* Profile photo: an 800px square crop of Ben's Profile.jpg, metadata stripped. */}
             <img src={BASE + 'assets/photos/profile-square.jpg'} alt="Benjamin Elmore" width="800" height="800" />
           </figure>
-          <div className="intro__side">
-            <p className="intro__team"><Link className="cbu-logo" to="/CBU-Robotics/"><img src={BASE + 'assets/photos/cbu1-logo-white.png'} width="400" height="115" decoding="async" alt="CBU1 VEX U Robotics" /></Link></p>
-            <ul className="intro__status" aria-label="At a glance">
-              <li>B.S. Computer Science, expected May 2029</li>
-              <li>GPA 4.00</li>
-              <li>Seeking a Summer 2027 internship in embedded, autonomy or flight software</li>
-              <li>U.S. citizen</li>
-            </ul>
-          </div>
+          <ul className="intro__status" aria-label="At a glance">
+            <li>B.S. Computer Science, expected May 2029</li>
+            <li>GPA 4.00</li>
+            <li>Seeking a Summer 2027 internship in embedded, autonomy or flight software</li>
+            <li>U.S. citizen</li>
+          </ul>
         </div>
         <TypeLine className="intro__lede" text={INTRO} />
         <ul className="tag-list keyword-strip" aria-label="Core technologies">
