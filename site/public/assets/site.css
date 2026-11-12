@@ -2151,3 +2151,6 @@ figcaption.figure__caption:has(.fig-tag)::before { content: none; }
 .page-header .page-header__roles {
   margin-top: var(--space-1);
 }
+
+/* Home Teams section: full-width team photo, with a link to the CBU Robotics page below it. */
+.section--teams .teams__photo { max-width: none; }

@@ -261,8 +261,8 @@ def check_gallery_tags(errors, raw):
         if not re.fullmatch(r"(ARC|MT|CBU1)-\d{2}", i):
             errors.append(f"Gallery: item id {i} is not PREFIX-NN")
     home = re.search(r'<main\b.*?</main>', raw.get("index.html", ""), re.S)
-    if home and "fig-tag" in home.group(0):
-        errors.append("index.html: Home carries no tags")
+    if home and home.group(0).count('class="fig-tag"') != 1:
+        errors.append("index.html: Home carries exactly one tag (the Teams photo)")
     for p in TAGGED_PAGES:
         main = MAIN_RE.search(raw.get(p, ""))
         outside = FIG_RE.sub("", main.group(0)) if main else ""

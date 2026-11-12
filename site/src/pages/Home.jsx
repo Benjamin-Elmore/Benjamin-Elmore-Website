@@ -3,6 +3,7 @@ import TypeLine from '../components/TypeLine.jsx';
 import { BASE } from '../routes.js';
 import SlideList from '../components/SlideList.jsx';
 import ResumeLink, { HAS_RESUME } from '../components/ResumeLink.jsx';
+import FigTag from '../components/FigTag.jsx';
 
 // HOME-1: the intro line under the profile photo. It types out once per visit.
 const INTRO = 'Computer science student at California Baptist University. Software engineer on CBU1, the VEX U robotics team, and Vice President of CBU Robotics, now building ARC: firmware for the custom ESP32-S3 sensor board of CBU1.';
@@ -17,7 +18,7 @@ const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'T
 const ARC_PREVIEW = { src: 'assets/photos/arc-sensor-example-code.jpg', label: 'ARC TMP117 sensor example · CPPDev b24ce84', veil: 0.45, blur: '4px' };
 const MT_PREVIEW = { src: 'assets/photos/markettesting-lstm.jpg', label: 'MarketTesting LSTM layers · stock_model.py · main 79f6e12', veil: 0.3 };
 const CODE_PREVIEW = { src: 'assets/photos/arc-lockguard-code.jpg', label: 'ARC lib/LockGuard.h · CPPDev 49d54a0', veil: 0.1 };
-const TEAM_PREVIEW = { src: 'assets/photos/cbu-club-2026.jpg', label: 'CBU Robotics full team · November 2026', veil: 0.49 };
+const TEAM_PREVIEW = { src: 'assets/photos/cbu-members-sign.jpg', label: 'CBU Robotics leads · November 2026', veil: 0.59 };
 const Preview = ({ src, label, veil, blur }) => <span className="hover-preview" data-label={label} style={blur ? { '--veil': veil, '--blur': blur } : { '--veil': veil }} aria-hidden="true"><img src={BASE + src} alt="" loading="lazy" decoding="async" /></span>;
 
 export default function Home() {
@@ -43,15 +44,23 @@ export default function Home() {
           {KEYWORDS.map((k) => <li className="tag" key={k}>{k}</li>)}
         </ul>
       </section>
+      <section id="teams" className="section section--teams" aria-labelledby="teams-title">
+        <h2 id="teams-title" className="section__title"><span aria-hidden="true">01 / </span>Teams</h2>
+        <figure className="photo-slot photo-slot--21x9 teams__photo" id="home-team">
+          <img src={BASE + 'assets/photos/cbu-club-2026.jpg'} width="2000" height="857" loading="lazy" decoding="async" alt="The full CBU Robotics team in matching navy club shirts, standing in three rows in a university building lobby." />
+          <figcaption className="figure__caption"><FigTag id="CBU1-02" />The full CBU Robotics team, November 2026.</figcaption>
+        </figure>
+        <p className="next-project"><Link to="/CBU-Robotics/">CBU Robotics: CBU1 VEX U team →</Link></p>
+      </section>
       <section id="work" className="section section--work" aria-labelledby="work-title">
-        <h2 id="work-title" className="section__title"><span aria-hidden="true">01 / </span>Selected work</h2>
+        <h2 id="work-title" className="section__title"><span aria-hidden="true">02 / </span>Selected work</h2>
         <SlideList className="work-list">
           <li><Link className="work-row" to="/ARC/"><span className="work-row__name">ARC</span> <span className="work-row__description">C++ firmware for the custom ESP32-S3 sensor board of CBU1, with FreeRTOS sensor tasks, shared I²C access and bench-tested data transfer to the V5 Brain.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/arc-software-cppdev.svg'} width="96" height="60" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>115200 baud RS-485</span> <span>Up to 15 sensor IDs</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span> <Preview {...ARC_PREVIEW} /></Link></li>
           <li><Link className="work-row" to="/MarketTesting/"><span className="work-row__name">MarketTesting</span> <span className="work-row__description">Independent Python project: a data pipeline and LSTM training loop, packaged as an installable Python package with lint checks in CI.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/photos/markettesting-table.jpg'} width="96" height="54" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>100-day windows</span> <span>12-stock run, Nov 8, 2026</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span> <Preview {...MT_PREVIEW} /></Link></li>
         </SlideList>
       </section>
       <section id="experience" className="section section--experience" aria-labelledby="experience-title">
-        <h2 id="experience-title" className="section__title"><span aria-hidden="true">02 / </span>Experience</h2>
+        <h2 id="experience-title" className="section__title"><span aria-hidden="true">03 / </span>Experience</h2>
         <SlideList className="exp-list">
           <li>
             <Link className="exp-row__link" to="/CBU-Robotics/#vice-president"><span className="exp-row__role">Vice President</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU Robotics</span> <span className="exp-row__dates">Since <time dateTime="2026-10">October 2026</time></span> <Preview {...TEAM_PREVIEW} /></Link>
@@ -82,7 +91,7 @@ export default function Home() {
         </SlideList>
       </section>
       <section id="skills" className="section section--skills" aria-labelledby="skills-title">
-        <h2 id="skills-title" className="section__title"><span aria-hidden="true">03 / </span>Technical skills</h2>
+        <h2 id="skills-title" className="section__title"><span aria-hidden="true">04 / </span>Technical skills</h2>
         <div className="skill-groups">
           <div className="skill-group">
             <h3 id="skills-embedded" className="skill-group__title">Embedded</h3>
@@ -121,12 +130,12 @@ export default function Home() {
         </div>
       </section>
       <section id="about" className="section section--num" aria-labelledby="about-title">
-        <h2 id="about-title" className="section__title"><span aria-hidden="true">04 / </span>About</h2>
+        <h2 id="about-title" className="section__title"><span aria-hidden="true">05 / </span>About</h2>
         <p className="section__lede">Computer science student at California Baptist University (B.S., Machine Learning and Artificial Intelligence concentration, expected May 2029), focused on embedded systems and software that interfaces directly with physical hardware.</p>
         <p className="about__link"><Link to="/About/">Read the full bio and education →</Link></p>
       </section>
       <section id="contact" className="section section--num" aria-labelledby="contact-title">
-        <h2 id="contact-title" className="section__title"><span aria-hidden="true">05 / </span>Contact</h2>
+        <h2 id="contact-title" className="section__title"><span aria-hidden="true">06 / </span>Contact</h2>
         <p className="section__lede contact__seeking">Looking for a Summer 2027 internship in embedded, autonomy or flight software, especially in defense and aerospace. U.S. citizen.</p>
         <p className="section__lede">Reach out by email or on LinkedIn.</p>
         <p className="contact__email">Email: <a href="mailto:benelmore6@gmail.com" data-umami-event="email-click">benelmore6@gmail.com</a></p>
