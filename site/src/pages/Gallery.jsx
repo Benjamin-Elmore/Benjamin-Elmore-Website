@@ -16,7 +16,7 @@ const SETS = [
       { id: 'arc', title: 'ARC', prefix: 'ARC', items: [
           { id: 'ARC-01', src: 'arc-architecture.svg', w: 1000, h: 370, title: 'ARC data path',
             alt: 'Data path: I²C sensors to an I²C multiplexer to the ESP32-S3 running ARC firmware, then half-duplex RS-485 to the V5 Brain.',
-            ref: <>Designed data path from the ARC sources at {ARC_COMMIT}. Read direction verified on the bench on November 10, 2026; not yet run on the robot.</>,
+            ref: <>Designed data path from the ARC sources at {ARC_COMMIT}. Read direction verified on the bench on November 10, 2026.</>,
             used: [['/ARC/#arc-data-path', 'ARC']] },
           { id: 'ARC-02', src: 'photos/arc-rs485-bench.jpg', w: 1600, h: 1200, title: 'The ARSENAL-3 to the V5 Brain over RS-485',
             alt: 'The ARSENAL-3 board on pink anti-static foam, cabled to a VEX V5 Brain labelled CBU 3 that shows the ARC three-temperature bus test.',
@@ -28,7 +28,7 @@ const SETS = [
             used: [['/ARC/#arc-rs485-test', 'ARC']] },
           { id: 'ARC-04', src: 'arc-software-cppdev.svg', w: 2000, h: 1250, title: 'ARC system architecture',
             alt: 'ARC system architecture in three packages: sensor hardware, the ESP32-S3 controller firmware classes, and the RS-485 robot interface to the V5 Brain.',
-            ref: <>Redrawn from the original PlantUML layout, updated to {ARC_COMMIT}. The read path was verified on the bench on November 10, 2026; not yet run on the robot.</>,
+            ref: <>Redrawn from the original PlantUML layout, updated to {ARC_COMMIT}. The read path was verified on the bench on November 10, 2026.</>,
             used: [['/ARC/#arc-software', 'ARC'], ['/', 'Home thumbnail']] },
           { id: 'ARC-05', code: 'serial', w: 0, h: 0, title: 'ARC serial monitor output', language: 'Serial output', codeTitle: 'ESP32-S3 serial monitor, October 28, 2026',
             ref: <>Bench serial output from ARC, October 28, 2026, with the RS-485 link under isolated test on the ARSENAL-2.5: a read request from the V5 Brain received and parsed without error. Duplicate buffer output and all-zero rows are omitted. Text, as on the ARC page.</>,
