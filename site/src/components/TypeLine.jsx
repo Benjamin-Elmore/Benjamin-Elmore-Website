@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react';
 // The full text is in the served HTML and stays readable to screen readers: it is only made
 // transparent while the typed copy runs over it, so nothing shifts. Skipped for reduced motion.
 const KEY = 'typed-intro';
-const START_MS = 400; // caret blinks before the first letter
-const END_MS = 1200; // caret blinks after the last letter, then the overlay goes
-const SPEED = 0.5; // scales every gap below: 0.5 types about twice as fast as the original timing
+const START_MS = 150; // caret blinks before the first letter
+const END_MS = 500; // caret blinks after the last letter, then the overlay goes
+const SPEED = 0.1; // scales every gap below: 0.1 types about ten times as fast as the original timing
 
 const rand = (lo, hi) => SPEED * (lo + Math.random() * (hi - lo));
 
