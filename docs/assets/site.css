@@ -1566,7 +1566,7 @@ time {
   text-wrap: pretty;
 }
 .intro__status li + li { margin-top: var(--space-2); }
-.intro__team { margin-top: var(--space-4); }
+.intro__team { margin: 0 0 var(--space-3); }
 
 .cbu-logo {
   display: inline-flex;
