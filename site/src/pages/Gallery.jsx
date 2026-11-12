@@ -72,7 +72,7 @@ const SETS = [
           { id: 'CBU1-02', src: 'photos/cbu-club-2026.jpg', w: 2000, h: 857, title: 'CBU Robotics full team, November 2026',
             alt: 'The full CBU Robotics team in matching navy club shirts, standing in three rows in a university building lobby.',
             ref: <>CBU Robotics full team photo, November 9, 2026. Cropped to 21:9.</>,
-            used: [['/CBU-Robotics/#cbu-club', 'CBU Robotics'], ['/#home-team', 'Home Teams section']] },
+            used: [['/CBU-Robotics/#cbu-club', 'CBU Robotics'], ['/', 'Home hover background']] },
           { id: 'CBU1-03', src: 'photos/cbu-members-sign.jpg', w: 1600, h: 1067, title: 'CBU Robotics leads, CBU sign',
             alt: 'The seven CBU Robotics leads in navy club shirts, sitting and standing along a wooden bench in front of a carved CBU wall sign.',
             ref: <>CBU Robotics leads, November 9, 2026.</>,

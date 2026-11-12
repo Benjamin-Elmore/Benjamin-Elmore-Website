@@ -3,7 +3,6 @@ import TypeLine from '../components/TypeLine.jsx';
 import { BASE } from '../routes.js';
 import SlideList from '../components/SlideList.jsx';
 import ResumeLink, { HAS_RESUME } from '../components/ResumeLink.jsx';
-import FigTag from '../components/FigTag.jsx';
 
 // HOME-1: the intro line under the profile photo. It types out once per visit.
 const INTRO = 'Computer science student at California Baptist University. Software engineer on CBU1, the VEX U robotics team, and Vice President of CBU Robotics, now building ARC: firmware for the custom ESP32-S3 sensor board of CBU1.';
@@ -18,6 +17,7 @@ const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'T
 const ARC_PREVIEW = { src: 'assets/photos/arc-sensor-example-code.jpg', label: 'ARC TMP117 sensor example · CPPDev b24ce84', veil: 0.45, blur: '4px' };
 const MT_PREVIEW = { src: 'assets/photos/markettesting-lstm.jpg', label: 'MarketTesting LSTM layers · stock_model.py · main 79f6e12', veil: 0.3 };
 const CODE_PREVIEW = { src: 'assets/photos/arc-lockguard-code.jpg', label: 'ARC lib/LockGuard.h · CPPDev 49d54a0', veil: 0.1 };
+const FULL_TEAM_PREVIEW = { src: 'assets/photos/cbu-club-2026.jpg', label: 'CBU Robotics full team · November 2026', veil: 0.49 };
 const TEAM_PREVIEW = { src: 'assets/photos/cbu-members-sign.jpg', label: 'CBU Robotics leads · November 2026', veil: 0.59 };
 const Preview = ({ src, label, veil, blur }) => <span className="hover-preview" data-label={label} style={blur ? { '--veil': veil, '--blur': blur } : { '--veil': veil }} aria-hidden="true"><img src={BASE + src} alt="" loading="lazy" decoding="async" /></span>;
 
@@ -46,11 +46,9 @@ export default function Home() {
       </section>
       <section id="teams" className="section section--teams" aria-labelledby="teams-title">
         <h2 id="teams-title" className="section__title"><span aria-hidden="true">01 / </span>Teams</h2>
-        <figure className="photo-slot photo-slot--21x9 teams__photo" id="home-team">
-          <img src={BASE + 'assets/photos/cbu-club-2026.jpg'} width="2000" height="857" loading="lazy" decoding="async" alt="The full CBU Robotics team in matching navy club shirts, standing in three rows in a university building lobby." />
-          <figcaption className="figure__caption"><FigTag id="CBU1-02" />The full CBU Robotics team, November 2026.</figcaption>
-        </figure>
-        <p className="next-project"><Link to="/CBU-Robotics/">CBU Robotics: CBU1 VEX U team →</Link></p>
+        <SlideList className="exp-list">
+          <li><Link className="exp-row__link" to="/CBU-Robotics/"><span className="exp-row__role">CBU Robotics</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U team, California Baptist University</span> <span className="exp-row__dates">Since <time dateTime="2025-09">September 2025</time></span> <Preview {...FULL_TEAM_PREVIEW} /></Link></li>
+        </SlideList>
       </section>
       <section id="work" className="section section--work" aria-labelledby="work-title">
         <h2 id="work-title" className="section__title"><span aria-hidden="true">02 / </span>Selected work</h2>
