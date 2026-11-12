@@ -14,6 +14,22 @@ const instant = (fn) => {
   try { fn(); } finally { s.scrollBehavior = prev; }
 };
 
+// A hash target inside a closed <details> (the ARC "Technical detail" section) is not rendered, so it
+// cannot be scrolled to. Open every enclosing <details> first; returns true if one had to be opened.
+const reveal = (el) => {
+  let opened = false;
+  for (let d = el && el.closest('details'); d; d = d.parentElement && d.parentElement.closest('details')) {
+    if (!d.open) { d.open = true; opened = true; }
+  }
+  return opened;
+};
+const hashTarget = (hash) => {
+  if (!hash) return null;
+  let id = hash.slice(1);
+  try { id = decodeURIComponent(id); } catch (e) {}
+  return id ? document.getElementById(id) : null;
+};
+
 export default function RouteEffects() {
   const location = useLocation();
   const navType = useNavigationType();
@@ -26,11 +42,16 @@ export default function RouteEffects() {
     const onScroll = () => { if (keyRef.current !== 'default') positions.current.set(keyRef.current, window.scrollY); };
     // Hand scroll restoration back to the browser on unload, so a reload keeps its position.
     const onHide = () => { try { history.scrollRestoration = 'auto'; } catch (e) {} };
+    // Same-document fragment changes (an in-page link, or a hash typed into the address bar) also open
+    // a closed <details> around the target; the router sees these too, but this covers any it misses.
+    const onHash = () => { const el = hashTarget(location.hash); if (reveal(el)) instant(() => el.scrollIntoView()); };
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('pagehide', onHide);
+    window.addEventListener('hashchange', onHash);
     return () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('pagehide', onHide);
+      window.removeEventListener('hashchange', onHash);
     };
   }, []);
 
@@ -38,8 +59,15 @@ export default function RouteEffects() {
     applyHead(routeFor(location.pathname));
     if (history.state && typeof history.state.idx === 'number') lastIdx.current = history.state.idx;
     keyRef.current = location.key;
-    // Hydration: only the head sync runs, so deep links keep the browser fragment scroll.
-    if (first.current) { first.current = false; hydration.active = false; return; }
+    // Hydration: only the head sync runs, so deep links keep the browser fragment scroll, unless the
+    // target sits in a closed <details> that the browser has not opened: then open it and land there.
+    if (first.current) {
+      first.current = false;
+      hydration.active = false;
+      const el = hashTarget(location.hash);
+      if (reveal(el)) instant(() => el.scrollIntoView());
+      return;
+    }
     try { history.scrollRestoration = 'manual'; } catch (e) {}
     // Behave like a full page load. Without a hash, move the sequential-focus start to the top of the
     // document (focus and blur in one task, so no ring paints); with one, the browser starts from the target.
@@ -51,10 +79,9 @@ export default function RouteEffects() {
       b.removeAttribute('tabindex');
     } else if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
     const target = () => {
-      if (!location.hash) return null;
-      let id = location.hash.slice(1);
-      try { id = decodeURIComponent(id); } catch (e) {}
-      return document.getElementById(id);
+      const el = hashTarget(location.hash);
+      reveal(el);
+      return el;
     };
     if (navType === 'POP') {
       // Entries the browser made for same-page #frag clicks have no router key, and the browser has already scrolled.

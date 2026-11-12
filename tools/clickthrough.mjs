@@ -341,7 +341,7 @@ async function main() {
 
   // K13 figure tags: one tag per content page goes to its Gallery item without a reload, and the item is highlighted
   const landed = (id) => `location.pathname===${JSON.stringify(BASE + 'Gallery/')} && location.hash==='#${id}' && document.getElementById(${JSON.stringify(id)})?.classList.contains('is-target')`;
-  for (const [p, id] of [['ARC/', 'ARC-05'], ['MarketTesting/', 'MT-03'], ['CBU-Robotics/', 'CBU1-04']]) {
+  for (const [p, id] of [['ARC/', 'ARC-03'], ['MarketTesting/', 'MT-03'], ['CBU-Robotics/', 'CBU1-04']]) {
     await step(`K13 ${p} tag ${id} -> Gallery item`, async () => {
       await tab.goto(url(p), SETTLE);
       // wait for hydration (React attaches props to the tag element) so the click is client-side
@@ -372,6 +372,55 @@ async function main() {
     });
   }
 
+  // K14 ARC Technical detail: a hash target inside the closed <details> opens it and lands on the target,
+  // on client navigation from a Gallery link, on a fresh load and on a same-page hash change.
+  const detailsOpen = "document.getElementById('arc-technical').open===true";
+  const landedAt = (id) => `(()=>{const e=document.getElementById(${JSON.stringify(id)});if(!e)return false;const t=e.getBoundingClientRect().top;return t>=-2&&t<120})()`;
+  await step('K14 Gallery link /ARC/#arc-lockguard opens Technical detail and lands on LockGuard', async () => {
+    await tab.goto(url('Gallery/'), SETTLE);
+    await tab.until(`(()=>{const a=document.querySelector('main a[href="${BASE}ARC/#arc-lockguard"]');return !!a&&Object.keys(a).some(k=>k.startsWith('__reactProps'))})()`, 'hydrated');
+    await tab.eval('window.__marker=14');
+    await tab.eval(q.click(BASE + 'ARC/#arc-lockguard'));
+    await tab.until(`location.pathname===${JSON.stringify(BASE + 'ARC/')} && location.hash==='#arc-lockguard'`, 'route');
+    await tab.until(detailsOpen, 'details open');
+    await sleep(800);
+    check(await tab.eval(landedAt('arc-lockguard')), 'LockGuard top ' + await tab.eval("document.getElementById('arc-lockguard').getBoundingClientRect().top"));
+    check(await tab.eval('window.__marker') === 14, 'page reloaded');
+  });
+  await step('K14 Back to the Gallery, then Forward to ARC keeps Technical detail open at LockGuard', async () => {
+    await tab.eval('history.back()');
+    await tab.until(`location.pathname===${JSON.stringify(BASE + 'Gallery/')}`, 'back to Gallery');
+    await tab.eval('history.forward()');
+    await tab.until(`location.pathname===${JSON.stringify(BASE + 'ARC/')}`, 'forward to ARC');
+    await tab.until(detailsOpen, 'details open');
+    await sleep(500);
+    check(await tab.eval(landedAt('arc-lockguard')), 'LockGuard top ' + await tab.eval("document.getElementById('arc-lockguard').getBoundingClientRect().top"));
+  });
+  await step('K14 fresh load of /ARC/#arc-lockguard opens Technical detail and lands on LockGuard', async () => {
+    await tab.goto('about:blank', "location.href==='about:blank'");
+    const t0 = Date.now();
+    await tab.goto(url('ARC/#arc-lockguard'), SETTLE);
+    const origin = await tab.eval('performance.timeOrigin');
+    if (!(origin >= t0 - 50)) throw new Error('not a fresh document load');
+    await tab.until(detailsOpen, 'details open', 3000);
+    await sleep(1200);
+    check(await tab.eval(landedAt('arc-lockguard')), 'LockGuard top ' + await tab.eval("document.getElementById('arc-lockguard').getBoundingClientRect().top"));
+  });
+  await step('K14 hash change on ARC to #arc-serial reopens a closed Technical detail', async () => {
+    await tab.goto('about:blank', "location.href==='about:blank'");
+    await tab.goto(url('ARC/'), SETTLE);
+    await sleep(300);
+    check(await tab.eval("document.getElementById('arc-technical').open===false"), 'details open without a hash');
+    check(await tab.eval("document.querySelector('#arc-technical > summary').textContent==='Technical detail'"), 'summary text');
+    await tab.eval("location.hash='#arc-serial'");
+    await tab.until(detailsOpen, 'details open');
+    // A same-page hash change scrolls smoothly (html{scroll-behavior:smooth}), so wait for it to arrive.
+    await tab.until(landedAt('arc-serial'), '#arc-serial scrolled into place', 4000)
+      .catch(async () => { throw new Error('serial top ' + await tab.eval("document.getElementById('arc-serial').getBoundingClientRect().top")); });
+    await tab.eval("document.querySelector('#arc-technical > summary').click()");
+    check(await tab.eval("document.getElementById('arc-technical').open===false"), 'summary click did not close it');
+  });
+
   // K11 JavaScript off
   await step('K11 JavaScript off: content, anchors on every route', async () => {
     await tab.send('Emulation.setScriptExecutionDisabled', { value: true });
@@ -383,6 +432,10 @@ async function main() {
         const v = JSON.parse(r.result.value);
         check(v.h1 && v.len > 20 && v.anchors > 0, `${p || '/'}: ${JSON.stringify(v)}`);
       }
+      // ARC Technical detail is a working native <details> without JS: closed, its content in the HTML, the summary toggles it.
+      await tab.goto(url('ARC/'), "document.readyState==='complete'");
+      const d = await tab.eval("(()=>{const d=document.getElementById('arc-technical');const was=d.open;d.querySelector('summary').click();return JSON.stringify({was,now:d.open,lock:!!d.querySelector('#arc-lockguard')})})()");
+      check(d === JSON.stringify({ was: false, now: true, lock: true }), 'ARC details without JS: ' + d);
     } finally { await tab.send('Emulation.setScriptExecutionDisabled', { value: false }); }
   });
 

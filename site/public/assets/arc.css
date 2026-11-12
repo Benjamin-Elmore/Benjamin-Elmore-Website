@@ -26,3 +26,50 @@
   outline-offset: 2px;
 }
 .case-study__block { min-width: 0; }
+
+/* Technical detail: one native <details> under the main story. Closed by default; a hash link to an
+   element inside it opens it (RouteEffects). The summary reads as a section rule with a +/- marker. */
+.arc-technical {
+  margin-top: var(--space-7);
+  border-top: 1px solid var(--color-text);
+}
+.arc-technical > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: var(--tap);
+  padding-block: var(--space-3);
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.8vw, 1.625rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.arc-technical > summary::-webkit-details-marker { display: none; }
+.arc-technical > summary::after {
+  flex: none;
+  font-family: var(--font-num);
+  font-size: 1.25rem;
+  font-weight: 400;
+  content: "+";
+  content: "+" / "";
+}
+.arc-technical[open] > summary::after {
+  content: "\2212";
+  content: "\2212" / "";
+}
+.arc-technical > summary:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.arc-technical > summary:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.arc-technical > .case-study__block:first-of-type { margin-top: var(--space-4); }
+.arc-technical > .case-study__block { margin-top: var(--space-6); }
+
+/* Source note: the commit links sit inside a sentence, so they stay inline. */
+.case-study__repo > p + p { margin-top: var(--space-1); }
+.case-study__repo .commit-link { display: inline; min-height: 0; background-position: 0 calc(100% - 0.02em), 0 calc(100% - 0.02em); }
+
+/* The data path figure sits directly above the first section title. */
+.case-study > .figure + .section__title { margin-top: var(--space-6); }

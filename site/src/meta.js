@@ -6,7 +6,7 @@ export const META = {
   },
   arc: {
     title: 'ARC firmware for the ARSENAL | Benjamin Elmore',
-    description: 'Overview of ARC, C++ sensor firmware for a custom ESP32-S3 board designed to connect external sensors to a VEX V5 Brain. What it does, what was built, bench results, data path and sensor integration.',
+    description: 'ARC, C++ firmware for the ARSENAL, the custom ESP32-S3 sensor board of the CBU1 VEX U team: how it reads I²C sensors and serves them to the VEX V5 Brain over RS-485, bench verification, engineering decisions and technical detail.',
   },
   marketTesting: {
     title: 'MarketTesting | Benjamin Elmore',

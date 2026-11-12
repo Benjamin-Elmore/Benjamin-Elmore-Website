@@ -260,7 +260,7 @@ def check_gallery_tags(errors, raw):
     for i in gids:
         if not re.fullmatch(r"(ARC|MT|CBU1)-\d{2}", i):
             errors.append(f"Gallery: item id {i} is not PREFIX-NN")
-    home = re.search(r'<main.*?</main>', raw.get("index.html", ""), re.S)
+    home = re.search(r'<main\b.*?</main>', raw.get("index.html", ""), re.S)
     if home and "fig-tag" in home.group(0):
         errors.append("index.html: Home carries no tags")
     for p in TAGGED_PAGES:
@@ -285,6 +285,55 @@ def check_gallery_tags(errors, raw):
                     errors.append(f"{p}: tag {text} links to {href}")
                 if text not in gset:
                     errors.append(f"{p}: tag {text} has no Gallery item")
+
+
+ARC_TAGS = [f"ARC-{i:02d}" for i in range(1, 8)]
+ARC_IN_DETAILS = {"ARC-04", "ARC-05", "ARC-06", "ARC-07"}
+
+
+def check_arc(errors, raw):
+    """ARC: the data path (ARC-01) is the first figure; the tags run ARC-01 to ARC-07 in page order; the
+    technical items sit in one native <details id="arc-technical"> that is in the prerendered HTML and
+    closed by default; the locked headings are there; the Gallery lists the ARC items in the same order."""
+    html = raw.get("ARC/index.html", "")
+    main = MAIN_RE.search(html)
+    if not main:
+        return
+    m = main.group(0)
+    tags = [t for _, t in TAG_RE.findall(m)]
+    if tags != ARC_TAGS:
+        errors.append(f"ARC: figure tags in page order are {tags}, expected {ARC_TAGS}")
+    first = FIG_RE.search(m)
+    if not first or 'id="arc-data-path"' not in first.group(1) or ">ARC-01<" not in first.group(2):
+        errors.append("ARC: the first figure must be the data path (#arc-data-path, ARC-01)")
+    elif "<h2" in m[: first.start()]:
+        errors.append("ARC: the data path figure must come before the first h2, under the header")
+    det = re.findall(r'<details\b([^>]*)>(.*?)</details>', m, re.S)
+    if len(det) != 1 or 'id="arc-technical"' not in det[0][0]:
+        errors.append('ARC: expected exactly one <details id="arc-technical">')
+    else:
+        attrs, body = det[0]
+        if re.search(r"\bopen\b", attrs):
+            errors.append("ARC: #arc-technical must be closed in the prerendered HTML")
+        if not re.match(r"\s*<summary>Technical detail</summary>", body):
+            errors.append("ARC: #arc-technical must start with <summary>Technical detail</summary>")
+        inside = {t for _, t in TAG_RE.findall(body)}
+        if inside != ARC_IN_DETAILS:
+            errors.append(f"ARC: tags inside #arc-technical are {sorted(inside)}, expected {sorted(ARC_IN_DETAILS)}")
+        for need in ('id="arc-lockguard"', 'id="arc-serial"', 'id="arc-sensor-example"', 'id="arc-software"', 'class="status-table"'):
+            if need not in body:
+                errors.append(f"ARC: {need} must be inside #arc-technical")
+        if not re.search(r'</details>\s*<p class="next-project">', m):
+            errors.append("ARC: the next-project link must follow the details")
+    for h in ("Operation", "Role", "Verification and remaining work", "Engineering decisions"):
+        if f"<h3>{h}</h3>" not in m:
+            errors.append(f"ARC: heading {h!r} missing")
+    if "510" in re.sub(r'alt="[^"]*"', "", m):
+        errors.append("ARC: the 510 sent count belongs in the photo alt text only")
+    gal = raw.get("Gallery/index.html", "")
+    gids = [i for i in re.findall(r'<li id="([^"]+)" class="gallery__item', gal) if i.startswith("ARC-")]
+    if gids != ARC_TAGS:
+        errors.append(f"Gallery: ARC items are {gids}, expected {ARC_TAGS}")
 
 
 def check_bundle_strings(errors, name, text, page_urls=()):
@@ -349,6 +398,7 @@ def main():
         check_bundle_strings(errors, bundles[0], (DOCS / bundles[0]).read_text(encoding="utf-8"), page_urls)
 
     check_gallery_tags(errors, raw)
+    check_arc(errors, raw)
     check_build_stamp(errors, raw)
 
     for name, (p, text) in REQUIRED.items():
