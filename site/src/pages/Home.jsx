@@ -17,9 +17,10 @@ const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'T
 const ARC_PREVIEW = { src: 'assets/photos/arc-sensor-example-code.jpg', label: 'ARC TMP117 sensor example · CPPDev b24ce84', veil: 0.45, blur: '4px' };
 const MT_PREVIEW = { src: 'assets/photos/markettesting-lstm.jpg', label: 'MarketTesting LSTM layers · stock_model.py · main 79f6e12', veil: 0.3 };
 const CODE_PREVIEW = { src: 'assets/photos/arc-lockguard-code.jpg', label: 'ARC lib/LockGuard.h · CPPDev 49d54a0', veil: 0.1 };
-const FULL_TEAM_PREVIEW = { src: 'assets/photos/cbu-club-2026.jpg', label: 'CBU Robotics full team · November 2026', veil: 0.49 };
-const TEAM_PREVIEW = { src: 'assets/photos/cbu-members-sign.jpg', label: 'CBU Robotics leads · November 2026', veil: 0.59 };
-const Preview = ({ src, label, veil, blur }) => <span className="hover-preview" data-label={label} style={blur ? { '--veil': veil, '--blur': blur } : { '--veil': veil }} aria-hidden="true"><img src={BASE + src} alt="" loading="lazy" decoding="async" /></span>;
+const FULL_TEAM_PREVIEW = { src: 'assets/photos/cbu-club-2026.jpg', label: 'CBU Robotics full team · November 2026', veil: 0.49, pos: 'center 20%' };
+const TEAM_PREVIEW = { src: 'assets/photos/cbu-members-sign.jpg', label: 'CBU Robotics leads · November 2026', veil: 0.59, pos: 'center 22%' };
+// pos = object-position of the blurred image, so a row can show a chosen band of the photo (faces on the team photos).
+const Preview = ({ src, label, veil, blur, pos }) => <span className="hover-preview" data-label={label} style={blur ? { '--veil': veil, '--blur': blur } : { '--veil': veil }} aria-hidden="true"><img src={BASE + src} alt="" loading="lazy" decoding="async" style={pos ? { objectPosition: pos } : undefined} /></span>;
 
 export default function Home() {
   return (
