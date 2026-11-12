@@ -1,7 +1,7 @@
 import { META } from './meta.js';
 
-export const BASE = '/Benjamin-Elmore-Website/';
-export const SITE_URL = 'https://benjamin-elmore.github.io/Benjamin-Elmore-Website/';
+export const BASE = '/';
+export const SITE_URL = 'https://benjaminelmore.dev/';
 
 export const ROUTES = [
   { path: '/', file: 'index.html', meta: META.home },

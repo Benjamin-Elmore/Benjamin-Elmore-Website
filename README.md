@@ -29,4 +29,4 @@ node tools/clickthrough.mjs --browser "<path to Edge or Chrome>" --profile "<emp
 
 ## Hosting
 
-GitHub Pages serves the `main` branch, `/docs` folder, at https://benjamin-elmore.github.io/Benjamin-Elmore-Website/. The Vite base path is `/Benjamin-Elmore-Website/`, and `docs/.nojekyll` disables Jekyll processing.
+GitHub Pages serves the `main` branch, `/docs` folder, at the custom domain https://benjaminelmore.dev/ (`site/public/CNAME`, copied into `docs/CNAME` by the build). The Vite base path is `/`, and `docs/.nojekyll` keeps Pages from running Jekyll.

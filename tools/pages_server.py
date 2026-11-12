@@ -4,7 +4,7 @@
 Case-sensitive lookup, 301 from a directory to its trailing-slash form, dir/ serves index.html,
 anything missing gets a 404 with the body of 404.html, no directory listings.
 
-  python tools/pages_server.py [--root docs] [--port 8765] [--base /Benjamin-Elmore-Website/]
+  python tools/pages_server.py [--root docs] [--port 8765] [--base /]
 Port 0 picks a free port. The first line printed is "listening http://127.0.0.1:<port>".
 """
 import argparse
@@ -85,7 +85,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=str(Path(__file__).resolve().parent.parent / "docs"))
     ap.add_argument("--port", type=int, default=8765)
-    ap.add_argument("--base", default="/Benjamin-Elmore-Website/")
+    ap.add_argument("--base", default="/")
     a = ap.parse_args()
     srv = ThreadingHTTPServer(("127.0.0.1", a.port), make_handler(Path(a.root), a.base))
     print(f"listening http://127.0.0.1:{srv.server_address[1]}", flush=True)

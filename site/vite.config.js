@@ -22,7 +22,7 @@ const DATE = BUILD_SHA ? gitValue('git log -1 --format=%cs -- .') : '';
 const BUILD_DATE = /^\d{4}-\d{2}-\d{2}$/.test(DATE) ? DATE : '';
 
 export default defineConfig(({ isSsrBuild, isPreview }) => ({
-  base: '/Benjamin-Elmore-Website/',
+  base: '/',
   appType: isPreview ? 'mpa' : 'spa',
   plugins: [react()],
   define: {

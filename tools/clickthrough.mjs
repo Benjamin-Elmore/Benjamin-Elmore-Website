@@ -18,8 +18,8 @@ if (!browser) { console.error('usage: --browser <exe> --profile <dir> [--root do
 const profile = args.profile ? resolve(args.profile) : mkdtempSync(join(tmpdir(), 'clickthrough-'));
 mkdirSync(profile, { recursive: true });
 
-const BASE = '/Benjamin-Elmore-Website/';
-const SITE_URL = 'https://benjamin-elmore.github.io' + BASE;
+const BASE = '/';
+const SITE_URL = 'https://benjaminelmore.dev' + BASE;
 const PAGES = ['', 'ARC/', 'MarketTesting/', 'CBU-Robotics/', 'In-N-Out/', 'LEGOLAND/', 'About/', 'Gallery/'];
 async function get(url) {  // fetch without following redirects, body always drained
   const r = await fetch(url, { redirect: 'manual' });
@@ -315,11 +315,11 @@ async function main() {
   });
 
   // K9 lowercase redirects and the 404 page
-  // Entries are relative to the base, except the root-absolute wrong-case base one.
+  // Entries are relative to the base (the site is served at the domain root).
   const from9 = (f) => (f.startsWith('/') ? server + f : url(f));
   for (const [from, to] of [['arc', 'ARC/'], ['arc/', 'ARC/'], ['markettesting/', 'MarketTesting/'],
     ['cbu-robotics/#vice-president', 'CBU-Robotics/#vice-president'], ['in-n-out', 'In-N-Out/'], ['legoland/', 'LEGOLAND/'], ['about', 'About/'],
-    ['/benjamin-elmore-website/arc', 'ARC/']]) {
+    ['gallery', 'Gallery/']]) {
     await step(`K9 ${from.startsWith('/') ? from : '/' + from} -> /${to}`, async () => {
       await tab.goto(from9(from), 'true');
       const want = BASE + to.split('#')[0];

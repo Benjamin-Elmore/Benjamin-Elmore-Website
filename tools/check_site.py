@@ -14,8 +14,8 @@ from urllib.parse import unquote, urldefrag, urlparse
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = Path(os.environ.get("SITE_DOCS_DIR") or ROOT / "docs").resolve()
-BASE = "/Benjamin-Elmore-Website/"
-SITE_URL = "https://benjamin-elmore.github.io/Benjamin-Elmore-Website/"
+BASE = "/"
+SITE_URL = "https://benjaminelmore.dev/"
 NOT_FOUND = "404.html"
 PAGES = ["index.html", "ARC/index.html", "MarketTesting/index.html",
          "CBU-Robotics/index.html", "In-N-Out/index.html", "LEGOLAND/index.html",
