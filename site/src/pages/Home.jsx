@@ -5,7 +5,7 @@ import SlideList from '../components/SlideList.jsx';
 import ResumeLink, { HAS_RESUME } from '../components/ResumeLink.jsx';
 
 // HOME-1: the intro line under the profile photo. It types out once per visit.
-const INTRO = 'Vice President of CBU Robotics and computer science student at California Baptist University. Software engineer on CBU1, the VEX U robotics team, now building ARC: firmware for the custom ESP32-S3 sensor board of CBU1.';
+const INTRO = 'Computer science student at California Baptist University. Software engineer on CBU1, the VEX U robotics team, now building ARC: firmware for the custom ESP32-S3 sensor board of CBU1.';
 
 // Subset of the Technical skills section below.
 const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'TensorFlow', 'Linux', 'Git'];
@@ -27,7 +27,7 @@ export default function Home() {
     <>
       <section id="top" className="section section--intro" aria-labelledby="intro-title">
         <h1 id="intro-title" className="visually-hidden">Benjamin Elmore</h1>
-        <p className="intro__role">Vice President, CBU Robotics <span aria-hidden="true">/</span> Software Engineer</p>
+        <p className="intro__role">Software Engineer <span aria-hidden="true">/</span> Computer Science Student</p>
         <div className="intro__head">
           <figure className="photo-slot intro__photo" id="profile">
             {/* Profile photo: an 800px square crop of Ben's Profile.jpg, metadata stripped. */}
@@ -35,6 +35,7 @@ export default function Home() {
           </figure>
           <ul className="intro__status" aria-label="At a glance">
             <li className="intro__status-lead">Vice President of CBU Robotics</li>
+            <li><Link to="/ARC/">Building ARC: ESP32-S3 sensor firmware in C++ on FreeRTOS</Link></li>
             <li>B.S. Computer Science, expected May 2029</li>
             <li>GPA 4.00</li>
             <li>Seeking a Summer 2027 internship in embedded, autonomy or flight software</li>

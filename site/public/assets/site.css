@@ -2130,12 +2130,18 @@ figcaption.figure__caption:has(.fig-tag)::before { content: none; }
   margin-top: var(--space-1);
 }
 
-/* First at-a-glance fact (the VP role): larger and bold, with a left rule hung into the gap so the text stays aligned with the other facts. */
+/* First at-a-glance fact (the VP role): one step larger and semibold, with a left rule hung into the gap so the text stays aligned with the other facts. */
 .intro__status-lead {
   margin-left: calc(-1 * var(--space-2) - 2px);
   padding-left: var(--space-2);
   border-left: 2px solid var(--color-text);
-  font-size: clamp(0.9375rem, 1.6vw, 1.25rem);
-  line-height: 1.3;
-  font-weight: 700;
+  font-size: clamp(0.9375rem, 1.1vw, 1.0625rem);
+  line-height: 1.35;
+  font-weight: 600;
+}
+.intro__status .intro__status-lead + li { margin-top: var(--space-3); }
+/* Phones: the facts column beside the photo gets too narrow, so the facts stack under the photo. */
+@media (max-width: 30em) {
+  .intro__head { grid-template-columns: minmax(0, 1fr); }
+  .intro__head .intro__photo { max-width: 11rem; }
 }
