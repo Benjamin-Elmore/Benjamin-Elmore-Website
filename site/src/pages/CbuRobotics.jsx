@@ -25,9 +25,9 @@ export default function CbuRobotics() {
           <h3>Vice President</h3>
           <p className="meta">Since <time dateTime="2026-10">October 2026</time></p>
           <ul>
-            <li>Coordinating engineering milestones across the build, electronics and software sub-teams and supporting engineers in meeting deadlines.</li>
-            <li>Supporting the planning of team events, competitions and participation in the VEX U World Championship.</li>
+            <li>Coordinating engineering schedules across the build, electronics and software sub-teams: tracking deadlines, identifying dependencies and resolving project blockers.</li>
             <li>Helping prepare the weekly Responsible Engineer updates for the team.</li>
+            <li>Helping plan competition logistics and preparation for the VEX U World Championship.</li>
           </ul>
           <figure className="photo-slot photo-slot--21x9" id="cbu-club">
             {/* Photo "cbu-club": 21:9 crop (2000x857) of IMG_0258.jpg (Canon, November 9, 2026); the original is in the private notes folder. */}

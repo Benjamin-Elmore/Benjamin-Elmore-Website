@@ -1,14 +1,13 @@
 import { Link } from 'react-router';
-import TypeLine from '../components/TypeLine.jsx';
 import { BASE } from '../routes.js';
 import SlideList from '../components/SlideList.jsx';
 import ResumeLink, { HAS_RESUME } from '../components/ResumeLink.jsx';
 
-// HOME-1: the intro line under the profile photo. It types out once per visit.
+// HOME-1: the intro line under the profile photo, shown as static text (TypeLine.jsx is kept but unused).
 const INTRO = 'Computer science student at California Baptist University. Software engineer on CBU1, the VEX U robotics team, now building ARC: firmware for the custom ESP32-S3 sensor board of CBU1.';
 
 // Subset of the Technical skills section below.
-const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'TensorFlow', 'Linux', 'Git'];
+const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'TensorFlow', 'Linux'];
 
 // Hover backgrounds on the Selected work and Experience rows (pointer devices only, see "Hover backgrounds" in
 // site.css): the row image fills the row behind its text, blurred and dimmed. label = small credit line;
@@ -42,7 +41,7 @@ export default function Home() {
             <li>U.S. citizen</li>
           </ul>
         </div>
-        <TypeLine className="intro__lede" text={INTRO} />
+        <p className="intro__lede">{INTRO}</p>
         <ul className="tag-list keyword-strip" aria-label="Core technologies">
           {KEYWORDS.map((k) => <li className="tag" key={k}>{k}</li>)}
         </ul>
@@ -55,8 +54,9 @@ export default function Home() {
             <details className="exp-details">
               <summary>Responsibilities</summary>
               <ul className="role__points">
-                <li>Coordinate engineering milestones across the build, electronics and software sub-teams and support engineers in meeting deadlines.</li>
-                <li>Support planning of team events, competitions and team participation in the VEX U World Championship.</li>
+                <li>Coordinate engineering schedules across the build, electronics and software sub-teams: track deadlines, identify dependencies and resolve project blockers.</li>
+                <li>Help prepare the weekly Responsible Engineer updates for the team.</li>
+                <li>Help plan competition logistics and preparation for the VEX U World Championship.</li>
               </ul>
             </details>
           </li>

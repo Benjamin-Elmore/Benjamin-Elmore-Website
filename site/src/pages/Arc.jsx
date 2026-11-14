@@ -31,7 +31,7 @@ export default function Arc() {
       <div className="page-header">
         <p><Link className="back-link" to="/#work">← All work</Link></p>
         <p className="eyebrow">Project 01</p>
-        <h1>ARC firmware for the ARSENAL</h1>
+        <h1>ARC: Firmware for the ARSENAL</h1>
         <p className="page-header__meta">CBU1 VEX U Robotics · C++ · ESP32-S3 · ESP-IDF</p>
         <p className="page-header__summary">ARC (ARSENAL Runtime Code) is C++ firmware for the ARSENAL, the custom sensor board of CBU1, built around a Seeed XIAO ESP32-S3. It reads I²C sensors and sends their data to the VEX V5 Brain over RS-485, and is meant to be reused from season to season. Benjamin Elmore is the sole author of the firmware. In a bench test on November 10, 2026, the V5 display recorded 59 replies and 0 bad packets.</p>
       </div>

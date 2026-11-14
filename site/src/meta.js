@@ -5,7 +5,7 @@ export const META = {
     ogDescription: 'Software engineer and computer science student focused on embedded software. C++ firmware on ESP32-S3 and FreeRTOS, RS-485 communication, and machine learning in Python.',
   },
   arc: {
-    title: 'ARC firmware for the ARSENAL | Benjamin Elmore',
+    title: 'ARC: Firmware for the ARSENAL | Benjamin Elmore',
     description: 'ARC, C++ firmware for the ARSENAL, the custom ESP32-S3 sensor board of the CBU1 VEX U team: how it reads I²C sensors and serves them to the VEX V5 Brain over RS-485, bench verification, engineering decisions and technical detail.',
   },
   marketTesting: {
