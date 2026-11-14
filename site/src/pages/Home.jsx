@@ -26,15 +26,20 @@ export default function Home() {
   return (
     <>
       <section id="top" className="section section--intro" aria-labelledby="intro-title">
-        <p className="intro__role">Vice President, CBU Robotics <span aria-hidden="true">/</span> Software Engineer</p>
         <h1 id="intro-title" className="visually-hidden">Benjamin Elmore</h1>
+        {/* Title block: the VP role is the headline of the cover (display type), with the org as an eyebrow above it. */}
+        <div className="intro__title-block">
+          <p className="eyebrow intro__org">CBU Robotics</p>
+          <p className="intro__title">Vice President</p>
+          <p className="intro__role">Software Engineer <span aria-hidden="true">/</span> CBU1 VEX U</p>
+        </div>
         <div className="intro__head">
           <figure className="photo-slot intro__photo" id="profile">
             {/* Profile photo: an 800px square crop of Ben's Profile.jpg, metadata stripped. */}
             <img src={BASE + 'assets/photos/profile-square.jpg'} alt="Benjamin Elmore" width="800" height="800" />
           </figure>
           <ul className="intro__status" aria-label="At a glance">
-            <li>Vice President of CBU Robotics</li>
+            <li className="intro__status-lead">Vice President of CBU Robotics</li>
             <li>B.S. Computer Science, expected May 2029</li>
             <li>GPA 4.00</li>
             <li>Seeking a Summer 2027 internship in embedded, autonomy or flight software</li>

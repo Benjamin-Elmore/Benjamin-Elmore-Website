@@ -2129,3 +2129,27 @@ figcaption.figure__caption:has(.fig-tag)::before { content: none; }
 .page-header .page-header__roles {
   margin-top: var(--space-1);
 }
+
+/* Home cover title block: CBU Robotics eyebrow, VP in display type (same face and weight as page h1), then the mono role line. */
+.intro__title-block { margin-top: var(--space-2); }
+.intro__title-block .intro__org { margin-top: 0; }
+.intro__title {
+  margin-top: var(--space-2);
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+.intro__title-block .intro__role {
+  margin-top: var(--space-3);
+  color: var(--color-muted);
+  letter-spacing: 0.12em;
+}
+/* First at-a-glance fact (the VP role): a left rule hung into the gap, so the text stays aligned with the other facts. */
+.intro__status-lead {
+  margin-left: calc(-1 * var(--space-2) - 2px);
+  padding-left: var(--space-2);
+  border-left: 2px solid var(--color-text);
+}
