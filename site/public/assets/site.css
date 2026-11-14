@@ -1156,28 +1156,6 @@ main {
   }
 }
 
-@media (min-width: 54em) {
-  main {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .section--experience,
-  .section--skills {
-    grid-column: auto;
-    margin-top: var(--space-3);
-    margin-bottom: var(--space-7);
-    padding-block: 0;
-  }
-
-  .section--experience {
-    padding-right: var(--space-6);
-  }
-
-  .section--skills {
-    padding-left: var(--space-6);
-    border-left: 1px solid var(--color-text);
-  }
-}
 
 /* ---------- Motion ---------- */
 
@@ -1849,7 +1827,7 @@ figcaption.figure__caption::before {
   background-repeat: no-repeat;
 }
 
-/* M5. Row serials on Selected work: 01.01, 01.02 (section 01, item n), in the row's existing top padding. */
+/* M5. Row serials on Selected work: 02.01, 02.02 (section 02, item n), in the row's existing top padding. */
 .work-list { counter-reset: work; }
 .work-row { position: relative; counter-increment: work; }
 .work-row::before {
@@ -1862,8 +1840,8 @@ figcaption.figure__caption::before {
   line-height: 1;
   letter-spacing: 0.08em;
   pointer-events: none;
-  content: "01." counter(work, decimal-leading-zero);
-  content: "01." counter(work, decimal-leading-zero) / "";
+  content: "02." counter(work, decimal-leading-zero);
+  content: "02." counter(work, decimal-leading-zero) / "";
 }
 @media (min-width: 45em) { .work-row::before { left: var(--space-5); } }
 

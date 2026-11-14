@@ -5,7 +5,7 @@ import SlideList from '../components/SlideList.jsx';
 import ResumeLink, { HAS_RESUME } from '../components/ResumeLink.jsx';
 
 // HOME-1: the intro line under the profile photo. It types out once per visit.
-const INTRO = 'Computer science student at California Baptist University. Software engineer on CBU1, the VEX U robotics team, and Vice President of CBU Robotics, now building ARC: firmware for the custom ESP32-S3 sensor board of CBU1.';
+const INTRO = 'Vice President of CBU Robotics and computer science student at California Baptist University. Software engineer on CBU1, the VEX U robotics team, now building ARC: firmware for the custom ESP32-S3 sensor board of CBU1.';
 
 // Subset of the Technical skills section below.
 const KEYWORDS = ['C/C++', 'FreeRTOS', 'ESP-IDF', 'I²C', 'RS-485', 'Python', 'TensorFlow', 'Linux', 'Git'];
@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <>
       <section id="top" className="section section--intro" aria-labelledby="intro-title">
-        <p className="intro__role">Software Engineer <span aria-hidden="true">/</span> Computer Science Student</p>
+        <p className="intro__role">Vice President, CBU Robotics <span aria-hidden="true">/</span> Software Engineer</p>
         <h1 id="intro-title" className="visually-hidden">Benjamin Elmore</h1>
         <div className="intro__head">
           <figure className="photo-slot intro__photo" id="profile">
@@ -34,6 +34,7 @@ export default function Home() {
             <img src={BASE + 'assets/photos/profile-square.jpg'} alt="Benjamin Elmore" width="800" height="800" />
           </figure>
           <ul className="intro__status" aria-label="At a glance">
+            <li>Vice President of CBU Robotics</li>
             <li>B.S. Computer Science, expected May 2029</li>
             <li>GPA 4.00</li>
             <li>Seeking a Summer 2027 internship in embedded, autonomy or flight software</li>
@@ -45,21 +46,8 @@ export default function Home() {
           {KEYWORDS.map((k) => <li className="tag" key={k}>{k}</li>)}
         </ul>
       </section>
-      <section id="teams" className="section section--teams" aria-labelledby="teams-title">
-        <h2 id="teams-title" className="section__title"><span aria-hidden="true">01 / </span>Teams</h2>
-        <SlideList className="exp-list">
-          <li><Link className="exp-row__link" to="/CBU-Robotics/"><span className="exp-row__role">CBU Robotics</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U team, California Baptist University</span> <span className="exp-row__dates">Since <time dateTime="2025-09">September 2025</time></span> <Preview {...FULL_TEAM_PREVIEW} /></Link></li>
-        </SlideList>
-      </section>
-      <section id="work" className="section section--work" aria-labelledby="work-title">
-        <h2 id="work-title" className="section__title"><span aria-hidden="true">02 / </span>Selected work</h2>
-        <SlideList className="work-list">
-          <li><Link className="work-row" to="/ARC/"><span className="work-row__name">ARC</span> <span className="work-row__description">C++ firmware for the custom ESP32-S3 sensor board of CBU1, with FreeRTOS sensor tasks, shared I²C access and bench-tested data transfer to the V5 Brain.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/arc-software-cppdev.svg'} width="96" height="60" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>115200 baud RS-485</span> <span>Up to 15 sensor IDs</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span> <Preview {...ARC_PREVIEW} /></Link></li>
-          <li><Link className="work-row" to="/MarketTesting/"><span className="work-row__name">MarketTesting</span> <span className="work-row__description">Independent Python project: a data pipeline and LSTM training loop, packaged as an installable Python package with lint checks in CI.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/photos/markettesting-table.jpg'} width="96" height="54" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>100-day windows</span> <span>12-stock run, Nov 8, 2026</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span> <Preview {...MT_PREVIEW} /></Link></li>
-        </SlideList>
-      </section>
       <section id="experience" className="section section--experience" aria-labelledby="experience-title">
-        <h2 id="experience-title" className="section__title"><span aria-hidden="true">03 / </span>Experience</h2>
+        <h2 id="experience-title" className="section__title"><span aria-hidden="true">01 / </span>Experience</h2>
         <SlideList className="exp-list">
           <li>
             <Link className="exp-row__link" to="/CBU-Robotics/#vice-president"><span className="exp-row__role">Vice President</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU Robotics</span> <span className="exp-row__dates">Since <time dateTime="2026-10">October 2026</time></span> <Preview {...TEAM_PREVIEW} /></Link>
@@ -87,6 +75,19 @@ export default function Home() {
           </li>
           <li><Link className="exp-row__link" to="/In-N-Out/"><span className="exp-row__role">Associate</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">In-N-Out Burger</span> <span className="exp-row__dates">Since <time dateTime="2024-05">May 2024</time></span></Link></li>
           <li><Link className="exp-row__link" to="/LEGOLAND/"><span className="exp-row__role">Seasonal Lifeguard</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">LEGOLAND California Resort</span> <span className="exp-row__dates"><time dateTime="2026-04">April</time> to <time dateTime="2026-08">August 2026</time></span></Link></li>
+        </SlideList>
+      </section>
+      <section id="work" className="section section--work" aria-labelledby="work-title">
+        <h2 id="work-title" className="section__title"><span aria-hidden="true">02 / </span>Selected work</h2>
+        <SlideList className="work-list">
+          <li><Link className="work-row" to="/ARC/"><span className="work-row__name">ARC</span> <span className="work-row__description">C++ firmware for the custom ESP32-S3 sensor board of CBU1, with FreeRTOS sensor tasks, shared I²C access and bench-tested data transfer to the V5 Brain.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/arc-software-cppdev.svg'} width="96" height="60" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>115200 baud RS-485</span> <span>Up to 15 sensor IDs</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span> <Preview {...ARC_PREVIEW} /></Link></li>
+          <li><Link className="work-row" to="/MarketTesting/"><span className="work-row__name">MarketTesting</span> <span className="work-row__description">Independent Python project: a data pipeline and LSTM training loop, packaged as an installable Python package with lint checks in CI.</span> <span className="work-row__facts"><img className="work-row__thumb" src={BASE + 'assets/photos/markettesting-table.jpg'} width="96" height="54" alt="" loading="lazy" decoding="async" /><span className="work-row__stats"><span>100-day windows</span> <span>12-stock run, Nov 8, 2026</span></span></span> <span className="work-row__arrow" aria-hidden="true">→</span> <Preview {...MT_PREVIEW} /></Link></li>
+        </SlideList>
+      </section>
+      <section id="teams" className="section section--teams" aria-labelledby="teams-title">
+        <h2 id="teams-title" className="section__title"><span aria-hidden="true">03 / </span>Teams</h2>
+        <SlideList className="exp-list">
+          <li><Link className="exp-row__link" to="/CBU-Robotics/"><span className="exp-row__role">CBU Robotics</span> <span className="exp-row__arrow" aria-hidden="true">→</span> <span className="exp-row__org">CBU1 VEX U team, California Baptist University</span> <span className="exp-row__dates">Since <time dateTime="2025-09">September 2025</time></span> <Preview {...FULL_TEAM_PREVIEW} /></Link></li>
         </SlideList>
       </section>
       <section id="skills" className="section section--skills" aria-labelledby="skills-title">
